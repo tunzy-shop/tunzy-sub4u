@@ -5,8 +5,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - TUNZY SUB 4 YOU</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Additional dashboard-specific styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,102,204,0.1);
+            border-color: var(--primary-blue);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin: 30px 0;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-item:hover {
+            background: var(--light-blue);
+            border-radius: 10px;
+        }
+        
+        .activity-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--light-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .activity-amount {
+            font-weight: bold;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+        
+        .activity-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .quick-fund-section {
+            background: linear-gradient(135deg, #f5f5f5, #ffffff);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed var(--primary-blue);
+        }
+        
+        .fund-amounts {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .fund-amount-btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px;
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: 8px;
+            color: var(--primary-blue);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .fund-amount-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-banner::before {
+            content: "🔵";
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            font-size: 8rem;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .featured-services {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 40px 0;
+        }
+        
+        .featured-service {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
+            border: 2px solid transparent;
+        }
+        
+        .featured-service:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 10px 25px rgba(0,102,204,0.15);
+        }
+        
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .service-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .featured-services {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav class="navbar blue-bg">
         <div class="container">
             <div class="logo">
@@ -15,68 +247,391 @@
             </div>
             <div class="nav-links">
                 <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="buy-data.html">Buy Data</a>
                 <a href="airtime.html">Airtime</a>
                 <a href="tv.html">TV</a>
                 <a href="electricity.html">Electricity</a>
                 <a href="history.html">History</a>
                 <a href="#" id="logoutBtn">Logout</a>
-                <span class="wallet-balance">💰 ₦5,000.00</span>
+                <span class="wallet-balance" id="walletBalance">💰 ₦5,000.00</span>
             </div>
             <button class="mobile-menu" id="mobileMenu">☰</button>
         </div>
     </nav>
 
     <div class="container dashboard">
-        <!-- Wallet Card -->
-        <div class="wallet-card">
-            <h2>Welcome back, John! 👋</h2>
-            <p>Your wallet balance</p>
-            <div class="wallet-balance">💰 ₦5,000.00</div>
-            <button class="btn btn-light" onclick="fundWallet(1000)">➕ Fund Wallet</button>
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h1 class="welcome-title" id="welcomeMessage">Welcome back, John! 👋</h1>
+            <p class="welcome-subtitle">Your one-stop platform for all digital subscriptions</p>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <span class="status-badge" style="background: rgba(255,255,255,0.2);">Member since 2024</span>
+                <span class="status-badge" style="background: rgba(255,255,255,0.2);">Verified Account</span>
+            </div>
         </div>
 
-        <!-- Quick Actions -->
-        <h3>Quick Actions</h3>
-        <div class="quick-actions">
-            <a href="airtime.html" class="quick-action-btn">
-                <div class="quick-action-icon">📱</div>
-                <div>Buy Airtime</div>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="walletStat">₦5,000</div>
+                <div class="stat-label">Wallet Balance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalSpent">₦12,500</div>
+                <div class="stat-label">Total Spent</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-value" id="transactionsCount">24</div>
+                <div class="stat-label">Transactions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎁</div>
+                <div class="stat-value" id="bonusPoints">150</div>
+                <div class="stat-label">Bonus Points</div>
+            </div>
+        </div>
+
+        <!-- Quick Fund Section -->
+        <div class="quick-fund-section">
+            <h3 style="margin-bottom: 10px;">⚡ Quick Fund Wallet</h3>
+            <p style="color: #666; margin-bottom: 15px;">Select amount to add to your wallet instantly</p>
+            <div class="fund-amounts">
+                <button class="fund-amount-btn" onclick="quickFund(1000)">₦1,000</button>
+                <button class="fund-amount-btn" onclick="quickFund(2000)">₦2,000</button>
+                <button class="fund-amount-btn" onclick="quickFund(5000)">₦5,000</button>
+                <button class="fund-amount-btn" onclick="quickFund(10000)">₦10,000</button>
+                <button class="fund-amount-btn" onclick="customFund()">Custom</button>
+            </div>
+        </div>
+
+        <!-- Featured Services -->
+        <h3 style="margin: 30px 0 20px;">🌟 Featured Services</h3>
+        <div class="featured-services">
+            <a href="buy-data.html" class="featured-service">
+                <div class="service-icon">📱</div>
+                <div class="service-name">Data Bundle</div>
+                <small style="color: #666;">Best rates</small>
             </a>
-            <a href="tv.html" class="quick-action-btn">
-                <div class="quick-action-icon">📺</div>
-                <div>Pay TV</div>
+            <a href="airtime.html" class="featured-service">
+                <div class="service-icon">📞</div>
+                <div class="service-name">Airtime</div>
+                <small style="color: #666;">Instant</small>
             </a>
-            <a href="electricity.html" class="quick-action-btn">
-                <div class="quick-action-icon">💡</div>
-                <div>Electricity</div>
+            <a href="tv.html" class="featured-service">
+                <div class="service-icon">📺</div>
+                <div class="service-name">Cable TV</div>
+                <small style="color: #666;">DSTV, GOtv</small>
             </a>
-            <a href="results.html" class="quick-action-btn">
-                <div class="quick-action-icon">📊</div>
-                <div>Check Results</div>
+            <a href="electricity.html" class="featured-service">
+                <div class="service-icon">💡</div>
+                <div class="service-name">Electricity</div>
+                <small style="color: #666;">Prepaid</small>
             </a>
         </div>
 
-        <!-- Recent Transactions -->
-        <h3>Recent Transactions</h3>
-        <table class="transaction-table">
-            <thead>
-                <tr>
-                    <th>Service</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Filled by JavaScript -->
-            </tbody>
-        </table>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="history.html" style="color: var(--primary-blue);">View All Transactions →</a>
+        <!-- Main Content Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin: 30px 0;">
+            <!-- Left Column - Recent Activity -->
+            <div class="recent-activity">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>📋 Recent Activity</h3>
+                    <a href="history.html" style="color: var(--primary-blue); text-decoration: none;">View All →</a>
+                </div>
+                
+                <div id="recentTransactions">
+                    <!-- Transactions will be loaded here by JavaScript -->
+                    <div class="activity-item">
+                        <div class="activity-icon">📱</div>
+                        <div class="activity-details">
+                            <div class="activity-title">MTN Data - 1GB</div>
+                            <div class="activity-time">Today, 10:30 AM</div>
+                        </div>
+                        <div class="activity-amount">-₦500</div>
+                        <div class="activity-status status-success">Success</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📞</div>
+                        <div class="activity-details">
+                            <div class="activity-title">Airtime - Glo</div>
+                            <div class="activity-time">Yesterday, 3:15 PM</div>
+                        </div>
+                        <div class="activity-amount">-₦200</div>
+                        <div class="activity-status status-success">Success</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">💰</div>
+                        <div class="activity-details">
+                            <div class="activity-title">Wallet Funding</div>
+                            <div class="activity-time">Yesterday, 2:00 PM</div>
+                        </div>
+                        <div class="activity-amount" style="color: #28a745;">+₦5,000</div>
+                        <div class="activity-status status-success">Success</div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📺</div>
+                        <div class="activity-details">
+                            <div class="activity-title">DSTV - Premium</div>
+                            <div class="activity-time">2 days ago</div>
+                        </div>
+                        <div class="activity-amount">-₦3,500</div>
+                        <div class="activity-status status-success">Success</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Quick Info -->
+            <div>
+                <!-- Wallet Card -->
+                <div class="wallet-card" style="margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 15px;">💳 Your Wallet</h3>
+                    <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 10px;" id="walletAmount">₦5,000.00</div>
+                    <p style="opacity: 0.9; margin-bottom: 20px;">Available Balance</p>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-light" onclick="fundWalletAPI(1000)" style="flex: 1;">➕ Fund</button>
+                        <button class="btn btn-light" onclick="withdrawFunds()" style="flex: 1;">📤 Withdraw</button>
+                    </div>
+                </div>
+
+                <!-- Quick Tips -->
+                <div style="background: var(--light-blue); padding: 20px; border-radius: 15px;">
+                    <h3 style="margin-bottom: 15px;">💡 Quick Tips</h3>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 10px;">✓ Buy data and get 2% bonus</li>
+                        <li style="margin-bottom: 10px;">✓ Refer friends and earn ₦100</li>
+                        <li style="margin-bottom: 10px;">✓ First transaction? Get 5% discount</li>
+                        <li style="margin-bottom: 10px;">✓ Fund wallet with bank transfer</li>
+                    </ul>
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid rgba(0,102,204,0.2);">
+                    <div style="text-align: center;">
+                        <p style="color: var(--primary-blue); font-weight: bold;">Need help? Contact support</p>
+                        <p>📞 0800 000 0000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Data Plans -->
+        <div style="background: white; border-radius: 15px; padding: 25px; margin: 30px 0; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>🔥 Popular Data Plans</h3>
+                <a href="buy-data.html" style="color: var(--primary-blue);">View All Plans →</a>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                <div style="text-align: center; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                    <div style="font-weight: bold;">MTN 1GB</div>
+                    <div style="color: var(--primary-blue); font-size: 1.3rem;">₦500</div>
+                    <small>Monthly</small>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                    <div style="font-weight: bold;">Glo 2GB</div>
+                    <div style="color: var(--primary-blue); font-size: 1.3rem;">₦800</div>
+                    <small>Monthly</small>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                    <div style="font-weight: bold;">Airtel 1GB</div>
+                    <div style="color: var(--primary-blue); font-size: 1.3rem;">₦500</div>
+                    <small>Weekly</small>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                    <div style="font-weight: bold;">9mobile 2GB</div>
+                    <div style="color: var(--primary-blue); font-size: 1.3rem;">₦700</div>
+                    <small>Monthly</small>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer blue-bg">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; padding: 40px 0;">
+                <div>
+                    <h4 style="margin-bottom: 20px;">TUNZY SUB 4 YOU</h4>
+                    <p>Your trusted partner for all digital subscriptions and bill payments.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 20px;">Quick Links</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 10px;"><a href="#" style="color: white; text-decoration: none;">About Us</a></li>
+                        <li style="margin-bottom: 10px;"><a href="#" style="color: white; text-decoration: none;">FAQs</a></li>
+                        <li style="margin-bottom: 10px;"><a href="#" style="color: white; text-decoration: none;">Terms</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 20px;">Contact</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 10px;">📧 support@tunzysub4u.com</li>
+                        <li style="margin-bottom: 10px;">📞 +234 800 000 0000</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+                <p>&copy; 2024 TUNZY SUB 4 YOU. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="js/app.js"></script>
+    <script>
+        // Dashboard specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data
+            loadUserData();
+            
+            // Update wallet display
+            updateWalletDisplay();
+            
+            // Load recent transactions
+            loadRecentTransactions();
+        });
+
+        // Load user data from localStorage or default
+        function loadUserData() {
+            // Try to load from localStorage
+            const savedUser = localStorage.getItem('tunzyUser');
+            if (savedUser) {
+                window.currentUser = JSON.parse(savedUser);
+            } else {
+                // Default user
+                window.currentUser = {
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                    balance: 5000,
+                    transactions: [
+                        {
+                            type: 'Data',
+                            network: 'MTN',
+                            plan: '1GB',
+                            amount: 500,
+                            status: 'success',
+                            date: '2024-03-03 10:30 AM'
+                        },
+                        {
+                            type: 'Airtime',
+                            network: 'Glo',
+                            amount: 200,
+                            status: 'success',
+                            date: '2024-03-02 3:15 PM'
+                        },
+                        {
+                            type: 'Funding',
+                            amount: 5000,
+                            status: 'success',
+                            date: '2024-03-02 2:00 PM'
+                        }
+                    ]
+                };
+            }
+            
+            // Update welcome message
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${window.currentUser.name}! 👋`;
+        }
+
+        // Update wallet display
+        function updateWalletDisplay() {
+            const balance = window.currentUser?.balance || 5000;
+            document.getElementById('walletBalance').textContent = `💰 ₦${balance.toLocaleString()}.00`;
+            document.getElementById('walletStat').textContent = `₦${balance.toLocaleString()}`;
+            document.getElementById('walletAmount').textContent = `₦${balance.toLocaleString()}.00`;
+            
+            // Calculate total spent (mock data)
+            document.getElementById('totalSpent').textContent = '₦12,500';
+            document.getElementById('transactionsCount').textContent = '24';
+            document.getElementById('bonusPoints').textContent = '150';
+        }
+
+        // Load recent transactions
+        function loadRecentTransactions() {
+            const container = document.getElementById('recentTransactions');
+            const transactions = window.currentUser?.transactions?.slice(0, 4) || [];
+            
+            if (transactions.length > 0) {
+                let html = '';
+                transactions.forEach(t => {
+                    const icon = t.type === 'Data' ? '📱' : 
+                                t.type === 'Airtime' ? '📞' : 
+                                t.type === 'Funding' ? '💰' : '📺';
+                    
+                    const amountClass = t.type === 'Funding' ? 'style="color: #28a745;"' : '';
+                    const amountPrefix = t.type === 'Funding' ? '+' : '-';
+                    
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon">${icon}</div>
+                            <div class="activity-details">
+                                <div class="activity-title">${t.type} ${t.network || ''} ${t.plan || ''}</div>
+                                <div class="activity-time">${t.date || 'Just now'}</div>
+                            </div>
+                            <div class="activity-amount" ${amountClass}>${amountPrefix}₦${t.amount}</div>
+                            <div class="activity-status status-${t.status || 'success'}">${t.status || 'Success'}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        }
+
+        // Quick fund function
+        function quickFund(amount) {
+            if (confirm(`Add ₦${amount.toLocaleString()} to your wallet?`)) {
+                if (typeof fundWalletAPI === 'function') {
+                    fundWalletAPI(amount);
+                } else {
+                    // Fallback
+                    window.currentUser.balance += amount;
+                    updateWalletDisplay();
+                    
+                    // Add transaction
+                    const transaction = {
+                        type: 'Funding',
+                        amount: amount,
+                        status: 'success',
+                        date: new Date().toLocaleString()
+                    };
+                    
+                    if (!window.currentUser.transactions) {
+                        window.currentUser.transactions = [];
+                    }
+                    window.currentUser.transactions.unshift(transaction);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('tunzyUser', JSON.stringify(window.currentUser));
+                    
+                    alert(`✅ Wallet funded with ₦${amount.toLocaleString()}!`);
+                    loadRecentTransactions();
+                }
+            }
+        }
+
+        // Custom fund
+        function customFund() {
+            const amount = prompt('Enter amount to fund (₦):', '1000');
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                quickFund(parseInt(amount));
+            }
+        }
+
+        // Withdraw funds
+        function withdrawFunds() {
+            alert('Withdrawal feature coming soon! You can use your wallet balance to pay for services.');
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Mobile menu
+        document.getElementById('mobileMenu').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+    </script>
 </body>
-                              </html>
+</html>
