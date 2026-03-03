@@ -3,184 +3,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TUNZY SUB 4 YOU - Your Digital Services Partner</title>
+    <title>TUNZY SUB 4 YOU</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header with your logo */
+        .header {
+            background: #0066cc;
+            padding: 20px 20px 30px;
+            color: white;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Your logo in a perfect circle */
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .user-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Balance Card */
+        .balance-section {
+            background: white;
+            margin: -20px 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0066cc;
+        }
+
+        .fund-button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Services Grid - EXACTLY like Sambasfund */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: #e0e0e0;
+            margin: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .service-item {
+            background: white;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .service-item:hover {
+            background: #f8f9fa;
+        }
+
+        /* Network logo container */
+        .network-logo {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .network-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .service-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .service-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Quick Actions */
+        .section-title {
+            padding: 0 20px;
+            margin: 25px 0 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .quick-actions {
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .quick-action-item {
+            background: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 1px solid #e0e0e0;
+            white-space: nowrap;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .quick-action-item:hover {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        /* Transactions List */
+        .transactions-list {
+            margin: 15px 20px;
+        }
+
+        .transaction-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #f0f0f0;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-service {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .transaction-detail {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            color: #0066cc;
+        }
+
+        .transaction-amount.credit {
+            color: #28a745;
+        }
+
+        /* Bottom Navigation - NO EMOJIS, just text like Sambasfund */
+        .bottom-nav {
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            position: fixed;
+            bottom: 0;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .nav-item {
+            text-align: center;
+            text-decoration: none;
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .nav-item.active {
+            color: #0066cc;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding-bottom: 70px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar blue-bg">
-        <div class="container">
-            <div class="logo">
-                <span class="logo-icon">🔵</span>
-                <span class="logo-text">TUNZY SUB 4 YOU</span>
+    <div class="app-container">
+        <!-- Header with YOUR logo -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo-circle">
+                    <!-- 🔴 YOUR LOGO - JPG FORMAT -->
+                    <img src="assets/my-logo.jpg" alt="TUNZY">
+                </div>
+                <div class="menu-icon">☰</div>
             </div>
-            <div class="nav-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="#services">Services</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
-                <a href="login.html" class="btn btn-outline">Login</a>
-                <a href="signup.html" class="btn btn-primary">Sign Up</a>
-            </div>
-            <!-- Mobile menu button -->
-            <button class="mobile-menu" id="mobileMenu">☰</button>
+            <div class="welcome-text">Welcome back,</div>
+            <div class="user-name" id="userDisplay">Loading...</div>
         </div>
-    </nav>
 
-    <!-- Hero Section - Big Welcome Area -->
-    <section class="hero">
-        <div class="container">
-            <h1>Welcome to <span class="blue-text">TUNZY SUB 4 YOU</span></h1>
-            <p class="hero-subtitle">Your one-stop platform for all digital subscriptions</p>
-            <div class="hero-features">
-                <span>📱 Airtime & Data</span>
-                <span>📺 Cable TV</span>
-                <span>💡 Electricity</span>
-                <span>📊 Results Checker</span>
+        <!-- Balance Card -->
+        <div class="balance-section">
+            <div>
+                <div class="balance-label">Wallet Balance</div>
+                <div class="balance-amount" id="balanceDisplay">₦0.00</div>
             </div>
-            <div class="hero-cta">
-                <a href="signup.html" class="btn btn-primary btn-large">Create Free Account</a>
-                <a href="#services" class="btn btn-outline btn-large">View Services</a>
+            <button class="fund-button" onclick="fundWallet()">Fund</button>
+        </div>
+
+        <!-- Services Grid - ALL NETWORK LOGOS -->
+        <div class="services-grid">
+            <!-- MTN Data -->
+            <div class="service-item" onclick="location.href='buy-data.html?network=mtn'">
+                <div class="network-logo">
+                    <img src="assets/networks/mtn-logo.jpg" alt="MTN" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none; font-weight:bold; color:#ffcc00;">MTN</span>
+                </div>
+                <div class="service-title">Data Plans</div>
+                <div class="service-subtitle">1GB · ₦500</div>
+            </div>
+
+            <!-- GLO Data -->
+            <div class="service-item" onclick="location.href='buy-data.html?network=glo'">
+                <div class="network-logo">
+                    <img src="assets/networks/glo-logo.jpg" alt="GLO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none; font-weight:bold; color:#00a859;">GLO</span>
+                </div>
+                <div class="service-title">Data Plans</div>
+                <div class="service-subtitle">1GB · ₦500</div>
+            </div>
+
+            <!-- Airtel Data -->
+            <div class="service-item" onclick="location.href='buy-data.html?network=airtel'">
+                <div class="network-logo">
+                    <img src="assets/networks/airtel-logo.jpg" alt="AIRTEL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none; font-weight:bold; color:#e60000;">AIRTEL</span>
+                </div>
+                <div class="service-title">Data Plans</div>
+                <div class="service-subtitle">1GB · ₦500</div>
+            </div>
+
+            <!-- 9mobile Data (Etisalat) -->
+            <div class="service-item" onclick="location.href='buy-data.html?network=9mobile'">
+                <div class="network-logo">
+                    <img src="assets/networks/etisalat-logo.jpg" alt="9MOBILE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none; font-weight:bold; color:#00aeef;">9MOBILE</span>
+                </div>
+                <div class="service-title">Data Plans</div>
+                <div class="service-subtitle">1GB · ₦500</div>
+            </div>
+
+            <!-- Airtime -->
+            <div class="service-item" onclick="location.href='airtime.html'">
+                <div class="network-logo">
+                    <img src="assets/networks/airtime-icon.jpg" alt="AIRTIME" onerror="this.innerHTML='📞'">
+                </div>
+                <div class="service-title">Airtime</div>
+                <div class="service-subtitle">All networks</div>
+            </div>
+
+            <!-- Cable TV -->
+            <div class="service-item" onclick="location.href='tv.html'">
+                <div class="network-logo">
+                    <img src="assets/networks/tv-icon.jpg" alt="TV" onerror="this.innerHTML='📺'">
+                </div>
+                <div class="service-title">Cable TV</div>
+                <div class="service-subtitle">DSTV, GOtv</div>
+            </div>
+
+            <!-- Electricity -->
+            <div class="service-item" onclick="location.href='electricity.html'">
+                <div class="network-logo">
+                    <img src="assets/networks/electricity-icon.jpg" alt="POWER" onerror="this.innerHTML='💡'">
+                </div>
+                <div class="service-title">Electricity</div>
+                <div class="service-subtitle">Prepaid</div>
+            </div>
+
+            <!-- Results -->
+            <div class="service-item" onclick="location.href='results.html'">
+                <div class="network-logo">
+                    <img src="assets/networks/results-icon.jpg" alt="EXAMS" onerror="this.innerHTML='📊'">
+                </div>
+                <div class="service-title">Results</div>
+                <div class="service-subtitle">WAEC, NECO</div>
             </div>
         </div>
-    </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services">
-        <div class="container">
-            <h2 class="section-title">Our <span class="blue-text">Services</span></h2>
-            <p class="section-subtitle">Everything you need in one place</p>
+        <!-- Popular Services -->
+        <div class="section-title">Popular Services</div>
+        <div class="quick-actions">
+            <span class="quick-action-item">MTN 1GB - ₦500</span>
+            <span class="quick-action-item">GLO 2GB - ₦800</span>
+            <span class="quick-action-item">DSTV Premium</span>
+            <span class="quick-action-item">IKEDC Prepaid</span>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="section-title">Recent Transactions</div>
+        <div class="transactions-list" id="transactionsList">
+            <!-- Will be filled by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation - NO EMOJIS, just text like Sambasfund -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div>Home</div>
+        </a>
+        <a href="services.html" class="nav-item">
+            <div class="nav-icon">📋</div>
+            <div>Services</div>
+        </a>
+        <a href="history.html" class="nav-item">
+            <div class="nav-icon">📊</div>
+            <div>History</div>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div>Profile</div>
+        </a>
+    </div>
+
+    <script>
+        // Load user data
+        document.addEventListener('DOMContentLoaded', function() {
+            const userName = localStorage.getItem('userName') || 'John Doe';
+            const balance = localStorage.getItem('userBalance') || '5000';
             
-            <div class="service-grid">
-                <!-- Service 1: Airtime -->
-                <div class="service-card">
-                    <div class="service-icon blue-bg">📱</div>
-                    <h3>Airtime & Data</h3>
-                    <p>MTN, Glo, Airtel, 9mobile - Best rates guaranteed</p>
-                    <a href="airtime.html" class="service-link">Buy Now →</a>
-                </div>
+            document.getElementById('userDisplay').textContent = userName;
+            document.getElementById('balanceDisplay').textContent = `₦${parseFloat(balance).toLocaleString()}.00`;
+            
+            loadTransactions();
+        });
 
-                <!-- Service 2: Cable TV -->
-                <div class="service-card">
-                    <div class="service-icon blue-bg">📺</div>
-                    <h3>Cable TV</h3>
-                    <p>DSTV, GOtv, Startimes - Instant activation</p>
-                    <a href="tv.html" class="service-link">Subscribe →</a>
-                </div>
+        // Load transactions
+        function loadTransactions() {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const list = document.getElementById('transactionsList');
+            
+            if (transactions.length === 0) {
+                list.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">No transactions yet</div>';
+                return;
+            }
+            
+            let html = '';
+            transactions.slice(0, 3).forEach(t => {
+                html += `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-service">${t.type}</div>
+                            <div class="transaction-detail">${t.date || 'Just now'}</div>
+                        </div>
+                        <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount}</div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
 
-                <!-- Service 3: Electricity -->
-                <div class="service-card">
-                    <div class="service-icon blue-bg">💡</div>
-                    <h3>Electricity Bill</h3>
-                    <p>Prepaid & Postpaid - All distribution companies</p>
-                    <a href="electricity.html" class="service-link">Pay Now →</a>
-                </div>
-
-                <!-- Service 4: Results -->
-                <div class="service-card">
-                    <div class="service-icon blue-bg">📊</div>
-                    <h3>Results Checker</h3>
-                    <p>WAEC, NECO, NABTEB - Quick & easy</p>
-                    <a href="results.html" class="service-link">Check →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works">
-        <div class="container">
-            <h2 class="section-title">How <span class="blue-text">TUNZY SUB 4 YOU</span> Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number blue-bg">1</div>
-                    <h3>Create Account</h3>
-                    <p>Sign up for free in less than a minute</p>
-                </div>
-                <div class="step">
-                    <div class="step-number blue-bg">2</div>
-                    <h3>Fund Wallet</h3>
-                    <p>Add money using bank transfer or card</p>
-                </div>
-                <div class="step">
-                    <div class="step-number blue-bg">3</div>
-                    <h3>Pay Bills</h3>
-                    <p>Select service and make payment instantly</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features/Benefits -->
-    <section class="features">
-        <div class="container">
-            <h2 class="section-title">Why Choose <span class="blue-text">TUNZY SUB 4 YOU</span></h2>
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Instant Delivery</h3>
-                    <p>Services delivered immediately after payment</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Secure Payments</h3>
-                    <p>Your transactions are 100% safe and encrypted</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">💰</div>
-                    <h3>Best Rates</h3>
-                    <p>We offer competitive prices on all services</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">📞</div>
-                    <h3>24/7 Support</h3>
-                    <p>We're always here to help you</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer blue-bg">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>TUNZY SUB 4 YOU</h4>
-                    <p>Your trusted partner for all digital subscriptions and bill payments.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#faq">FAQ</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="airtime.html">Airtime & Data</a></li>
-                        <li><a href="tv.html">Cable TV</a></li>
-                        <li><a href="electricity.html">Electricity</a></li>
-                        <li><a href="results.html">Results Checker</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Contact Us</h4>
-                    <ul>
-                        <li>📧 support@tunzyshop.com</li>
-                        <li>📞 +234 906 734 5425</li>
-                        <li>📍 Lagos, Nigeria</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 TUNZY SUB 4 YOU. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/app.js"></script>
+        // Fund wallet
+        function fundWallet() {
+            const amount = prompt('Enter amount to fund (₦):', '1000');
+            if (amount) {
+                alert(`Funding ₦${amount} - Paystack integration coming`);
+            }
+        }
+    </script>
 </body>
-                  </html>
+</html>
