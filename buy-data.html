@@ -6,15 +6,61 @@
     <title>Buy Data - TUNZY SUB 4 YOU</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #0066cc;
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
         .network-selector {
             padding: 20px;
         }
+
+        .network-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
         .network-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin: 20px 0;
         }
+
         .network-card {
             background: #f8f9fa;
             padding: 20px;
@@ -22,20 +68,65 @@
             text-align: center;
             cursor: pointer;
             border: 2px solid transparent;
+            transition: all 0.3s;
         }
+
+        .network-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
+        }
+
         .network-card.selected {
             border-color: #0066cc;
             background: #e6f0ff;
         }
+
         .network-card img {
             width: 60px;
             height: 60px;
             object-fit: contain;
             margin-bottom: 10px;
         }
-        .plans-list {
+
+        .network-card span {
+            display: block;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .phone-input {
             padding: 20px;
         }
+
+        .phone-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .phone-input input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .phone-input input:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+
+        .plans-section {
+            padding: 20px;
+        }
+
+        .plans-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
         .plan-item {
             background: white;
             padding: 15px;
@@ -44,12 +135,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #e0e0e0;
             cursor: pointer;
+            transition: all 0.2s;
         }
+
         .plan-item:hover {
             border-color: #0066cc;
         }
+
+        .plan-item.selected {
+            border-color: #0066cc;
+            background: #e6f0ff;
+        }
+
+        .plan-info h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .plan-info p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .plan-price {
+            font-weight: bold;
+            color: #0066cc;
+            font-size: 18px;
+        }
+
         .purchase-btn {
             width: calc(100% - 40px);
             margin: 20px;
@@ -61,6 +176,36 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .purchase-btn:hover:not(:disabled) {
+            background: #004d99;
+        }
+
+        .purchase-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .balance-info {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-label {
+            color: #666;
+        }
+
+        .balance-value {
+            font-weight: bold;
+            color: #0066cc;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -71,63 +216,217 @@
             <h1>Buy Data</h1>
         </div>
 
+        <!-- Balance Display -->
+        <div class="balance-info">
+            <span class="balance-label">Your Balance</span>
+            <span class="balance-value" id="balanceDisplay">₦5,000.00</span>
+        </div>
+
+        <!-- Network Selection with YOUR logos -->
         <div class="network-selector">
             <h3>Select Network</h3>
             <div class="network-grid">
-                <div class="network-card selected" onclick="selectNetwork('mtn')">
-                    <img src="assets/networks/mtn-logo.jpg" alt="MTN">
-                    <div>MTN</div>
+                <!-- MTN - mtn-logo.png -->
+                <div class="network-card" onclick="selectNetwork('mtn')" id="net-mtn">
+                    <img src="assets/networks/mtn-logo.png" alt="MTN" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none;">MTN</span>
+                    <span>MTN</span>
                 </div>
-                <div class="network-card" onclick="selectNetwork('glo')">
-                    <img src="assets/networks/glo-logo.jpg" alt="GLO">
-                    <div>GLO</div>
+                
+                <!-- GLO - glo-logo.png -->
+                <div class="network-card" onclick="selectNetwork('glo')" id="net-glo">
+                    <img src="assets/networks/glo-logo.png" alt="GLO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none;">GLO</span>
+                    <span>GLO</span>
                 </div>
-                <div class="network-card" onclick="selectNetwork('airtel')">
-                    <img src="assets/networks/airtel-logo.jpg" alt="AIRTEL">
-                    <div>AIRTEL</div>
+                
+                <!-- Airtel - airtel-logo.jpeg -->
+                <div class="network-card" onclick="selectNetwork('airtel')" id="net-airtel">
+                    <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none;">AIRTEL</span>
+                    <span>AIRTEL</span>
                 </div>
-                <div class="network-card" onclick="selectNetwork('9mobile')">
-                    <img src="assets/networks/etisalat-logo.jpg" alt="9MOBILE">
-                    <div>9MOBILE</div>
+                
+                <!-- 9mobile - 9mobile-logo.jpeg -->
+                <div class="network-card" onclick="selectNetwork('9mobile')" id="net-9mobile">
+                    <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <span style="display:none;">9MOBILE</span>
+                    <span>9MOBILE</span>
                 </div>
             </div>
         </div>
 
-        <div class="plans-list">
+        <!-- Phone Number Input -->
+        <div class="phone-input">
+            <label>Phone Number</label>
+            <input type="tel" id="phoneNumber" placeholder="08012345678" value="08012345678">
+        </div>
+
+        <!-- Data Plans -->
+        <div class="plans-section">
             <h3>Select Plan</h3>
-            <div class="plan-item">
-                <div>
-                    <div style="font-weight: bold;">1GB</div>
-                    <div style="font-size: 12px; color: #999;">Monthly Plan</div>
-                </div>
-                <div style="font-weight: bold; color: #0066cc;">₦500</div>
-            </div>
-            <div class="plan-item">
-                <div>
-                    <div style="font-weight: bold;">2GB</div>
-                    <div style="font-size: 12px; color: #999;">Monthly Plan</div>
-                </div>
-                <div style="font-weight: bold; color: #0066cc;">₦1000</div>
-            </div>
-            <div class="plan-item">
-                <div>
-                    <div style="font-weight: bold;">5GB</div>
-                    <div style="font-size: 12px; color: #999;">Monthly Plan</div>
-                </div>
-                <div style="font-weight: bold; color: #0066cc;">₦2000</div>
-            </div>
+            <div id="plansContainer"></div>
         </div>
 
-        <button class="purchase-btn">Purchase Data</button>
+        <!-- Purchase Button -->
+        <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>Select a plan</button>
     </div>
 
     <script>
+        // Data plans
+        const dataPlans = {
+            mtn: [
+                { name: '100MB', price: 100, validity: 'Daily' },
+                { name: '350MB', price: 200, validity: 'Daily' },
+                { name: '750MB', price: 300, validity: 'Daily' },
+                { name: '1GB', price: 500, validity: 'Monthly' },
+                { name: '2GB', price: 1000, validity: 'Monthly' },
+                { name: '5GB', price: 2000, validity: 'Monthly' }
+            ],
+            glo: [
+                { name: '500MB', price: 300, validity: 'Weekly' },
+                { name: '1GB', price: 500, validity: 'Weekly' },
+                { name: '2GB', price: 800, validity: 'Monthly' },
+                { name: '3GB', price: 1200, validity: 'Monthly' }
+            ],
+            airtel: [
+                { name: '500MB', price: 300, validity: 'Weekly' },
+                { name: '1GB', price: 500, validity: 'Weekly' },
+                { name: '2GB', price: 900, validity: 'Monthly' },
+                { name: '3GB', price: 1300, validity: 'Monthly' }
+            ],
+            '9mobile': [
+                { name: '500MB', price: 250, validity: 'Weekly' },
+                { name: '1GB', price: 500, validity: 'Weekly' },
+                { name: '2GB', price: 700, validity: 'Monthly' },
+                { name: '3GB', price: 1000, validity: 'Monthly' }
+            ]
+        };
+
+        let currentNetwork = 'mtn';
+        let selectedPlan = null;
+        let selectedPrice = 0;
+        let userBalance = 5000;
+
+        // Load user balance
+        document.addEventListener('DOMContentLoaded', function() {
+            userBalance = parseFloat(localStorage.getItem('userBalance')) || 5000;
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+            selectNetwork('mtn');
+        });
+
+        // Select network
         function selectNetwork(network) {
+            currentNetwork = network;
+            
+            // Update UI
             document.querySelectorAll('.network-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
+            document.getElementById(`net-${network}`).classList.add('selected');
+            
+            // Display plans
+            displayPlans(network);
+            
+            // Reset selection
+            selectedPlan = null;
+            updatePurchaseButton();
         }
+
+        // Display plans
+        function displayPlans(network) {
+            const container = document.getElementById('plansContainer');
+            const plans = dataPlans[network];
+            
+            let html = '';
+            plans.forEach(plan => {
+                html += `
+                    <div class="plan-item" onclick="selectPlan('${plan.name}', ${plan.price})">
+                        <div class="plan-info">
+                            <h4>${plan.name}</h4>
+                            <p>${plan.validity} Plan</p>
+                        </div>
+                        <div class="plan-price">₦${plan.price}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Select plan
+        function selectPlan(name, price) {
+            selectedPlan = name;
+            selectedPrice = price;
+            
+            document.querySelectorAll('.plan-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            updatePurchaseButton();
+        }
+
+        // Update purchase button
+        function updatePurchaseButton() {
+            const btn = document.getElementById('purchaseBtn');
+            const phone = document.getElementById('phoneNumber').value;
+            
+            if (selectedPlan && phone.length >= 11) {
+                btn.disabled = false;
+                btn.textContent = `Buy ${selectedPlan} for ₦${selectedPrice}`;
+            } else {
+                btn.disabled = true;
+                btn.textContent = 'Select a plan';
+            }
+        }
+
+        // Purchase data
+        function purchaseData() {
+            const phone = document.getElementById('phoneNumber').value;
+            
+            if (!selectedPlan) {
+                alert('Please select a plan');
+                return;
+            }
+            
+            if (phone.length < 11) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+            
+            if (userBalance < selectedPrice) {
+                alert('Insufficient balance! Please fund your wallet.');
+                return;
+            }
+            
+            // Process purchase
+            userBalance -= selectedPrice;
+            localStorage.setItem('userBalance', userBalance);
+            
+            // Add transaction
+            const transaction = {
+                type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
+                amount: `-₦${selectedPrice}`,
+                date: new Date().toLocaleString()
+            };
+            
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            transactions.unshift(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+            
+            alert(`✅ Success! ${selectedPlan} data sent to ${phone}`);
+            
+            // Update balance display
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+            
+            // Reset
+            selectedPlan = null;
+            updatePurchaseButton();
+        }
+
+        // Phone input listener
+        document.getElementById('phoneNumber').addEventListener('input', updatePurchaseButton);
     </script>
 </body>
 </html>
