@@ -80,20 +80,25 @@
             margin-bottom: 15px;
         }
 
-        .profile-stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px 0;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
         }
 
-        .stat {
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: #0066cc;
+            margin-bottom: 5px;
         }
 
         .stat-label {
@@ -101,46 +106,8 @@
             color: #666;
         }
 
-        .menu-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            background: #f8f9fa;
-        }
-
-        .menu-icon {
-            width: 40px;
-            height: 40px;
-            background: #e6f0ff;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0066cc;
-        }
-
-        .menu-text {
-            flex: 1;
-        }
-
-        .menu-title {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-
-        .menu-subtitle {
-            font-size: 12px;
-            color: #999;
-        }
-
         .logout-btn {
-            margin: 20px;
+            width: 100%;
             padding: 15px;
             background: #dc3545;
             color: white;
@@ -149,7 +116,7 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            width: calc(100% - 40px);
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -167,42 +134,14 @@
                 <div class="profile-email" id="profileEmail">loading@email.com</div>
             </div>
 
-            <div class="profile-stats">
-                <div class="stat">
+            <div class="stats-grid">
+                <div class="stat-card">
                     <div class="stat-value" id="statBalance">₦0</div>
                     <div class="stat-label">Balance</div>
                 </div>
-                <div class="stat">
+                <div class="stat-card">
                     <div class="stat-value" id="statTransactions">0</div>
                     <div class="stat-label">Transactions</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="statJoined">2024</div>
-                    <div class="stat-label">Joined</div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <div class="menu-icon">📱</div>
-                <div class="menu-text">
-                    <div class="menu-title">Phone Number</div>
-                    <div class="menu-subtitle" id="profilePhone">08012345678</div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <div class="menu-icon">🔔</div>
-                <div class="menu-text">
-                    <div class="menu-title">Notifications</div>
-                    <div class="menu-subtitle">Email, SMS</div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <div class="menu-icon">🔒</div>
-                <div class="menu-text">
-                    <div class="menu-title">Change Password</div>
-                    <div class="menu-subtitle">Update your password</div>
                 </div>
             </div>
 
@@ -212,10 +151,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const name = localStorage.getItem('userName') || 'John Doe';
-            const email = localStorage.getItem('userEmail') || 'john@example.com';
-            const balance = localStorage.getItem('userBalance') || '5000';
+            const name = localStorage.getItem('userName');
+            const email = localStorage.getItem('userEmail');
+            const balance = localStorage.getItem('userBalance') || '0';
             const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            
+            if (!name) {
+                window.location.href = 'login.html';
+                return;
+            }
             
             document.getElementById('profileName').textContent = name;
             document.getElementById('profileEmail').textContent = email;
@@ -225,6 +169,7 @@
 
         function logout() {
             if (confirm('Logout?')) {
+                localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
         }
