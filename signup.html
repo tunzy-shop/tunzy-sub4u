@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - TUNZY SUB 4 YOU</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Same styles as login.html */
         * {
             margin: 0;
             padding: 0;
@@ -37,10 +35,37 @@
 
         .logo {
             text-align: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #0066cc;
             margin-bottom: 30px;
+        }
+
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #0066cc;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo h1 {
+            color: #0066cc;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
         }
 
         .form-group {
@@ -59,7 +84,7 @@
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 16px;
         }
 
         .form-group input:focus {
@@ -74,14 +99,16 @@
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
             margin: 20px 0;
         }
 
         .signup-btn:hover {
             background: #004d99;
+            transform: translateY(-2px);
         }
 
         .login-link {
@@ -103,27 +130,20 @@
             margin-bottom: 20px;
             display: none;
         }
-
-        .success-message {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div class="signup-container">
         <div class="signup-box">
             <div class="logo">
-                TUNZY SUB 4 YOU
-                <span>Create Your Account</span>
+                <div class="logo-circle">
+                    <img src="assets/my-logo.jpg" alt="TUNZY">
+                </div>
+                <h1>TUNZY SUB 4 YOU</h1>
+                <p>Create your account</p>
             </div>
 
             <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
 
             <form id="signupForm">
                 <div class="form-group">
@@ -154,7 +174,7 @@
                 <button type="submit" class="signup-btn">Create Account</button>
 
                 <div class="login-link">
-                    Already have an account? <a href="login.html">Login</a>
+                    Already have an account? <a href="login.html">Sign In</a>
                 </div>
             </form>
         </div>
@@ -169,6 +189,9 @@
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Clear previous error
+            document.getElementById('errorMessage').style.display = 'none';
             
             // Validate
             if (!name || !email || !phone || !password) {
@@ -197,12 +220,12 @@
             
             // Create new user
             const newUser = {
-                email: email,
-                password: password,
                 name: name,
+                email: email,
                 phone: phone,
-                role: 'user',
+                password: password,
                 balance: 0,
+                role: 'user',
                 created: new Date().toISOString()
             };
             
@@ -210,32 +233,25 @@
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
             
-            // Save user data for session
+            // Auto login
+            localStorage.setItem('currentUser', JSON.stringify({
+                email: email,
+                name: name,
+                role: 'user'
+            }));
+            
             localStorage.setItem('userName', name);
             localStorage.setItem('userEmail', email);
             localStorage.setItem('userBalance', '0');
             
-            showSuccess('Account created! Redirecting to login...');
-            
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
+            alert('✅ Account created successfully!');
+            window.location.href = 'index.html';
         });
 
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.style.display = 'block';
             errorDiv.textContent = message;
-            
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 3000);
-        }
-
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.style.display = 'block';
-            successDiv.textContent = message;
         }
     </script>
 </body>
