@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TUNZY SUB 4 YOU</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             margin: 0;
@@ -36,18 +35,38 @@
 
         .logo {
             text-align: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #0066cc;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
-        .logo span {
-            display: block;
-            font-size: 1rem;
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #0066cc;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo h1 {
+            color: #0066cc;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
             color: #666;
-            margin-top: 5px;
-            font-weight: normal;
+            font-size: 14px;
         }
 
         .form-group {
@@ -66,24 +85,13 @@
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 16px;
             transition: all 0.3s;
         }
 
         .form-group input:focus {
             border-color: #0066cc;
             outline: none;
-        }
-
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-
-        .forgot-password a {
-            color: #0066cc;
-            text-decoration: none;
-            font-size: 0.9rem;
         }
 
         .login-btn {
@@ -93,11 +101,11 @@
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 15px;
+            margin: 10px 0;
         }
 
         .login-btn:hover {
@@ -107,6 +115,7 @@
 
         .signup-link {
             text-align: center;
+            margin: 20px 0;
             color: #666;
         }
 
@@ -134,67 +143,28 @@
             display: none;
         }
 
-        /* Modal for Password Reset */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .modal-content h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+        .forgot-password {
+            text-align: right;
             margin-bottom: 15px;
         }
 
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .cancel-btn {
-            background: #f5f5f5;
+        .forgot-password a {
             color: #666;
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        .reset-btn {
-            background: #0066cc;
-            color: white;
+        .forgot-password a:hover {
+            color: #0066cc;
+        }
+
+        .demo-note {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -202,15 +172,16 @@
     <div class="login-container">
         <div class="login-box">
             <div class="logo">
-                TUNZY SUB 4 YOU
-                <span>Sign in to your account</span>
+                <div class="logo-circle">
+                    <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=T'">
+                </div>
+                <h1>TUNZY SUB 4 YOU</h1>
+                <p>Sign in to your account</p>
             </div>
 
-            <!-- Error/Success Messages -->
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
 
-            <!-- Login Form -->
             <form id="loginForm">
                 <div class="form-group">
                     <label>Email Address</label>
@@ -232,103 +203,104 @@
                     Don't have an account? <a href="signup.html">Create Account</a>
                 </div>
             </form>
+
+            <div class="demo-note">
+                Secure login • Your data is protected
+            </div>
         </div>
     </div>
 
     <!-- Password Reset Modal -->
-    <div class="modal" id="resetModal">
-        <div class="modal-content">
-            <h3>Reset Password</h3>
-            <p style="margin-bottom: 15px; color: #666;">Enter your email to receive reset instructions</p>
+    <div id="resetModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+        <div style="background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 350px;">
+            <h3 style="margin-bottom: 15px; color: #333;">Reset Password</h3>
+            <p style="margin-bottom: 20px; color: #666; font-size: 14px;">Enter your email to receive reset instructions</p>
             
-            <input type="email" id="resetEmail" placeholder="Your email address">
+            <input type="email" id="resetEmail" placeholder="Your email address" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; margin-bottom: 20px;">
             
-            <div class="modal-buttons">
-                <button class="cancel-btn" onclick="hideResetModal()">Cancel</button>
-                <button class="reset-btn" onclick="resetPassword()">Send Reset Link</button>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="hideResetModal()" style="flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                <button onclick="resetPassword()" style="flex: 1; padding: 12px; background: #0066cc; color: white; border: none; border-radius: 8px; cursor: pointer;">Send Reset</button>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // USER DATABASE
+        // SIMPLE LOGIN - NO LOOPS!
         // ============================================
-        const users = [
-            {
-                email: 'admin@tunzy.com',
-                password: 'Admin123',
-                name: 'Admin User',
-                role: 'admin'
+
+        // Check if already logged in - ONCE and stop
+        (function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                if (user.role === 'admin') {
+                    window.location.replace('admin-dashboard.html');
+                } else {
+                    window.location.replace('index.html');
+                }
+                return;
             }
-        ];
+        })();
 
-        // Load existing users from localStorage
-        function loadUsers() {
-            const saved = localStorage.getItem('users');
-            if (saved) {
-                return JSON.parse(saved);
-            }
-            // Save default admin only
-            localStorage.setItem('users', JSON.stringify(users));
-            return users;
-        }
-
-        // Save a new user (from signup)
-        function saveUser(userData) {
-            const users = loadUsers();
-            users.push(userData);
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        // ============================================
-        // LOGIN FUNCTION
-        // ============================================
+        // Handle login
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
+            // Clear previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
             // Get users from localStorage
-            const users = loadUsers();
+            const users = JSON.parse(localStorage.getItem('users')) || [];
             
             // Find user
             const user = users.find(u => u.email === email && u.password === password);
             
             if (user) {
                 // Login successful
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
+                
+                // Save current user
                 localStorage.setItem('currentUser', JSON.stringify({
                     email: user.email,
                     name: user.name,
                     role: user.role || 'user'
                 }));
                 
-                showSuccess('Login successful! Redirecting...');
+                // Save user data for app
+                localStorage.setItem('userName', user.name);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userBalance', user.balance || '0');
                 
-                // Redirect based on role
+                // Redirect
                 setTimeout(() => {
                     if (user.role === 'admin') {
                         window.location.href = 'admin-dashboard.html';
                     } else {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'index.html';
                     }
                 }, 1500);
             } else {
                 // Login failed
-                showError('Invalid email or password');
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'Invalid email or password';
+                document.getElementById('password').value = '';
             }
         });
 
-        // ============================================
-        // PASSWORD RESET
-        // ============================================
+        // Password reset functions
         function showResetModal() {
-            document.getElementById('resetModal').classList.add('active');
+            document.getElementById('resetModal').style.display = 'flex';
         }
 
         function hideResetModal() {
-            document.getElementById('resetModal').classList.remove('active');
+            document.getElementById('resetModal').style.display = 'none';
             document.getElementById('resetEmail').value = '';
         }
 
@@ -340,58 +312,23 @@
                 return;
             }
             
-            const users = loadUsers();
+            const users = JSON.parse(localStorage.getItem('users')) || [];
             const user = users.find(u => u.email === email);
             
             if (user) {
-                // In real app, you'd send an email
-                alert(`✅ Password reset link sent to ${email}\n\nPlease check your email.`);
-                
-                // Generate temporary password (in real app)
-                // const tempPassword = Math.random().toString(36).slice(-8);
-                // user.password = tempPassword;
-                // localStorage.setItem('users', JSON.stringify(users));
+                alert(`✅ Password reset link sent to ${email}`);
+                hideResetModal();
             } else {
                 alert('❌ Email not found');
             }
-            
-            hideResetModal();
         }
 
-        // ============================================
-        // HELPER FUNCTIONS
-        // ============================================
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = message;
-            
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 3000);
-        }
-
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.style.display = 'block';
-            successDiv.textContent = message;
-        }
-
-        // Check if already logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-                const user = JSON.parse(currentUser);
-                if (user.role === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
+        // Allow Enter key
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
             }
         });
-
-        // Expose functions for signup page
-        window.saveUser = saveUser;
     </script>
 </body>
 </html>
