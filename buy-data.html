@@ -6,582 +6,504 @@
     <title>Buy Data - TUNZY SUB 4 YOU</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .network-tabs {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .network-tab {
-            flex: 1;
-            min-width: 100px;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
             padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            text-align: center;
         }
-        .network-tab:hover {
-            border-color: var(--primary-blue);
-            transform: translateY(-2px);
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
         }
-        .network-tab.active {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-        }
-        .network-tab.mtn.active { background: #ffcc00; color: black; border-color: #ffcc00; }
-        .network-tab.glo.active { background: #00a859; color: white; border-color: #00a859; }
-        .network-tab.airtel.active { background: #e60000; color: white; border-color: #e60000; }
-        .network-tab.ninemobile.active { background: #00aeef; color: white; border-color: #00aeef; }
-        
-        .data-plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .data-plan-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        .data-plan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-color: var(--primary-blue);
-        }
-        .data-plan-card.selected {
-            border-color: var(--primary-blue);
-            background: var(--light-blue);
-        }
-        .data-plan-card.popular::before {
-            content: "🔥 POPULAR";
-            position: absolute;
-            top: 10px;
-            right: -30px;
-            background: #ff4444;
-            color: white;
-            padding: 5px 30px;
-            transform: rotate(45deg);
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-        .plan-size {
+
+        .back-btn {
             font-size: 1.5rem;
+            text-decoration: none;
+            color: #0066cc;
             font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
-        .plan-price {
-            font-size: 2rem;
+
+        .page-title {
+            font-size: 1.3rem;
             font-weight: bold;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
+            color: #0066cc;
         }
-        .plan-validity {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        .plan-description {
-            font-size: 0.9rem;
-            color: #999;
-        }
-        .balance-display {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #0066cc, #004d99);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 15px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .balance-amount {
-            font-size: 2rem;
+
+        .balance-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .balance-value {
+            font-size: 1.5rem;
             font-weight: bold;
         }
-        .phone-input {
+
+        /* Network Tabs */
+        .network-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .network-tab {
+            flex: 1;
+            min-width: 70px;
+            padding: 12px 5px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .network-tab.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        /* Phone Input */
+        .input-group {
             margin: 20px 0;
         }
-        .phone-input label {
+
+        .input-group label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
-        .phone-input input {
+
+        .input-group input {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
-        .phone-input input:focus {
-            border-color: var(--primary-blue);
+
+        .input-group input:focus {
+            border-color: #0066cc;
             outline: none;
         }
+
+        /* Data Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .plan-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .plan-card:hover {
+            border-color: #0066cc;
+        }
+
+        .plan-card.selected {
+            border-color: #0066cc;
+            background: #e6f0ff;
+        }
+
+        .plan-size {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .plan-price {
+            color: #0066cc;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Purchase Button */
         .purchase-btn {
             width: 100%;
-            padding: 20px;
-            background: var(--primary-blue);
+            padding: 18px;
+            background: #0066cc;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
             margin: 20px 0;
         }
-        .purchase-btn:hover:not(:disabled) {
-            background: var(--dark-blue);
-            transform: translateY(-2px);
-        }
+
         .purchase-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
-        .quick-amounts {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+
+        .purchase-btn:hover:not(:disabled) {
+            background: #004d99;
         }
-        .quick-amount {
-            flex: 1;
-            padding: 10px;
-            background: var(--light-blue);
-            border: 2px solid var(--light-blue);
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        .quick-amount:hover {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-        }
-        .transaction-history {
-            margin-top: 40px;
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .transaction-item:last-child {
-            border-bottom: none;
-        }
-        .transaction-success { color: #28a745; }
-        .transaction-pending { color: #ffc107; }
-        .transaction-failed { color: #dc3545; }
     </style>
 </head>
 <body>
-    <nav class="navbar blue-bg">
-        <div class="container">
-            <div class="logo">
-                <span class="logo-icon">🔵</span>
-                <span class="logo-text">TUNZY SUB 4 YOU</span>
-            </div>
-            <div class="nav-links">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="buy-data.html" class="active">Buy Data</a>
-                <a href="airtime.html">Airtime</a>
-                <a href="tv.html">TV</a>
-                <a href="electricity.html">Electricity</a>
-                <a href="history.html">History</a>
-                <span class="wallet-balance" id="walletBalance">💰 ₦5,000.00</span>
-            </div>
-        </div>
-    </nav>
-
     <div class="container">
-        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
-            <h1>📱 Buy Data Bundle</h1>
-            <p>Select your network and preferred data plan</p>
-
-            <!-- Balance Display -->
-            <div class="balance-display" id="balanceDisplay">
-                <div>
-                    <h3>Your Wallet Balance</h3>
-                    <p class="balance-amount" id="displayBalance">₦5,000.00</p>
-                </div>
-                <button class="btn btn-light" onclick="fundWallet()">➕ Fund Wallet</button>
-            </div>
-
-            <!-- Network Selection -->
-            <h3>Select Network</h3>
-            <div class="network-tabs">
-                <div class="network-tab mtn active" onclick="selectNetwork('mtn')" id="tab-mtn">📱 MTN</div>
-                <div class="network-tab glo" onclick="selectNetwork('glo')" id="tab-glo">📱 Glo</div>
-                <div class="network-tab airtel" onclick="selectNetwork('airtel')" id="tab-airtel">📱 Airtel</div>
-                <div class="network-tab ninemobile" onclick="selectNetwork('9mobile')" id="tab-9mobile">📱 9mobile</div>
-            </div>
-
-            <!-- Phone Number Input -->
-            <div class="phone-input">
-                <label>📞 Phone Number</label>
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number (e.g., 08012345678)" value="08012345678">
-            </div>
-
-            <!-- Data Plans Container -->
-            <div id="dataPlansContainer"></div>
-
-            <!-- Purchase Button -->
-            <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>👉 Select a plan to continue</button>
-
-            <!-- Quick Recharge Amounts (for reference) -->
-            <div class="quick-amounts">
-                <div class="quick-amount" onclick="document.getElementById('phoneNumber').value='08012345678'">Use Demo Number</div>
-                <div class="quick-amount" onclick="checkBalance()">Check Balance</div>
-                <div class="quick-amount" onclick="showHelp()">Need Help?</div>
-            </div>
-
-            <!-- Recent Transactions -->
-            <div class="transaction-history">
-                <h3>Recent Data Purchases</h3>
-                <div id="recentTransactions">
-                    <div class="transaction-item">
-                        <span>📱 MTN 1GB</span>
-                        <span>₦500</span>
-                        <span class="transaction-success">✅ Success</span>
-                        <span>2 mins ago</span>
-                    </div>
-                    <div class="transaction-item">
-                        <span>📱 Glo 2GB</span>
-                        <span>₦1,000</span>
-                        <span class="transaction-success">✅ Success</span>
-                        <span>1 hour ago</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button onclick="goBack()" class="back-btn">←</button>
+            <div class="page-title">Buy Data</div>
+            <div style="width: 30px;"></div>
         </div>
+
+        <!-- Show Current Balance -->
+        <div class="balance-card">
+            <span class="balance-label">Your Balance</span>
+            <span class="balance-value" id="balanceDisplay">₦0.00</span>
+        </div>
+
+        <!-- Network Selection -->
+        <div class="network-tabs">
+            <div class="network-tab active" onclick="selectNetwork('mtn')" id="tab-mtn">MTN</div>
+            <div class="network-tab" onclick="selectNetwork('glo')" id="tab-glo">GLO</div>
+            <div class="network-tab" onclick="selectNetwork('airtel')" id="tab-airtel">AIRTEL</div>
+            <div class="network-tab" onclick="selectNetwork('9mobile')" id="tab-9mobile">9MOBILE</div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="input-group">
+            <label>📱 Phone Number</label>
+            <input type="tel" id="phoneNumber" placeholder="08012345678" value="08012345678">
+        </div>
+
+        <!-- Data Plans Container -->
+        <div id="plansContainer"></div>
+
+        <!-- Purchase Button -->
+        <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>
+            Select a plan
+        </button>
     </div>
 
     <script>
-        // Global variables
-        let currentNetwork = 'mtn';
+        // ============================================
+        // VTPASS CONFIGURATION - PUT YOUR KEYS HERE
+        // ============================================
+        const VTPASS = {
+            BASE_URL: 'https://api.vtpass.com/api',
+            PUBLIC_KEY: 'YOUR_VTPASS_PUBLIC_KEY',  // 🔴 REPLACE THIS
+            SECRET_KEY: 'YOUR_VTPASS_SECRET_KEY'   // 🔴 REPLACE THIS
+        };
+
+        // User data
+        let currentUser = {
+            balance: 0,
+            email: ''
+        };
+
+        // Selected values
+        let selectedNetwork = 'mtn';
         let selectedPlan = null;
         let selectedPrice = 0;
-        let selectedPlanId = '';
-        let userBalance = 5000; // This would come from actual user data
+        let selectedPlanCode = '';
 
-        // Data plans for all networks
+        // Data plans from VTPASS
         const dataPlans = {
             mtn: [
-                { id: 'mtn-100mb', size: '100MB', price: 100, validity: 'Daily', popular: false, description: '100MB Daily Plan' },
-                { id: 'mtn-350mb', size: '350MB', price: 200, validity: 'Daily', popular: false, description: '350MB Daily Plan' },
-                { id: 'mtn-750mb', size: '750MB', price: 300, validity: 'Daily', popular: true, description: '750MB Daily Plan' },
-                { id: 'mtn-1gb', size: '1GB', price: 500, validity: 'Monthly', popular: true, description: '1GB Monthly Plan' },
-                { id: 'mtn-2gb', size: '2GB', price: 1000, validity: 'Monthly', popular: false, description: '2GB Monthly Plan' },
-                { id: 'mtn-3gb', size: '3GB', price: 1500, validity: 'Monthly', popular: false, description: '3GB Monthly Plan' },
-                { id: 'mtn-5gb', size: '5GB', price: 2000, validity: 'Monthly', popular: false, description: '5GB Monthly Plan' },
-                { id: 'mtn-10gb', size: '10GB', price: 3000, validity: 'Monthly', popular: false, description: '10GB Monthly Plan' }
+                { name: '100MB', price: 100, code: 'mtn-daily-100mb', validity: 'Daily' },
+                { name: '350MB', price: 200, code: 'mtn-daily-350mb', validity: 'Daily' },
+                { name: '750MB', price: 300, code: 'mtn-daily-750mb', validity: 'Daily' },
+                { name: '1GB', price: 500, code: 'mtn-monthly-1gb', validity: 'Monthly' },
+                { name: '2GB', price: 1000, code: 'mtn-monthly-2gb', validity: 'Monthly' },
+                { name: '3GB', price: 1500, code: 'mtn-monthly-3gb', validity: 'Monthly' },
+                { name: '5GB', price: 2000, code: 'mtn-monthly-5gb', validity: 'Monthly' },
+                { name: '10GB', price: 3000, code: 'mtn-monthly-10gb', validity: 'Monthly' }
             ],
             glo: [
-                { id: 'glo-500mb', size: '500MB', price: 300, validity: 'Weekly', popular: false, description: '500MB Weekly Plan' },
-                { id: 'glo-1gb', size: '1GB', price: 500, validity: 'Weekly', popular: true, description: '1GB Weekly Plan' },
-                { id: 'glo-2gb', size: '2GB', price: 800, validity: 'Monthly', popular: false, description: '2GB Monthly Plan' },
-                { id: 'glo-3gb', size: '3GB', price: 1200, validity: 'Monthly', popular: false, description: '3GB Monthly Plan' },
-                { id: 'glo-5gb', size: '5GB', price: 1800, validity: 'Monthly', popular: false, description: '5GB Monthly Plan' },
-                { id: 'glo-10gb', size: '10GB', price: 3000, validity: 'Monthly', popular: false, description: '10GB Monthly Plan' }
+                { name: '500MB', price: 300, code: 'glo-weekly-500mb', validity: 'Weekly' },
+                { name: '1GB', price: 500, code: 'glo-weekly-1gb', validity: 'Weekly' },
+                { name: '2GB', price: 800, code: 'glo-monthly-2gb', validity: 'Monthly' },
+                { name: '3GB', price: 1200, code: 'glo-monthly-3gb', validity: 'Monthly' },
+                { name: '5GB', price: 1800, code: 'glo-monthly-5gb', validity: 'Monthly' },
+                { name: '10GB', price: 3000, code: 'glo-monthly-10gb', validity: 'Monthly' }
             ],
             airtel: [
-                { id: 'airtel-500mb', size: '500MB', price: 300, validity: 'Weekly', popular: false, description: '500MB Weekly Plan' },
-                { id: 'airtel-1gb', size: '1GB', price: 500, validity: 'Weekly', popular: true, description: '1GB Weekly Plan' },
-                { id: 'airtel-2gb', size: '2GB', price: 900, validity: 'Monthly', popular: false, description: '2GB Monthly Plan' },
-                { id: 'airtel-3gb', size: '3GB', price: 1300, validity: 'Monthly', popular: false, description: '3GB Monthly Plan' },
-                { id: 'airtel-5gb', size: '5GB', price: 2000, validity: 'Monthly', popular: false, description: '5GB Monthly Plan' },
-                { id: 'airtel-10gb', size: '10GB', price: 3500, validity: 'Monthly', popular: false, description: '10GB Monthly Plan' }
+                { name: '500MB', price: 300, code: 'airtel-weekly-500mb', validity: 'Weekly' },
+                { name: '1GB', price: 500, code: 'airtel-weekly-1gb', validity: 'Weekly' },
+                { name: '2GB', price: 900, code: 'airtel-monthly-2gb', validity: 'Monthly' },
+                { name: '3GB', price: 1300, code: 'airtel-monthly-3gb', validity: 'Monthly' },
+                { name: '5GB', price: 2000, code: 'airtel-monthly-5gb', validity: 'Monthly' },
+                { name: '10GB', price: 3500, code: 'airtel-monthly-10gb', validity: 'Monthly' }
             ],
             '9mobile': [
-                { id: '9mobile-500mb', size: '500MB', price: 250, validity: 'Weekly', popular: false, description: '500MB Weekly Plan' },
-                { id: '9mobile-1gb', size: '1GB', price: 500, validity: 'Weekly', popular: true, description: '1GB Weekly Plan' },
-                { id: '9mobile-2gb', size: '2GB', price: 700, validity: 'Monthly', popular: false, description: '2GB Monthly Plan' },
-                { id: '9mobile-3gb', size: '3GB', price: 1000, validity: 'Monthly', popular: false, description: '3GB Monthly Plan' },
-                { id: '9mobile-5gb', size: '5GB', price: 1500, validity: 'Monthly', popular: false, description: '5GB Monthly Plan' },
-                { id: '9mobile-10gb', size: '10GB', price: 2500, validity: 'Monthly', popular: false, description: '10GB Monthly Plan' }
+                { name: '500MB', price: 250, code: '9mobile-weekly-500mb', validity: 'Weekly' },
+                { name: '1GB', price: 500, code: '9mobile-weekly-1gb', validity: 'Weekly' },
+                { name: '2GB', price: 700, code: '9mobile-monthly-2gb', validity: 'Monthly' },
+                { name: '3GB', price: 1000, code: '9mobile-monthly-3gb', validity: 'Monthly' },
+                { name: '5GB', price: 1500, code: '9mobile-monthly-5gb', validity: 'Monthly' },
+                { name: '10GB', price: 2500, code: '9mobile-monthly-10gb', validity: 'Monthly' }
             ]
         };
 
-        // Initialize page
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            displayDataPlans('mtn');
-            updateBalance();
+            loadUserData();
+            displayPlans('mtn');
         });
+
+        // Load user data
+        function loadUserData() {
+            const savedBalance = localStorage.getItem('userBalance');
+            const savedEmail = localStorage.getItem('userEmail');
+            
+            currentUser.balance = savedBalance ? parseFloat(savedBalance) : 0;
+            currentUser.email = savedEmail || 'user@example.com';
+            
+            document.getElementById('balanceDisplay').textContent = `₦${currentUser.balance.toLocaleString()}.00`;
+        }
+
+        // Update balance
+        function updateBalance() {
+            document.getElementById('balanceDisplay').textContent = `₦${currentUser.balance.toLocaleString()}.00`;
+            localStorage.setItem('userBalance', currentUser.balance);
+        }
+
+        // Go back
+        function goBack() {
+            window.history.back();
+        }
 
         // Select network
         function selectNetwork(network) {
-            currentNetwork = network;
+            selectedNetwork = network;
             
-            // Update tab styles
+            // Update tabs
             document.querySelectorAll('.network-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             document.getElementById(`tab-${network}`).classList.add('active');
             
-            // Display plans for selected network
-            displayDataPlans(network);
+            // Display plans for network
+            displayPlans(network);
             
             // Reset selection
             selectedPlan = null;
             updatePurchaseButton();
         }
 
-        // Display data plans
-        function displayDataPlans(network) {
-            const container = document.getElementById('dataPlansContainer');
+        // Display plans
+        function displayPlans(network) {
+            const container = document.getElementById('plansContainer');
             const plans = dataPlans[network];
             
-            let html = '<h3>Select Data Plan</h3>';
-            html += '<div class="data-plans-grid">';
-            
+            let html = '<div class="plans-grid">';
             plans.forEach(plan => {
                 html += `
-                    <div class="data-plan-card ${plan.popular ? 'popular' : ''}" onclick="selectPlan('${plan.id}', '${plan.size}', ${plan.price})">
-                        <div class="plan-size">${plan.size}</div>
+                    <div class="plan-card" onclick="selectPlan('${plan.name}', ${plan.price}, '${plan.code}')">
+                        <div class="plan-size">${plan.name}</div>
                         <div class="plan-price">₦${plan.price}</div>
-                        <div class="plan-validity">${plan.validity}</div>
-                        <div class="plan-description">${plan.description}</div>
+                        <div style="font-size:0.8rem; color:#666;">${plan.validity}</div>
                     </div>
                 `;
             });
-            
             html += '</div>';
+            
             container.innerHTML = html;
         }
 
-        // Select a plan
-        function selectPlan(planId, size, price) {
-            selectedPlan = size;
+        // Select plan
+        function selectPlan(name, price, code) {
+            selectedPlan = name;
             selectedPrice = price;
-            selectedPlanId = planId;
+            selectedPlanCode = code;
             
-            // Remove selected class from all plans
-            document.querySelectorAll('.data-plan-card').forEach(card => {
+            // Remove selected class from all
+            document.querySelectorAll('.plan-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // Add selected class to clicked plan
+            // Add selected class to clicked
             event.currentTarget.classList.add('selected');
             
             updatePurchaseButton();
         }
 
-        // Update purchase button state
+        // Update purchase button
         function updatePurchaseButton() {
             const btn = document.getElementById('purchaseBtn');
             const phone = document.getElementById('phoneNumber').value;
             
             if (selectedPlan && phone && phone.length >= 11) {
                 btn.disabled = false;
-                btn.textContent = `👉 Purchase ${selectedPlan} for ₦${selectedPrice}`;
-            } else if (!selectedPlan) {
+                btn.textContent = `Buy ${selectedPlan} for ₦${selectedPrice}`;
+            } else {
                 btn.disabled = true;
-                btn.textContent = '👉 Select a plan to continue';
-            } else if (!phone || phone.length < 11) {
-                btn.disabled = true;
-                btn.textContent = '👉 Enter valid phone number';
+                btn.textContent = 'Select a plan';
             }
         }
 
-        // Purchase data
+        // ============================================
+        // PURCHASE DATA WITH VTPASS
+        // ============================================
         async function purchaseData() {
             const phone = document.getElementById('phoneNumber').value;
             
             if (!selectedPlan) {
-                alert('❌ Please select a data plan');
+                alert('Select a plan');
                 return;
             }
             
             if (!phone || phone.length < 11) {
-                alert('❌ Please enter a valid phone number');
+                alert('Valid phone number required');
                 return;
             }
             
-            if (userBalance < selectedPrice) {
-                alert('❌ Insufficient balance! Please fund your wallet.');
+            // CHECK BALANCE FIRST
+            if (currentUser.balance < selectedPrice) {
+                alert(`❌ Insufficient balance! Need ₦${selectedPrice - currentUser.balance} more`);
                 return;
             }
-            
-            // Show loading
-            showCustomLoading(`Purchasing ${selectedPlan} data for ${phone}...`);
-            
+
+            showLoading('Processing data purchase...');
+
             try {
-                // 🔴 HERE IS WHERE YOUR REAL API CALL WILL GO
-                // This connects to VTpass or your provider
-                
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Success!
-                userBalance -= selectedPrice;
-                updateBalance();
-                
-                hideCustomLoading();
-                showCustomSuccess(`✅ Success! ${selectedPlan} data has been sent to ${phone}`);
-                
-                // Add to transaction history
-                addTransaction(phone, selectedPlan, selectedPrice);
-                
-                // Reset selection
-                selectedPlan = null;
-                updatePurchaseButton();
-                
+                // 🔴 VTPASS API CALL
+                // This is the actual VTPASS integration
+                const response = await fetch(`${VTPASS.BASE_URL}/pay`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'api-key': VTPASS.PUBLIC_KEY,
+                        'secret-key': VTPASS.SECRET_KEY
+                    },
+                    body: JSON.stringify({
+                        serviceID: selectedNetwork,
+                        phone: phone,
+                        variation_code: selectedPlanCode,
+                        amount: selectedPrice
+                    })
+                });
+
+                const data = await response.json();
+
+                // Check if successful (VTPASS returns code '000' for success)
+                if (data.code === '000' || data.response_description?.includes('success')) {
+                    // Deduct from balance
+                    currentUser.balance -= selectedPrice;
+                    updateBalance();
+                    
+                    // Add transaction
+                    addTransaction(
+                        'Data Purchase',
+                        `-₦${selectedPrice}`,
+                        'debit',
+                        '📱',
+                        `${selectedNetwork.toUpperCase()} ${selectedPlan}`
+                    );
+                    
+                    hideLoading();
+                    alert(`✅ Success! ${selectedPlan} data sent to ${phone}`);
+                    
+                    // Reset selection
+                    selectedPlan = null;
+                    updatePurchaseButton();
+                    
+                } else {
+                    hideLoading();
+                    alert(`❌ Failed: ${data.response_description || 'Unknown error'}`);
+                }
+
             } catch (error) {
-                hideCustomLoading();
-                showCustomError('❌ Purchase failed. Please try again.');
-                console.error('Purchase error:', error);
+                hideLoading();
+                alert('❌ Network error. Please try again.');
+                console.error('VTPASS Error:', error);
             }
         }
 
-        // Update balance display
-        function updateBalance() {
-            const balanceElements = document.querySelectorAll('#walletBalance, #displayBalance');
-            balanceElements.forEach(el => {
-                if (el) el.textContent = `💰 ₦${userBalance.toLocaleString()}.00`;
-            });
+        // Add transaction
+        function addTransaction(type, amount, className, icon, detail) {
+            const transaction = {
+                type: type,
+                detail: detail || '',
+                amount: amount,
+                date: new Date().toLocaleString(),
+                icon: icon || '📱'
+            };
+            
+            let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            transactions.unshift(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
         }
 
-        // Add transaction to history
-        function addTransaction(phone, plan, amount) {
-            const transactionsDiv = document.getElementById('recentTransactions');
-            const transactionHtml = `
-                <div class="transaction-item">
-                    <span>📱 ${currentNetwork.toUpperCase()} ${plan}</span>
-                    <span>₦${amount}</span>
-                    <span class="transaction-success">✅ Success</span>
-                    <span>Just now</span>
-                </div>
-            `;
-            transactionsDiv.innerHTML = transactionHtml + transactionsDiv.innerHTML;
-        }
-
-        // Custom loading
-        function showCustomLoading(message) {
+        // Helper functions
+        function showLoading(msg) {
             const overlay = document.createElement('div');
-            overlay.className = 'loading-overlay';
-            overlay.id = 'customLoading';
+            overlay.id = 'loading';
+            overlay.style.cssText = `
+                position: fixed; top:0; left:0; right:0; bottom:0;
+                background: rgba(255,255,255,0.9); display:flex;
+                justify-content:center; align-items:center; z-index:9999;
+            `;
             overlay.innerHTML = `
-                <div class="loading-spinner blue-bg">
-                    <div class="spinner"></div>
-                    <p>${message}</p>
+                <div style="background:#0066cc; color:white; padding:20px; border-radius:10px;">
+                    <div style="width:30px; height:30px; border:3px solid white; 
+                                border-top-color:transparent; border-radius:50%; 
+                                animation:spin 1s infinite; margin:0 auto 10px;"></div>
+                    <p>${msg || 'Processing...'}</p>
                 </div>
             `;
             document.body.appendChild(overlay);
         }
 
-        function hideCustomLoading() {
-            const loading = document.getElementById('customLoading');
-            if (loading) loading.remove();
+        function hideLoading() {
+            const el = document.getElementById('loading');
+            if (el) el.remove();
         }
 
-        function showCustomSuccess(message) {
-            alert('✅ ' + message);
-        }
-
-        function showCustomError(message) {
-            alert('❌ ' + message);
-        }
-
-        // Helper functions
-        function fundWallet() {
-            const amount = prompt('Enter amount to fund (₦):', '1000');
-            if (amount) {
-                userBalance += parseInt(amount);
-                updateBalance();
-                showCustomSuccess(`Wallet funded with ₦${amount}`);
-            }
-        }
-
-        function checkBalance() {
-            alert(`Your wallet balance: ₦${userBalance}`);
-        }
-
-        function showHelp() {
-            alert('Need help? Contact support@tunzysub4u.com');
-        }
-
-        // Listen for phone input changes
+        // Phone input listener
         document.getElementById('phoneNumber').addEventListener('input', updatePurchaseButton);
     </script>
+
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
-// Add this to your buy-data.html script, after your existing code
-
-// Load current user balance
-let userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-
-// Function to check balance before purchase
-async function purchaseData() {
-    const phone = document.getElementById('phoneNumber').value;
-    
-    if (!selectedPlan) { alert('Select a plan'); return; }
-    if (!phone || phone.length < 11) { alert('Valid phone number'); return; }
-
-    // --- BALANCE CHECK ---
-    if (userBalance < selectedPrice) {
-        alert(`❌ Insufficient balance! You need ₦${selectedPrice - userBalance} more.`);
-        return;
-    }
-
-    showLoading('Purchasing data...');
-
-    // --- SIMULATED API CALL ---
-    // 🔴 REPLACE THIS WITH YOUR REAL API CALL (e.g., to VTpass)
-    try {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Simulate success
-        const success = true; // Assume API call succeeded
-
-        if (success) {
-            // Deduct from balance
-            userBalance -= selectedPrice;
-            localStorage.setItem('userBalance', userBalance);
-
-            // Record transaction
-            const transaction = {
-                type: 'Data',
-                detail: `${selectedNetwork.toUpperCase()} ${selectedPlan}`,
-                amount: `-₦${selectedPrice}`,
-                date: new Date().toLocaleString(),
-                icon: '📱'
-            };
-            let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-            transactions.unshift(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-
-            hideLoading();
-            alert(`✅ Success! ${selectedPlan} data sent to ${phone}`);
-            
-            // Update balance on page if you have an element
-            // e.g., document.getElementById('walletDisplay').textContent = `₦${userBalance}`;
-        } else {
-            throw new Error('API failed');
-        }
-
-    } catch (error) {
-        hideLoading();
-        alert('❌ Purchase failed. Please try again.');
-        console.error(error);
-    }
-}
