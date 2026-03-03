@@ -39,7 +39,7 @@
             font-size: 2rem;
             font-weight: bold;
             color: #0066cc;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
         .logo span {
@@ -47,6 +47,7 @@
             font-size: 1rem;
             color: #666;
             margin-top: 5px;
+            font-weight: normal;
         }
 
         .form-group {
@@ -202,7 +203,7 @@
         <div class="login-box">
             <div class="logo">
                 TUNZY SUB 4 YOU
-                <span>Your Digital Services Partner</span>
+                <span>Sign in to your account</span>
             </div>
 
             <!-- Error/Success Messages -->
@@ -225,20 +226,12 @@
                     <a href="#" onclick="showResetModal()">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="login-btn">Login</button>
+                <button type="submit" class="login-btn">Sign In</button>
 
                 <div class="signup-link">
-                    Don't have an account? <a href="signup.html">Sign Up</a>
+                    Don't have an account? <a href="signup.html">Create Account</a>
                 </div>
             </form>
-
-            <!-- Admin Login Hint -->
-            <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
-                <small style="color: #999;">
-                    Admin: admin@tunzy.com / Admin123<br>
-                    Demo: user@test.com / password123
-                </small>
-            </div>
         </div>
     </div>
 
@@ -259,7 +252,7 @@
 
     <script>
         // ============================================
-        // USER DATABASE (In real app, this would be backend)
+        // USER DATABASE
         // ============================================
         const users = [
             {
@@ -267,12 +260,6 @@
                 password: 'Admin123',
                 name: 'Admin User',
                 role: 'admin'
-            },
-            {
-                email: 'user@test.com',
-                password: 'password123',
-                name: 'John Doe',
-                role: 'user'
             }
         ];
 
@@ -282,7 +269,7 @@
             if (saved) {
                 return JSON.parse(saved);
             }
-            // Save default users
+            // Save default admin only
             localStorage.setItem('users', JSON.stringify(users));
             return users;
         }
@@ -358,10 +345,9 @@
             
             if (user) {
                 // In real app, you'd send an email
-                // For demo, we'll show the password
-                alert(`✅ Reset link sent to ${email}\n\nDemo Mode - Your password is: ${user.password}`);
+                alert(`✅ Password reset link sent to ${email}\n\nPlease check your email.`);
                 
-                // You could also generate a temporary password
+                // Generate temporary password (in real app)
                 // const tempPassword = Math.random().toString(36).slice(-8);
                 // user.password = tempPassword;
                 // localStorage.setItem('users', JSON.stringify(users));
