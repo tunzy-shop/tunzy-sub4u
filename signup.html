@@ -64,3 +64,17 @@
     <script src="js/app.js"></script>
 </body>
   </html>
+// When user signs up, save their name
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    
+    // Save to localStorage
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userEmail', email);
+    
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+});
