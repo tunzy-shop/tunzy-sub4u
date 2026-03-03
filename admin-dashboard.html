@@ -352,3 +352,90 @@
     // Call this when the admin page loads
     document.addEventListener('DOMContentLoaded', loadDataPlansForAdmin);
 </script>
+<!-- Add this to your admin-dashboard.html where you want price management -->
+
+<div class="admin-section">
+    <h2>📱 Manage VTPASS Prices</h2>
+    
+    <div class="price-section">
+        <h3>Data Plans</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Network</th>
+                    <th>Plan</th>
+                    <th>Current Price</th>
+                    <th>New Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="dataPricesTable">
+                <!-- Filled by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="price-section">
+        <h3>Airtime</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Network</th>
+                    <th>Commission %</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="airtimePricesTable">
+                <!-- Filled by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Load and display data plans for admin
+    function loadPricesForAdmin() {
+        const dataPlans = {
+            mtn: [
+                { name: '100MB', price: 100, code: 'mtn-daily-100mb' },
+                { name: '1GB', price: 500, code: 'mtn-monthly-1gb' },
+                { name: '2GB', price: 1000, code: 'mtn-monthly-2gb' }
+            ],
+            glo: [
+                { name: '500MB', price: 300, code: 'glo-weekly-500mb' },
+                { name: '1GB', price: 500, code: 'glo-weekly-1gb' },
+                { name: '2GB', price: 800, code: 'glo-monthly-2gb' }
+            ]
+        };
+
+        let html = '';
+        for (let network in dataPlans) {
+            dataPlans[network].forEach(plan => {
+                html += `
+                    <tr>
+                        <td>${network.toUpperCase()}</td>
+                        <td>${plan.name}</td>
+                        <td>₦${plan.price}</td>
+                        <td><input type="number" id="price-${plan.code}" value="${plan.price}" min="50"></td>
+                        <td><button onclick="updatePrice('${plan.code}')">Update</button></td>
+                    </tr>
+                `;
+            });
+        }
+        document.getElementById('dataPricesTable').innerHTML = html;
+    }
+
+    function updatePrice(planCode) {
+        const newPrice = document.getElementById(`price-${planCode}`).value;
+        if (!newPrice || newPrice < 50) {
+            alert('Enter valid price');
+            return;
+        }
+        
+        // 🔴 Here you would save to your database
+        alert(`✅ Price updated for ${planCode} to ₦${newPrice}`);
+    }
+
+    // Call on page load
+    document.addEventListener('DOMContentLoaded', loadPricesForAdmin);
+</script>
