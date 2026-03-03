@@ -4,822 +4,233 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - TUNZY SUB 4 YOU</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: Arial, sans-serif;
             background: #f4f6f9;
         }
-
-        .admin-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .admin-sidebar {
-            width: 280px;
+        .header {
             background: #1a1a2e;
             color: white;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
             padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .admin-info {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .admin-avatar {
-            width: 50px;
-            height: 50px;
-            background: #0066cc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .admin-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .admin-role {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .sidebar-nav {
-            padding: 20px 0;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            border: none;
-            background: none;
-            font-size: 1rem;
-        }
-
-        .nav-item:hover {
-            background: #16213e;
-            color: white;
-        }
-
-        .nav-item.active {
-            background: #0066cc;
-            color: white;
-        }
-
-        .nav-item i {
-            width: 30px;
-            font-size: 1.2rem;
-        }
-
-        .badge {
-            margin-left: auto;
-            background: #dc3545;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-        }
-
-        .sidebar-footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* Main Content */
-        .admin-main {
-            flex: 1;
-            margin-left: 280px;
-        }
-
-        .top-bar {
-            background: white;
-            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .page-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .date-time {
-            color: #666;
-        }
-
         .logout-btn {
             background: #dc3545;
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
         }
-
-        .content-area {
-            padding: 30px;
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
-        /* Stats Cards */
-        .stats-grid {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-bottom: 30px;
+            margin: 20px 0;
         }
-
         .stat-card {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
-        .stat-info h3 {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
         .stat-number {
             font-size: 2rem;
-            font-weight: bold;
             color: #0066cc;
+            font-weight: bold;
         }
-
-        .stat-icon {
-            font-size: 2.5rem;
-            opacity: 0.5;
-        }
-
-        /* Tables */
-        .table-container {
+        .section {
             background: white;
-            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .table-header h2 {
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        .admin-table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        .admin-table th {
-            background: #f8f9fa;
-            padding: 15px;
+        th, td {
+            padding: 12px;
             text-align: left;
-            font-weight: 600;
-            color: #333;
+            border-bottom: 1px solid #ddd;
         }
-
-        .admin-table td {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
+        th {
+            background: #f8f9fa;
         }
-
-        .admin-table tr:hover {
-            background: #f5f5f5;
+        .price-input {
+            width: 80px;
+            padding: 5px;
         }
-
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .status-active {
-            background: #d4edda;
-            color: #155724;
-        }
-
         .btn {
-            padding: 8px 15px;
+            padding: 5px 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 3px;
             cursor: pointer;
-            font-weight: 500;
-            margin: 0 5px;
+            margin: 0 2px;
         }
-
         .btn-primary {
             background: #0066cc;
             color: white;
         }
-
         .btn-danger {
             background: #dc3545;
             color: white;
         }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-small {
-            padding: 5px 10px;
-            font-size: 0.9rem;
-        }
-
-        /* Price Management */
-        .price-input {
-            width: 100px;
-            padding: 8px;
-            border: 2px solid #e0e0e0;
-            border-radius: 5px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .admin-main {
-                margin-left: 0;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="admin-wrapper">
-        <!-- Sidebar -->
-        <div class="admin-sidebar">
-            <div class="sidebar-header">
-                <h2>🔵 TUNZY ADMIN</h2>
+    <div class="header">
+        <h2>🔵 TUNZY ADMIN DASHBOARD</h2>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div>Total Users</div>
+                <div class="stat-number" id="totalUsers">0</div>
             </div>
-            
-            <div class="admin-info">
-                <div class="admin-avatar">👤</div>
-                <div class="admin-details">
-                    <div class="admin-name" id="adminName">Loading...</div>
-                    <div class="admin-role">Administrator</div>
-                </div>
+            <div class="stat-card">
+                <div>Today's Transactions</div>
+                <div class="stat-number" id="todayTrans">0</div>
             </div>
-            
-            <nav class="sidebar-nav">
-                <button class="nav-item active" onclick="loadPage('dashboard')">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </button>
-                <button class="nav-item" onclick="loadPage('users')">
-                    <i class="fas fa-users"></i>
-                    <span>Users</span>
-                    <span class="badge" id="userCount">0</span>
-                </button>
-                <button class="nav-item" onclick="loadPage('transactions')">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Transactions</span>
-                    <span class="badge" id="transactionCount">0</span>
-                </button>
-                <button class="nav-item" onclick="loadPage('prices')">
-                    <i class="fas fa-tag"></i>
-                    <span>Manage Prices</span>
-                </button>
-                <button class="nav-item" onclick="loadPage('api-settings')">
-                    <i class="fas fa-key"></i>
-                    <span>API Settings</span>
-                </button>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <button class="nav-item" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </button>
+            <div class="stat-card">
+                <div>Total Revenue</div>
+                <div class="stat-number" id="totalRevenue">₦0</div>
+            </div>
+            <div class="stat-card">
+                <div>Active Services</div>
+                <div class="stat-number">4</div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="admin-main">
-            <div class="top-bar">
-                <div class="page-title" id="currentPage">Dashboard</div>
-                <div class="admin-actions">
-                    <div class="date-time" id="currentDateTime"></div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
-            </div>
+        <!-- Users Section -->
+        <div class="section">
+            <h3>👥 Recent Users</h3>
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="usersBody"></tbody>
+            </table>
+        </div>
 
-            <div class="content-area" id="contentArea">
-                <!-- Content will load here -->
-                <div style="text-align: center; padding: 50px;">
-                    <div class="spinner" style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top-color: #0066cc; border-radius: 50%; animation: spin 1s infinite; margin: 20px auto;"></div>
-                    <p>Loading dashboard...</p>
-                </div>
-            </div>
+        <!-- Price Management -->
+        <div class="section">
+            <h3>💰 Manage Data Prices</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Network</th>
+                        <th>Plan</th>
+                        <th>Current Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MTN</td>
+                        <td>1GB</td>
+                        <td><input type="number" id="price-mtn-1gb" class="price-input" value="500"></td>
+                        <td><button class="btn btn-primary" onclick="updatePrice('mtn-1gb')">Update</button></td>
+                    </tr>
+                    <tr>
+                        <td>GLO</td>
+                        <td>1GB</td>
+                        <td><input type="number" id="price-glo-1gb" class="price-input" value="500"></td>
+                        <td><button class="btn btn-primary" onclick="updatePrice('glo-1gb')">Update</button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <style>
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-
     <script>
         // ============================================
-        // CHECK ADMIN LOGIN
+        // CHECK LOGIN - SIMPLE AND CLEAN
+        // ============================================
+        (function() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            console.log('Login status:', isLoggedIn);
+            
+            if (isLoggedIn !== 'true') {
+                alert('Please login first!');
+                window.location.replace('admin-login.html');
+                return;
+            }
+        })();
+
+        // ============================================
+        // LOAD DASHBOARD DATA
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Admin page loaded');
+            loadUsers();
+            loadStats();
+        });
+
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const tbody = document.getElementById('usersBody');
             
-            // Check if admin is logged in
-            const currentUser = localStorage.getItem('currentUser');
-            console.log('Current user:', currentUser);
-            
-            if (!currentUser) {
-                console.log('No user found, redirecting to login');
-                window.location.href = 'login.html';
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users yet</td></tr>';
                 return;
             }
             
-            try {
-                const user = JSON.parse(currentUser);
-                console.log('User role:', user.role);
-                
-                if (user.role !== 'admin') {
-                    alert('Access denied. Admin only.');
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
-                
-                document.getElementById('adminName').textContent = user.name || 'Admin';
-                
-                // Load dashboard by default
-                loadPage('dashboard');
-                updateDateTime();
-                setInterval(updateDateTime, 1000);
-                loadCounts();
-                
-            } catch (e) {
-                console.error('Error parsing user:', e);
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Update date and time
-        function updateDateTime() {
-            const now = new Date();
-            document.getElementById('currentDateTime').textContent = 
-                now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'login.html';
-            }
-        }
-
-        // ============================================
-        // LOAD DIFFERENT PAGES
-        // ============================================
-        function loadPage(page) {
-            console.log('Loading page:', page);
-            
-            // Update active state
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
+            let html = '';
+            users.slice(0, 5).forEach(user => {
+                html += `
+                    <tr>
+                        <td>${user.name || 'N/A'}</td>
+                        <td>${user.email}</td>
+                        <td>₦${user.balance || 0}</td>
+                        <td><span style="color: green;">● Active</span></td>
+                    </tr>
+                `;
             });
-            event.currentTarget.classList.add('active');
-            
-            // Update page title
-            document.getElementById('currentPage').textContent = 
-                page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            
-            // Load content based on page
-            switch(page) {
-                case 'dashboard':
-                    loadDashboard();
-                    break;
-                case 'users':
-                    loadUsers();
-                    break;
-                case 'transactions':
-                    loadTransactions();
-                    break;
-                case 'prices':
-                    loadPriceManagement();
-                    break;
-                case 'api-settings':
-                    loadAPISettings();
-                    break;
-                default:
-                    loadDashboard();
-            }
+            tbody.innerHTML = html;
         }
 
-        // ============================================
-        // DASHBOARD
-        // ============================================
-        function loadDashboard() {
-            console.log('Loading dashboard content');
-            
+        function loadStats() {
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
             
-            // Calculate today's transactions
-            const today = new Date().toLocaleDateString();
-            const todayTransactions = transactions.filter(t => 
-                t.date && t.date.includes(today)
-            ).length;
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('todayTrans').textContent = transactions.length;
             
-            // Calculate total revenue
-            const totalRevenue = transactions
+            const revenue = transactions
                 .filter(t => t.amount && t.amount.includes('-'))
-                .reduce((sum, t) => {
-                    const num = parseInt(t.amount.replace(/[^0-9]/g, '')) || 0;
-                    return sum + num;
-                }, 0);
+                .reduce((sum, t) => sum + (parseInt(t.amount.replace(/[^0-9]/g, '')) || 0), 0);
             
-            const content = `
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Total Users</h3>
-                            <div class="stat-number">${users.length}</div>
-                        </div>
-                        <div class="stat-icon">👥</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Today's Transactions</h3>
-                            <div class="stat-number">${todayTransactions}</div>
-                        </div>
-                        <div class="stat-icon">💳</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Total Revenue</h3>
-                            <div class="stat-number">₦${totalRevenue.toLocaleString()}</div>
-                        </div>
-                        <div class="stat-icon">💰</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <h3>Total Transactions</h3>
-                            <div class="stat-number">${transactions.length}</div>
-                        </div>
-                        <div class="stat-icon">📊</div>
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>Recent Users</h2>
-                    </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Balance</th>
-                                <th>Joined</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${users.slice(0, 5).map(u => `
-                                <tr>
-                                    <td>${u.name || 'N/A'}</td>
-                                    <td>${u.email}</td>
-                                    <td>₦${u.balance || 0}</td>
-                                    <td>${u.created ? new Date(u.created).toLocaleDateString() : 'N/A'}</td>
-                                    <td><span class="status-badge status-active">Active</span></td>
-                                </tr>
-                            `).join('')}
-                            ${users.length === 0 ? '<tr><td colspan="5" style="text-align: center;">No users yet</td></tr>' : ''}
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>Recent Transactions</h2>
-                    </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${transactions.slice(0, 5).map(t => `
-                                <tr>
-                                    <td>${t.type || 'N/A'}</td>
-                                    <td>${t.amount || 'N/A'}</td>
-                                    <td>${t.date || 'N/A'}</td>
-                                    <td><span class="status-badge status-active">Success</span></td>
-                                </tr>
-                            `).join('')}
-                            ${transactions.length === 0 ? '<tr><td colspan="4" style="text-align: center;">No transactions yet</td></tr>' : ''}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            document.getElementById('contentArea').innerHTML = content;
-        }
-
-        // ============================================
-        // USERS MANAGEMENT
-        // ============================================
-        function loadUsers() {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>User Management</h2>
-                        <button class="btn btn-success" onclick="addUser()">+ Add User</button>
-                    </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Balance</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${users.map((u, index) => `
-                                <tr>
-                                    <td>${u.name || 'N/A'}</td>
-                                    <td>${u.email}</td>
-                                    <td>${u.phone || 'N/A'}</td>
-                                    <td>₦${u.balance || 0}</td>
-                                    <td><span class="status-badge ${u.role === 'admin' ? 'status-active' : ''}">${u.role || 'user'}</span></td>
-                                    <td>
-                                        <button class="btn btn-primary btn-small" onclick="editUser('${u.email}')">Edit</button>
-                                        <button class="btn btn-danger btn-small" onclick="deleteUser('${u.email}')">Delete</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                            ${users.length === 0 ? '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>' : ''}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            document.getElementById('contentArea').innerHTML = content;
+            document.getElementById('totalRevenue').textContent = `₦${revenue}`;
         }
 
         // ============================================
         // PRICE MANAGEMENT
         // ============================================
-        function loadPriceManagement() {
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>📱 Data Plans Pricing</h2>
-                    </div>
-                    
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Network</th>
-                                <th>Plan</th>
-                                <th>Current Price</th>
-                                <th>New Price</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>MTN</td>
-                                <td>100MB</td>
-                                <td>₦100</td>
-                                <td><input type="number" id="price-mtn-100" class="price-input" value="100" min="50"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('mtn-100')">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>MTN</td>
-                                <td>1GB</td>
-                                <td>₦500</td>
-                                <td><input type="number" id="price-mtn-1gb" class="price-input" value="500" min="50"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('mtn-1gb')">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>MTN</td>
-                                <td>2GB</td>
-                                <td>₦1000</td>
-                                <td><input type="number" id="price-mtn-2gb" class="price-input" value="1000" min="50"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('mtn-2gb')">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>GLO</td>
-                                <td>1GB</td>
-                                <td>₦500</td>
-                                <td><input type="number" id="price-glo-1gb" class="price-input" value="500" min="50"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('glo-1gb')">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>AIRTEL</td>
-                                <td>1GB</td>
-                                <td>₦500</td>
-                                <td><input type="number" id="price-airtel-1gb" class="price-input" value="500" min="50"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('airtel-1gb')">Update</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>📞 Airtime Commission</h2>
-                    </div>
-                    
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Network</th>
-                                <th>Commission %</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>MTN</td>
-                                <td><input type="number" id="comm-mtn" class="price-input" value="2" min="0" max="10"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updateCommission('mtn')">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>GLO</td>
-                                <td><input type="number" id="comm-glo" class="price-input" value="2" min="0" max="10"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updateCommission('glo')">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>AIRTEL</td>
-                                <td><input type="number" id="comm-airtel" class="price-input" value="2" min="0" max="10"></td>
-                                <td><button class="btn btn-primary btn-small" onclick="updateCommission('airtel')">Update</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            document.getElementById('contentArea').innerHTML = content;
-        }
-
-        // ============================================
-        // API SETTINGS
-        // ============================================
-        function loadAPISettings() {
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>🔑 API Configuration</h2>
-                    </div>
-                    
-                    <table class="admin-table">
-                        <tr>
-                            <td style="width: 200px;">VTPASS Public Key</td>
-                            <td><input type="text" id="vtpassPublic" style="width: 400px; padding: 10px;" value="${localStorage.getItem('vtpassPublic') || ''}"></td>
-                        </tr>
-                        <tr>
-                            <td>VTPASS Secret Key</td>
-                            <td><input type="password" id="vtpassSecret" style="width: 400px; padding: 10px;" value="${localStorage.getItem('vtpassSecret') || ''}"></td>
-                        </tr>
-                        <tr>
-                            <td>Paystack Public Key</td>
-                            <td><input type="text" id="paystackKey" style="width: 400px; padding: 10px;" value="${localStorage.getItem('paystackKey') || ''}"></td>
-                        </tr>
-                    </table>
-                    
-                    <div style="margin-top: 20px;">
-                        <button class="btn btn-success" onclick="saveAPIKeys()">Save API Keys</button>
-                        <button class="btn btn-primary" onclick="testAPIConnection()">Test Connection</button>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('contentArea').innerHTML = content;
-        }
-
-        // ============================================
-        // TRANSACTIONS PAGE
-        // ============================================
-        function loadTransactions() {
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>All Transactions</h2>
-                    </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${transactions.map(t => `
-                                <tr>
-                                    <td>${t.type || 'N/A'}</td>
-                                    <td>${t.amount || 'N/A'}</td>
-                                    <td>${t.date || 'N/A'}</td>
-                                    <td><span class="status-badge status-active">Success</span></td>
-                                </tr>
-                            `).join('')}
-                            ${transactions.length === 0 ? '<tr><td colspan="4" style="text-align: center;">No transactions found</td></tr>' : ''}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            document.getElementById('contentArea').innerHTML = content;
-        }
-
-        // ============================================
-        // HELPER FUNCTIONS
-        // ============================================
-        function loadCounts() {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            
-            document.getElementById('userCount').textContent = users.length;
-            document.getElementById('transactionCount').textContent = transactions.length;
-        }
-
         function updatePrice(planId) {
-            const newPrice = document.getElementById(`price-${planId}`).value;
+            const input = document.getElementById(`price-${planId}`);
+            const newPrice = input.value;
+            
             if (!newPrice || newPrice < 50) {
                 alert('Please enter a valid price (minimum ₦50)');
                 return;
@@ -833,52 +244,16 @@
             alert(`✅ Price updated to ₦${newPrice}`);
         }
 
-        function updateCommission(network) {
-            const commission = document.getElementById(`comm-${network}`).value;
-            if (!commission || commission < 0 || commission > 10) {
-                alert('Please enter a valid commission (0-10%)');
-                return;
-            }
-            
-            let commissions = JSON.parse(localStorage.getItem('commissions')) || {};
-            commissions[network] = parseInt(commission);
-            localStorage.setItem('commissions', JSON.stringify(commissions));
-            
-            alert(`✅ Commission updated to ${commission}%`);
-        }
-
-        function saveAPIKeys() {
-            const vtpassPublic = document.getElementById('vtpassPublic').value;
-            const vtpassSecret = document.getElementById('vtpassSecret').value;
-            const paystackKey = document.getElementById('paystackKey').value;
-            
-            localStorage.setItem('vtpassPublic', vtpassPublic);
-            localStorage.setItem('vtpassSecret', vtpassSecret);
-            localStorage.setItem('paystackKey', paystackKey);
-            
-            alert('✅ API keys saved successfully');
-        }
-
-        function testAPIConnection() {
-            alert('Testing connection to VTPASS...\n(This would make an API call in production)');
-        }
-
-        function addUser() {
-            alert('Add user functionality would open a modal');
-        }
-
-        function editUser(email) {
-            alert(`Edit user: ${email}`);
-        }
-
-        function deleteUser(email) {
-            if (confirm(`Are you sure you want to delete ${email}?`)) {
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                users = users.filter(u => u.email !== email);
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('User deleted');
-                loadUsers();
-                loadCounts();
+        // ============================================
+        // LOGOUT - CLEAN AND SIMPLE
+        // ============================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear ONLY admin login
+                localStorage.removeItem('adminLoggedIn');
+                
+                // Force redirect
+                window.location.href = 'admin-login.html';
             }
         }
     </script>
