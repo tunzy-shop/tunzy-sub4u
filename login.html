@@ -157,15 +157,6 @@
         .forgot-password a:hover {
             color: #0066cc;
         }
-
-        .demo-note {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            color: #999;
-            font-size: 12px;
-        }
     </style>
 </head>
 <body>
@@ -203,10 +194,6 @@
                     Don't have an account? <a href="signup.html">Create Account</a>
                 </div>
             </form>
-
-            <div class="demo-note">
-                Secure login • Your data is protected
-            </div>
         </div>
     </div>
 
@@ -227,19 +214,14 @@
 
     <script>
         // ============================================
-        // SIMPLE LOGIN - NO LOOPS!
+        // SIMPLE LOGIN - NO ADMIN, JUST USERS!
         // ============================================
 
-        // Check if already logged in - ONCE and stop
+        // Check if already logged in
         (function() {
             const currentUser = localStorage.getItem('currentUser');
             if (currentUser) {
-                const user = JSON.parse(currentUser);
-                if (user.role === 'admin') {
-                    window.location.replace('admin-dashboard.html');
-                } else {
-                    window.location.replace('index.html');
-                }
+                window.location.replace('index.html');
                 return;
             }
         })();
@@ -269,8 +251,7 @@
                 // Save current user
                 localStorage.setItem('currentUser', JSON.stringify({
                     email: user.email,
-                    name: user.name,
-                    role: user.role || 'user'
+                    name: user.name
                 }));
                 
                 // Save user data for app
@@ -278,13 +259,9 @@
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('userBalance', user.balance || '0');
                 
-                // Redirect
+                // Redirect to main app
                 setTimeout(() => {
-                    if (user.role === 'admin') {
-                        window.location.href = 'admin-dashboard.html';
-                    } else {
-                        window.location.href = 'index.html';
-                    }
+                    window.location.href = 'index.html';
                 }, 1500);
             } else {
                 // Login failed
