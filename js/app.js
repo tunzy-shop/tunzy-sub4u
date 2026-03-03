@@ -13,7 +13,7 @@ const CONFIG = {
     
     // Payment Gateway (Paystack/Flutterwave)
     PAYMENT: {
-        PUBLIC_KEY: 'YOUR_PAYMENT_PUBLIC_KEY',   // 🔴 REPLACE THIS
+        PUBLIC_KEY: 'pk_test_dca168dd5c169b6aa7e4e85a4b11867a0d52a9e5',   // 🔴 REPLACE THIS
     }
 };
 
