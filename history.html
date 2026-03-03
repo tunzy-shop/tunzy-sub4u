@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +56,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #f0f0f0;
+            border: 1px solid #e0e0e0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
@@ -120,7 +119,7 @@
                     <div class="transaction-item">
                         <div class="transaction-info">
                             <div class="transaction-service">${t.type}</div>
-                            <div class="transaction-date">${t.date || 'Just now'}</div>
+                            <div class="transaction-date">${t.date}</div>
                         </div>
                         <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount}</div>
                     </div>
