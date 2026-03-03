@@ -10,7 +10,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -19,36 +18,30 @@
             align-items: center;
             justify-content: center;
         }
-
         .login-container {
             width: 100%;
             max-width: 400px;
             padding: 20px;
         }
-
         .login-box {
             background: white;
             border-radius: 20px;
             padding: 40px 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-
         .logo {
             text-align: center;
             margin-bottom: 30px;
         }
-
         .logo h1 {
             color: #0066cc;
             font-size: 2rem;
             margin-bottom: 5px;
         }
-
         .logo p {
             color: #666;
             font-size: 0.9rem;
         }
-
         .admin-badge {
             background: #1a1a2e;
             color: white;
@@ -58,18 +51,15 @@
             margin-bottom: 25px;
             font-size: 0.9rem;
         }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: #333;
         }
-
         .form-group input {
             width: 100%;
             padding: 15px;
@@ -78,12 +68,10 @@
             font-size: 1rem;
             transition: all 0.3s;
         }
-
         .form-group input:focus {
             border-color: #0066cc;
             outline: none;
         }
-
         .login-btn {
             width: 100%;
             padding: 15px;
@@ -97,11 +85,9 @@
             transition: all 0.3s;
             margin: 10px 0;
         }
-
         .login-btn:hover {
             background: #004d99;
         }
-
         .error-message {
             background: #ffebee;
             color: #c62828;
@@ -110,7 +96,6 @@
             margin-bottom: 20px;
             display: none;
         }
-
         .success-message {
             background: #e8f5e9;
             color: #2e7d32;
@@ -119,29 +104,17 @@
             margin-bottom: 20px;
             display: none;
         }
-
         .back-link {
             text-align: center;
             margin-top: 20px;
         }
-
         .back-link a {
             color: #666;
             text-decoration: none;
             font-size: 0.9rem;
         }
-
         .back-link a:hover {
             color: #0066cc;
-        }
-
-        .note {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            color: #999;
-            font-size: 0.8rem;
         }
     </style>
 </head>
@@ -157,12 +130,8 @@
                 ⚡ Restricted Access - Administrators Only
             </div>
 
-            <!-- Error/Success Messages -->
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
-
-            <!-- Login Form -->
-            <form id="adminLoginForm">
+            <!-- Login Form - Make sure this is visible -->
+            <form id="adminLoginForm" onsubmit="return false;">
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" id="username" placeholder="Enter username" required>
@@ -173,103 +142,76 @@
                     <input type="password" id="password" placeholder="Enter password" required>
                 </div>
 
-                <button type="submit" class="login-btn">Access Admin Panel</button>
+                <button type="button" class="login-btn" onclick="handleLogin()">Access Admin Panel</button>
             </form>
 
             <div class="back-link">
                 <a href="index.html">← Return to Homepage</a>
             </div>
-
-            <div class="note">
-                Only authorized administrators can access this area.
-            </div>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // SIMPLE ADMIN LOGIN - NO REDIRECT LOOPS
-        // ============================================
-        
-        // Hardcoded admin credentials - ONLY THESE WORK
+        // Hardcoded admin credentials
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'Admin123';
 
-        // Check if already logged in - ONCE, no loops
+        // Check if already logged in
         (function() {
-            const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-            if (adminLoggedIn === 'true') {
-                // Silent redirect, no loop
-                window.location.replace('admin-dashboard.html');
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                window.location.href = 'admin-dashboard.html';
             }
         })();
 
-        // Handle login form
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        // Handle login - called by button click
+        function handleLogin() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            // Clear any previous messages
-            hideMessages();
+            // Clear previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
             
-            // Simple validation
             if (!username || !password) {
                 showError('Please enter both username and password');
                 return;
             }
             
-            // Check credentials
             if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                // Login successful
-                showSuccess('Login successful! Redirecting...');
+                // Show success
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
                 
-                // Set admin session
+                // Store session
                 localStorage.setItem('adminLoggedIn', 'true');
                 localStorage.setItem('adminUser', username);
-                localStorage.setItem('adminLoginTime', new Date().toISOString());
                 
-                // Redirect to admin dashboard
+                // Redirect
                 setTimeout(() => {
                     window.location.href = 'admin-dashboard.html';
                 }, 1500);
-                
             } else {
-                // Login failed
                 showError('Invalid username or password');
-                
-                // Clear password field
                 document.getElementById('password').value = '';
             }
-        });
+        }
 
-        // Helper functions
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.style.display = 'block';
             errorDiv.textContent = message;
-            
-            // Auto hide after 3 seconds
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 3000);
         }
 
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.style.display = 'block';
-            successDiv.textContent = message;
-        }
-
-        function hideMessages() {
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
-        }
-
-        // Clear any existing admin session on this page (optional)
-        // Uncomment if you want to force re-login every time
-        // localStorage.removeItem('adminLoggedIn');
+        // Allow Enter key to submit
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
     </script>
+
+    <!-- Add message divs at the bottom of the box, before the form ends -->
+    <div style="display: none;" id="errorMessage" class="error-message"></div>
+    <div style="display: none;" id="successMessage" class="success-message"></div>
 </body>
 </html>
