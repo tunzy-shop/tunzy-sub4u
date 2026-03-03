@@ -84,6 +84,10 @@
             text-decoration: none;
             cursor: pointer;
             transition: all 0.3s;
+            width: 100%;
+            border: none;
+            background: none;
+            font-size: 1rem;
         }
 
         .nav-item:hover {
@@ -250,11 +254,6 @@
             color: #155724;
         }
 
-        .status-inactive {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
         .btn {
             padding: 8px 15px;
             border: none;
@@ -319,48 +318,48 @@
             <div class="admin-info">
                 <div class="admin-avatar">👤</div>
                 <div class="admin-details">
-                    <div class="admin-name" id="adminName">Admin User</div>
+                    <div class="admin-name" id="adminName">Loading...</div>
                     <div class="admin-role">Administrator</div>
                 </div>
             </div>
             
             <nav class="sidebar-nav">
-                <div class="nav-item active" onclick="loadPage('dashboard')">
+                <button class="nav-item active" onclick="loadPage('dashboard')">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="loadPage('users')">
+                </button>
+                <button class="nav-item" onclick="loadPage('users')">
                     <i class="fas fa-users"></i>
                     <span>Users</span>
                     <span class="badge" id="userCount">0</span>
-                </div>
-                <div class="nav-item" onclick="loadPage('transactions')">
+                </button>
+                <button class="nav-item" onclick="loadPage('transactions')">
                     <i class="fas fa-credit-card"></i>
                     <span>Transactions</span>
                     <span class="badge" id="transactionCount">0</span>
-                </div>
-                <div class="nav-item" onclick="loadPage('prices')">
+                </button>
+                <button class="nav-item" onclick="loadPage('prices')">
                     <i class="fas fa-tag"></i>
                     <span>Manage Prices</span>
-                </div>
-                <div class="nav-item" onclick="loadPage('api-settings')">
+                </button>
+                <button class="nav-item" onclick="loadPage('api-settings')">
                     <i class="fas fa-key"></i>
                     <span>API Settings</span>
-                </div>
+                </button>
             </nav>
             
             <div class="sidebar-footer">
-                <div class="nav-item" onclick="logout()">
+                <button class="nav-item" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
-                </div>
+                </button>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="admin-main">
             <div class="top-bar">
-                <div class="page-title" id="currentPage">Admin Dashboard</div>
+                <div class="page-title" id="currentPage">Dashboard</div>
                 <div class="admin-actions">
                     <div class="date-time" id="currentDateTime"></div>
                     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -368,37 +367,60 @@
             </div>
 
             <div class="content-area" id="contentArea">
-                <!-- Content loads here -->
+                <!-- Content will load here -->
+                <div style="text-align: center; padding: 50px;">
+                    <div class="spinner" style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top-color: #0066cc; border-radius: 50%; animation: spin 1s infinite; margin: 20px auto;"></div>
+                    <p>Loading dashboard...</p>
+                </div>
             </div>
         </div>
     </div>
+
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 
     <script>
         // ============================================
         // CHECK ADMIN LOGIN
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Admin page loaded');
+            
             // Check if admin is logged in
             const currentUser = localStorage.getItem('currentUser');
+            console.log('Current user:', currentUser);
+            
             if (!currentUser) {
+                console.log('No user found, redirecting to login');
                 window.location.href = 'login.html';
                 return;
             }
             
-            const user = JSON.parse(currentUser);
-            if (user.role !== 'admin') {
-                alert('Access denied. Admin only.');
-                window.location.href = 'dashboard.html';
-                return;
+            try {
+                const user = JSON.parse(currentUser);
+                console.log('User role:', user.role);
+                
+                if (user.role !== 'admin') {
+                    alert('Access denied. Admin only.');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                
+                document.getElementById('adminName').textContent = user.name || 'Admin';
+                
+                // Load dashboard by default
+                loadPage('dashboard');
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+                loadCounts();
+                
+            } catch (e) {
+                console.error('Error parsing user:', e);
+                window.location.href = 'login.html';
             }
-            
-            document.getElementById('adminName').textContent = user.name || 'Admin';
-            
-            // Load initial page
-            loadPage('dashboard');
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-            loadCounts();
         });
 
         // Update date and time
@@ -410,7 +432,7 @@
 
         // Logout
         function logout() {
-            if (confirm('Logout?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
@@ -420,15 +442,19 @@
         // LOAD DIFFERENT PAGES
         // ============================================
         function loadPage(page) {
+            console.log('Loading page:', page);
+            
             // Update active state
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
             
+            // Update page title
             document.getElementById('currentPage').textContent = 
-                page.charAt(0).toUpperCase() + page.slice(1);
+                page.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
             
+            // Load content based on page
             switch(page) {
                 case 'dashboard':
                     loadDashboard();
@@ -445,6 +471,8 @@
                 case 'api-settings':
                     loadAPISettings();
                     break;
+                default:
+                    loadDashboard();
             }
         }
 
@@ -452,20 +480,31 @@
         // DASHBOARD
         // ============================================
         function loadDashboard() {
+            console.log('Loading dashboard content');
+            
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
             
-            const totalUsers = users.length;
+            // Calculate today's transactions
+            const today = new Date().toLocaleDateString();
             const todayTransactions = transactions.filter(t => 
-                t.date?.includes(new Date().toLocaleDateString())
+                t.date && t.date.includes(today)
             ).length;
+            
+            // Calculate total revenue
+            const totalRevenue = transactions
+                .filter(t => t.amount && t.amount.includes('-'))
+                .reduce((sum, t) => {
+                    const num = parseInt(t.amount.replace(/[^0-9]/g, '')) || 0;
+                    return sum + num;
+                }, 0);
             
             const content = `
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>Total Users</h3>
-                            <div class="stat-number">${totalUsers}</div>
+                            <div class="stat-number">${users.length}</div>
                         </div>
                         <div class="stat-icon">👥</div>
                     </div>
@@ -479,9 +518,16 @@
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>Total Revenue</h3>
-                            <div class="stat-number">₦${calculateRevenue()}</div>
+                            <div class="stat-number">₦${totalRevenue.toLocaleString()}</div>
                         </div>
                         <div class="stat-icon">💰</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Transactions</h3>
+                            <div class="stat-number">${transactions.length}</div>
+                        </div>
+                        <div class="stat-icon">📊</div>
                     </div>
                 </div>
                 
@@ -496,17 +542,47 @@
                                 <th>Email</th>
                                 <th>Balance</th>
                                 <th>Joined</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${users.slice(0, 5).map(u => `
                                 <tr>
-                                    <td>${u.name}</td>
+                                    <td>${u.name || 'N/A'}</td>
                                     <td>${u.email}</td>
                                     <td>₦${u.balance || 0}</td>
                                     <td>${u.created ? new Date(u.created).toLocaleDateString() : 'N/A'}</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
                                 </tr>
                             `).join('')}
+                            ${users.length === 0 ? '<tr><td colspan="5" style="text-align: center;">No users yet</td></tr>' : ''}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Recent Transactions</h2>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${transactions.slice(0, 5).map(t => `
+                                <tr>
+                                    <td>${t.type || 'N/A'}</td>
+                                    <td>${t.amount || 'N/A'}</td>
+                                    <td>${t.date || 'N/A'}</td>
+                                    <td><span class="status-badge status-active">Success</span></td>
+                                </tr>
+                            `).join('')}
+                            ${transactions.length === 0 ? '<tr><td colspan="4" style="text-align: center;">No transactions yet</td></tr>' : ''}
                         </tbody>
                     </table>
                 </div>
@@ -525,6 +601,7 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h2>User Management</h2>
+                        <button class="btn btn-success" onclick="addUser()">+ Add User</button>
                     </div>
                     <table class="admin-table">
                         <thead>
@@ -540,7 +617,7 @@
                         <tbody>
                             ${users.map((u, index) => `
                                 <tr>
-                                    <td>${u.name}</td>
+                                    <td>${u.name || 'N/A'}</td>
                                     <td>${u.email}</td>
                                     <td>${u.phone || 'N/A'}</td>
                                     <td>₦${u.balance || 0}</td>
@@ -551,6 +628,7 @@
                                     </td>
                                 </tr>
                             `).join('')}
+                            ${users.length === 0 ? '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>' : ''}
                         </tbody>
                     </table>
                 </div>
@@ -560,13 +638,13 @@
         }
 
         // ============================================
-        // PRICE MANAGEMENT - WHAT YOU ASKED FOR!
+        // PRICE MANAGEMENT
         // ============================================
         function loadPriceManagement() {
             const content = `
                 <div class="table-container">
                     <div class="table-header">
-                        <h2>📱 Manage Data Prices</h2>
+                        <h2>📱 Data Plans Pricing</h2>
                     </div>
                     
                     <table class="admin-table">
@@ -584,22 +662,36 @@
                                 <td>MTN</td>
                                 <td>100MB</td>
                                 <td>₦100</td>
-                                <td><input type="number" id="price-mtn-100" class="price-input" value="100"></td>
+                                <td><input type="number" id="price-mtn-100" class="price-input" value="100" min="50"></td>
                                 <td><button class="btn btn-primary btn-small" onclick="updatePrice('mtn-100')">Update</button></td>
                             </tr>
                             <tr>
                                 <td>MTN</td>
                                 <td>1GB</td>
                                 <td>₦500</td>
-                                <td><input type="number" id="price-mtn-1gb" class="price-input" value="500"></td>
+                                <td><input type="number" id="price-mtn-1gb" class="price-input" value="500" min="50"></td>
                                 <td><button class="btn btn-primary btn-small" onclick="updatePrice('mtn-1gb')">Update</button></td>
+                            </tr>
+                            <tr>
+                                <td>MTN</td>
+                                <td>2GB</td>
+                                <td>₦1000</td>
+                                <td><input type="number" id="price-mtn-2gb" class="price-input" value="1000" min="50"></td>
+                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('mtn-2gb')">Update</button></td>
                             </tr>
                             <tr>
                                 <td>GLO</td>
                                 <td>1GB</td>
                                 <td>₦500</td>
-                                <td><input type="number" id="price-glo-1gb" class="price-input" value="500"></td>
+                                <td><input type="number" id="price-glo-1gb" class="price-input" value="500" min="50"></td>
                                 <td><button class="btn btn-primary btn-small" onclick="updatePrice('glo-1gb')">Update</button></td>
+                            </tr>
+                            <tr>
+                                <td>AIRTEL</td>
+                                <td>1GB</td>
+                                <td>₦500</td>
+                                <td><input type="number" id="price-airtel-1gb" class="price-input" value="500" min="50"></td>
+                                <td><button class="btn btn-primary btn-small" onclick="updatePrice('airtel-1gb')">Update</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -607,7 +699,7 @@
                 
                 <div class="table-container">
                     <div class="table-header">
-                        <h2>📞 Manage Airtime Commission</h2>
+                        <h2>📞 Airtime Commission</h2>
                     </div>
                     
                     <table class="admin-table">
@@ -621,13 +713,18 @@
                         <tbody>
                             <tr>
                                 <td>MTN</td>
-                                <td><input type="number" id="comm-mtn" class="price-input" value="2"></td>
+                                <td><input type="number" id="comm-mtn" class="price-input" value="2" min="0" max="10"></td>
                                 <td><button class="btn btn-primary btn-small" onclick="updateCommission('mtn')">Update</button></td>
                             </tr>
                             <tr>
                                 <td>GLO</td>
-                                <td><input type="number" id="comm-glo" class="price-input" value="2"></td>
+                                <td><input type="number" id="comm-glo" class="price-input" value="2" min="0" max="10"></td>
                                 <td><button class="btn btn-primary btn-small" onclick="updateCommission('glo')">Update</button></td>
+                            </tr>
+                            <tr>
+                                <td>AIRTEL</td>
+                                <td><input type="number" id="comm-airtel" class="price-input" value="2" min="0" max="10"></td>
+                                <td><button class="btn btn-primary btn-small" onclick="updateCommission('airtel')">Update</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -638,125 +735,50 @@
         }
 
         // ============================================
-        // UPDATE PRICES
-        // ============================================
-        function updatePrice(planId) {
-            const newPrice = document.getElementById(`price-${planId}`).value;
-            if (!newPrice || newPrice < 50) {
-                alert('Enter valid price (min ₦50)');
-                return;
-            }
-            
-            // Save to localStorage (in real app, this would be a database)
-            let prices = JSON.parse(localStorage.getItem('dataPrices')) || {};
-            prices[planId] = parseInt(newPrice);
-            localStorage.setItem('dataPrices', JSON.stringify(prices));
-            
-            alert(`✅ Price updated to ₦${newPrice}`);
-        }
-
-        function updateCommission(network) {
-            const commission = document.getElementById(`comm-${network}`).value;
-            if (!commission || commission < 0) {
-                alert('Enter valid commission');
-                return;
-            }
-            
-            let commissions = JSON.parse(localStorage.getItem('commissions')) || {};
-            commissions[network] = parseInt(commission);
-            localStorage.setItem('commissions', JSON.stringify(commissions));
-            
-            alert(`✅ Commission updated to ${commission}%`);
-        }
-
-        // ============================================
         // API SETTINGS
         // ============================================
         function loadAPISettings() {
             const content = `
                 <div class="table-container">
                     <div class="table-header">
-                        <h2>🔑 VTPASS API Configuration</h2>
+                        <h2>🔑 API Configuration</h2>
                     </div>
                     
                     <table class="admin-table">
                         <tr>
-                            <td>Public Key</td>
-                            <td><input type="text" id="vtpassPublic" class="price-input" style="width:300px;" value="${localStorage.getItem('vtpassPublic') || ''}"></td>
+                            <td style="width: 200px;">VTPASS Public Key</td>
+                            <td><input type="text" id="vtpassPublic" style="width: 400px; padding: 10px;" value="${localStorage.getItem('vtpassPublic') || ''}"></td>
                         </tr>
                         <tr>
-                            <td>Secret Key</td>
-                            <td><input type="password" id="vtpassSecret" class="price-input" style="width:300px;" value="${localStorage.getItem('vtpassSecret') || ''}"></td>
+                            <td>VTPASS Secret Key</td>
+                            <td><input type="password" id="vtpassSecret" style="width: 400px; padding: 10px;" value="${localStorage.getItem('vtpassSecret') || ''}"></td>
                         </tr>
                         <tr>
-                            <td>Paystack Key</td>
-                            <td><input type="text" id="paystackKey" class="price-input" style="width:300px;" value="${localStorage.getItem('paystackKey') || ''}"></td>
+                            <td>Paystack Public Key</td>
+                            <td><input type="text" id="paystackKey" style="width: 400px; padding: 10px;" value="${localStorage.getItem('paystackKey') || ''}"></td>
                         </tr>
                     </table>
                     
-                    <button class="btn btn-success" onclick="saveAPIKeys()">Save API Keys</button>
-                    <button class="btn btn-primary" onclick="testAPIConnection()">Test Connection</button>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-success" onclick="saveAPIKeys()">Save API Keys</button>
+                        <button class="btn btn-primary" onclick="testAPIConnection()">Test Connection</button>
+                    </div>
                 </div>
             `;
             
             document.getElementById('contentArea').innerHTML = content;
         }
 
-        function saveAPIKeys() {
-            const vtpassPublic = document.getElementById('vtpassPublic').value;
-            const vtpassSecret = document.getElementById('vtpassSecret').value;
-            const paystackKey = document.getElementById('paystackKey').value;
-            
-            localStorage.setItem('vtpassPublic', vtpassPublic);
-            localStorage.setItem('vtpassSecret', vtpassSecret);
-            localStorage.setItem('paystackKey', paystackKey);
-            
-            alert('✅ API keys saved');
-        }
-
-        function testAPIConnection() {
-            alert('Testing connection to VTPASS... (In real app, this would make an API call)');
-        }
-
         // ============================================
-        // HELPER FUNCTIONS
+        // TRANSACTIONS PAGE
         // ============================================
-        function loadCounts() {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            
-            document.getElementById('userCount').textContent = users.length;
-            document.getElementById('transactionCount').textContent = transactions.length;
-        }
-
-        function calculateRevenue() {
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            return transactions
-                .filter(t => t.amount?.includes('-'))
-                .reduce((sum, t) => sum + (parseInt(t.amount.replace(/[^0-9]/g, '')) || 0), 0);
-        }
-
-        function editUser(email) {
-            alert(`Edit user: ${email}`);
-        }
-
-        function deleteUser(email) {
-            if (confirm(`Delete user ${email}?`)) {
-                let users = JSON.parse(localStorage.getItem('users')) || [];
-                users = users.filter(u => u.email !== email);
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('User deleted');
-                loadUsers();
-            }
-        }
-
         function loadTransactions() {
             const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
             
             const content = `
                 <div class="table-container">
                     <div class="table-header">
-                        <h2>Transaction History</h2>
+                        <h2>All Transactions</h2>
                     </div>
                     <table class="admin-table">
                         <thead>
@@ -770,18 +792,94 @@
                         <tbody>
                             ${transactions.map(t => `
                                 <tr>
-                                    <td>${t.type}</td>
-                                    <td>${t.amount}</td>
-                                    <td>${t.date || ''}</td>
+                                    <td>${t.type || 'N/A'}</td>
+                                    <td>${t.amount || 'N/A'}</td>
+                                    <td>${t.date || 'N/A'}</td>
                                     <td><span class="status-badge status-active">Success</span></td>
                                 </tr>
                             `).join('')}
+                            ${transactions.length === 0 ? '<tr><td colspan="4" style="text-align: center;">No transactions found</td></tr>' : ''}
                         </tbody>
                     </table>
                 </div>
             `;
             
             document.getElementById('contentArea').innerHTML = content;
+        }
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function loadCounts() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            
+            document.getElementById('userCount').textContent = users.length;
+            document.getElementById('transactionCount').textContent = transactions.length;
+        }
+
+        function updatePrice(planId) {
+            const newPrice = document.getElementById(`price-${planId}`).value;
+            if (!newPrice || newPrice < 50) {
+                alert('Please enter a valid price (minimum ₦50)');
+                return;
+            }
+            
+            // Save to localStorage
+            let prices = JSON.parse(localStorage.getItem('dataPrices')) || {};
+            prices[planId] = parseInt(newPrice);
+            localStorage.setItem('dataPrices', JSON.stringify(prices));
+            
+            alert(`✅ Price updated to ₦${newPrice}`);
+        }
+
+        function updateCommission(network) {
+            const commission = document.getElementById(`comm-${network}`).value;
+            if (!commission || commission < 0 || commission > 10) {
+                alert('Please enter a valid commission (0-10%)');
+                return;
+            }
+            
+            let commissions = JSON.parse(localStorage.getItem('commissions')) || {};
+            commissions[network] = parseInt(commission);
+            localStorage.setItem('commissions', JSON.stringify(commissions));
+            
+            alert(`✅ Commission updated to ${commission}%`);
+        }
+
+        function saveAPIKeys() {
+            const vtpassPublic = document.getElementById('vtpassPublic').value;
+            const vtpassSecret = document.getElementById('vtpassSecret').value;
+            const paystackKey = document.getElementById('paystackKey').value;
+            
+            localStorage.setItem('vtpassPublic', vtpassPublic);
+            localStorage.setItem('vtpassSecret', vtpassSecret);
+            localStorage.setItem('paystackKey', paystackKey);
+            
+            alert('✅ API keys saved successfully');
+        }
+
+        function testAPIConnection() {
+            alert('Testing connection to VTPASS...\n(This would make an API call in production)');
+        }
+
+        function addUser() {
+            alert('Add user functionality would open a modal');
+        }
+
+        function editUser(email) {
+            alert(`Edit user: ${email}`);
+        }
+
+        function deleteUser(email) {
+            if (confirm(`Are you sure you want to delete ${email}?`)) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users = users.filter(u => u.email !== email);
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('User deleted');
+                loadUsers();
+                loadCounts();
+            }
         }
     </script>
 </body>
