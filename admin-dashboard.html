@@ -256,3 +256,99 @@
         }
     }
 </script>
+<!-- Add this as a new "Data Plans" section in your admin-dashboard.html -->
+
+<div class="admin-section" id="dataPlansManagement">
+    <h2>📱 Manage Data Plans & Prices</h2>
+    <p>Update the prices for data plans. Changes reflect immediately for users.</p>
+
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Network</th>
+                <th>Plan</th>
+                <th>Current Price (₦)</th>
+                <th>New Price (₦)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="dataPlansTableBody">
+            <!-- Filled by JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Load and display data plans for admin to edit
+    function loadDataPlansForAdmin() {
+        // In a real app, you'd fetch from a database.
+        // Here, we load from localStorage (which we'll use as a simple DB)
+        let plans = JSON.parse(localStorage.getItem('dataPlans')) || getDefaultPlans();
+
+        const tbody = document.getElementById('dataPlansTableBody');
+        tbody.innerHTML = '';
+        
+        for (const network in plans) {
+            plans[network].forEach(plan => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${network.toUpperCase()}</td>
+                    <td>${plan.name}</td>
+                    <td>₦${plan.price}</td>
+                    <td><input type="number" id="price-${plan.id}" value="${plan.price}" min="50" step="50"></td>
+                    <td><button onclick="updatePlanPrice('${plan.id}')">Update</button></td>
+                `;
+            });
+        }
+    }
+
+    // Default plans if none exist
+    function getDefaultPlans() {
+        return {
+            mtn: [
+                { id: 'mtn-1gb', name: '1GB', price: 500 },
+                { id: 'mtn-2gb', name: '2GB', price: 1000 },
+                { id: 'mtn-5gb', name: '5GB', price: 2000 }
+            ],
+            glo: [
+                { id: 'glo-1gb', name: '1GB', price: 500 },
+                { id: 'glo-2gb', name: '2GB', price: 800 }
+            ],
+            airtel: [
+                { id: 'airtel-1gb', name: '1GB', price: 500 },
+                { id: 'airtel-2gb', name: '2GB', price: 900 }
+            ],
+            '9mobile': [
+                { id: '9mobile-1gb', name: '1GB', price: 500 },
+                { id: '9mobile-2gb', name: '2GB', price: 700 }
+            ]
+        };
+    }
+
+    // Function to update a plan's price
+    function updatePlanPrice(planId) {
+        const newPrice = document.getElementById(`price-${planId}`).value;
+        if (!newPrice || newPrice < 50) {
+            alert('Enter a valid price (min ₦50)');
+            return;
+        }
+
+        let plans = JSON.parse(localStorage.getItem('dataPlans')) || getDefaultPlans();
+        
+        // Find and update the plan
+        for (const network in plans) {
+            const planIndex = plans[network].findIndex(p => p.id === planId);
+            if (planIndex !== -1) {
+                plans[network][planIndex].price = parseInt(newPrice);
+                break;
+            }
+        }
+
+        localStorage.setItem('dataPlans', JSON.stringify(plans));
+        alert(`✅ Price updated for plan ${planId}`);
+        loadDataPlansForAdmin(); // Refresh the table
+    }
+
+    // Call this when the admin page loads
+    document.addEventListener('DOMContentLoaded', loadDataPlansForAdmin);
+</script>
