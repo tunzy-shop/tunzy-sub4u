@@ -78,3 +78,18 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     // Redirect to dashboard
     window.location.href = 'dashboard.html';
 });
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get values
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    
+    // SAVE TO LOCALSTORAGE - THIS IS KEY!
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userBalance', '5000'); // Starting balance
+    
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+});
