@@ -38,10 +38,6 @@
             font-size: 2rem;
             margin-bottom: 5px;
         }
-        .logo p {
-            color: #666;
-            font-size: 0.9rem;
-        }
         .admin-badge {
             background: #1a1a2e;
             color: white;
@@ -66,7 +62,6 @@
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
-            transition: all 0.3s;
         }
         .form-group input:focus {
             border-color: #0066cc;
@@ -82,7 +77,6 @@
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
             margin: 10px 0;
         }
         .login-btn:hover {
@@ -93,7 +87,7 @@
             color: #c62828;
             padding: 12px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 20px 0;
             display: none;
         }
         .success-message {
@@ -101,7 +95,7 @@
             color: #2e7d32;
             padding: 12px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin: 20px 0;
             display: none;
         }
         .back-link {
@@ -111,10 +105,6 @@
         .back-link a {
             color: #666;
             text-decoration: none;
-            font-size: 0.9rem;
-        }
-        .back-link a:hover {
-            color: #0066cc;
         }
     </style>
 </head>
@@ -130,8 +120,10 @@
                 ⚡ Restricted Access - Administrators Only
             </div>
 
-            <!-- Login Form - Make sure this is visible -->
-            <form id="adminLoginForm" onsubmit="return false;">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <form id="adminLoginForm">
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" id="username" placeholder="Enter username" required>
@@ -142,7 +134,7 @@
                     <input type="password" id="password" placeholder="Enter password" required>
                 </div>
 
-                <button type="button" class="login-btn" onclick="handleLogin()">Access Admin Panel</button>
+                <button type="submit" class="login-btn">Access Admin Panel</button>
             </form>
 
             <div class="back-link">
@@ -152,66 +144,55 @@
     </div>
 
     <script>
-        // Hardcoded admin credentials
+        // ============================================
+        // SIMPLE ADMIN LOGIN - NO REDIRECT LOOPS!
+        // ============================================
+        
         const ADMIN_USERNAME = 'admin';
         const ADMIN_PASSWORD = 'Admin123';
 
-        // Check if already logged in
-        (function() {
-            if (localStorage.getItem('adminLoggedIn') === 'true') {
-                window.location.href = 'admin-dashboard.html';
-            }
-        })();
+        // IMPORTANT: Check if already logged in - BUT ONLY ONCE and STOP if on login page!
+        // We check if we're NOT already on the dashboard before redirecting
+        const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+        const currentPath = window.location.pathname;
+        
+        // Only redirect if logged in AND not already on dashboard
+        if (isLoggedIn && !currentPath.includes('admin-dashboard.html')) {
+            window.location.replace('admin-dashboard.html');
+        }
 
-        // Handle login - called by button click
-        function handleLogin() {
+        // Handle login form
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop form from submitting normally
+            
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            // Clear previous messages
+            // Hide any previous messages
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
             
-            if (!username || !password) {
-                showError('Please enter both username and password');
-                return;
-            }
-            
+            // Check credentials
             if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                 // Show success
                 document.getElementById('successMessage').style.display = 'block';
                 document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
                 
-                // Store session
+                // Set login flag
                 localStorage.setItem('adminLoggedIn', 'true');
                 localStorage.setItem('adminUser', username);
                 
-                // Redirect
+                // Redirect to dashboard
                 setTimeout(() => {
                     window.location.href = 'admin-dashboard.html';
-                }, 1500);
+                }, 1000);
             } else {
-                showError('Invalid username or password');
+                // Show error
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 'Invalid username or password';
                 document.getElementById('password').value = '';
-            }
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = message;
-        }
-
-        // Allow Enter key to submit
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                handleLogin();
             }
         });
     </script>
-
-    <!-- Add message divs at the bottom of the box, before the form ends -->
-    <div style="display: none;" id="errorMessage" class="error-message"></div>
-    <div style="display: none;" id="successMessage" class="success-message"></div>
 </body>
 </html>
