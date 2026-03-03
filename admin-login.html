@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - TUNZY SUB 4 YOU</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0066cc, #003366);
+        }
+        .admin-login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .admin-login-box h1 {
+            color: #0066cc;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .admin-login-box .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .admin-login-box input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .admin-login-box input:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+        .admin-login-box button {
+            width: 100%;
+            padding: 15px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .admin-login-box button:hover {
+            background: #004d99;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-box">
+            <h1>🔵 TUNZY SUB 4 YOU</h1>
+            <div class="subtitle">Admin Portal</div>
+            
+            <form id="adminLoginForm">
+                <input type="text" id="username" placeholder="Admin Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Login to Admin Panel</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px; color: #999;">
+                Secure Access Only
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // 🔴 CHANGE THESE DEFAULT CREDENTIALS AFTER FIRST LOGIN!
+            if (username === 'admin' && password === 'Admin123') {
+                // Store admin session
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminUser', username);
+                
+                // Redirect to admin dashboard
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                alert('❌ Invalid credentials!');
+            }
+        });
+    </script>
+</body>
+  </html>
