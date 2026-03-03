@@ -524,3 +524,64 @@
     </script>
 </body>
 </html>
+// Add this to your buy-data.html script, after your existing code
+
+// Load current user balance
+let userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+
+// Function to check balance before purchase
+async function purchaseData() {
+    const phone = document.getElementById('phoneNumber').value;
+    
+    if (!selectedPlan) { alert('Select a plan'); return; }
+    if (!phone || phone.length < 11) { alert('Valid phone number'); return; }
+
+    // --- BALANCE CHECK ---
+    if (userBalance < selectedPrice) {
+        alert(`❌ Insufficient balance! You need ₦${selectedPrice - userBalance} more.`);
+        return;
+    }
+
+    showLoading('Purchasing data...');
+
+    // --- SIMULATED API CALL ---
+    // 🔴 REPLACE THIS WITH YOUR REAL API CALL (e.g., to VTpass)
+    try {
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Simulate success
+        const success = true; // Assume API call succeeded
+
+        if (success) {
+            // Deduct from balance
+            userBalance -= selectedPrice;
+            localStorage.setItem('userBalance', userBalance);
+
+            // Record transaction
+            const transaction = {
+                type: 'Data',
+                detail: `${selectedNetwork.toUpperCase()} ${selectedPlan}`,
+                amount: `-₦${selectedPrice}`,
+                date: new Date().toLocaleString(),
+                icon: '📱'
+            };
+            let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            transactions.unshift(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+
+            hideLoading();
+            alert(`✅ Success! ${selectedPlan} data sent to ${phone}`);
+            
+            // Update balance on page if you have an element
+            // e.g., document.getElementById('walletDisplay').textContent = `₦${userBalance}`;
+        } else {
+            throw new Error('API failed');
+        }
+
+    } catch (error) {
+        hideLoading();
+        alert('❌ Purchase failed. Please try again.');
+        console.error(error);
+    }
+}
