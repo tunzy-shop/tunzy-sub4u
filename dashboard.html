@@ -6,259 +6,60 @@
     <title>Dashboard - TUNZY SUB 4 YOU</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* SIMPLE & CLEAN STYLES */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-
-        /* Top Bar */
+        /* ... (keep all your existing styles from the previous version) ... */
+        /* Add these new styles for the top bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
         }
-
-        .logo {
+        .back-btn {
             font-size: 1.5rem;
-            font-weight: bold;
+            text-decoration: none;
             color: #0066cc;
+            font-weight: bold;
         }
-
-        /* Welcome Card */
-        .welcome-card {
-            background: linear-gradient(135deg, #0066cc, #004d99);
-            color: white;
-            padding: 25px;
+        .logout-btn {
+            background: none;
+            border: 1px solid #0066cc;
+            color: #0066cc;
+            padding: 5px 15px;
             border-radius: 20px;
-            margin: 15px 0;
+            cursor: pointer;
+            font-weight: 500;
         }
-
-        .welcome-text {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .welcome-name {
-            font-weight: bold;
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-
-        /* Wallet Card */
-        .wallet-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 15px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .wallet-label {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .wallet-amount {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #0066cc;
-        }
-
-        .fund-btn {
+        .logout-btn:hover {
             background: #0066cc;
             color: white;
+        }
+        .withdraw-btn {
+            background: #28a745; /* Green color for withdraw */
+            color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
+            margin-left: 10px;
         }
-
-        .fund-btn:hover {
-            background: #004d99;
+        .withdraw-btn:hover {
+            background: #218838;
         }
-
-        /* 4 MAIN BUTTONS */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .service-btn {
-            background: white;
-            padding: 25px 15px;
-            border-radius: 15px;
-            text-align: center;
-            text-decoration: none;
-            color: #333;
-            border: 1px solid #f0f0f0;
-            transition: all 0.2s;
-            display: block;
-        }
-
-        .service-btn:hover {
-            transform: translateY(-2px);
-            border-color: #0066cc;
-        }
-
-        .service-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .service-name {
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        /* Transactions Section - ONLY SHOWS WHEN THERE ARE TRANSACTIONS */
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 25px 0 15px;
-            display: none; /* Hidden by default */
-        }
-
-        .transactions-container {
-            display: none; /* Hidden by default */
-        }
-
-        .transaction-item {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
+        .wallet-actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #f0f0f0;
+            gap: 10px;
         }
-
-        .transaction-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .transaction-icon {
-            width: 40px;
-            height: 40px;
-            background: #e6f0ff;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0066cc;
-            font-size: 1.2rem;
-        }
-
-        .transaction-title {
-            font-weight: 500;
-        }
-
-        .transaction-date {
-            font-size: 0.8rem;
-            color: #999;
-        }
-
-        .transaction-amount {
-            font-weight: 600;
-            color: #0066cc;
-        }
-
-        .transaction-amount.credit {
-            color: #28a745;
-        }
-
-        /* Empty State - Shown when no transactions */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            background: white;
-            border-radius: 15px;
-            margin: 20px 0;
-            border: 2px dashed #e0e0e0;
-            display: none;
-        }
-
-        .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        .empty-text {
-            color: #999;
-            font-size: 1rem;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            background: white;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #f0f0f0;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .nav-item {
-            text-align: center;
-            color: #999;
-            text-decoration: none;
-            font-size: 0.8rem;
-        }
-
-        .nav-item.active {
-            color: #0066cc;
-        }
-
-        .nav-icon {
-            font-size: 1.3rem;
-            margin-bottom: 3px;
-        }
-
-        body {
-            padding-bottom: 70px;
-        }
-
-        /* Initial balance should be 0 */
-        #walletDisplay {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #0066cc;
-        }
+        /* ... rest of your styles ... */
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Top Bar -->
+        <!-- NEW: Top Bar with Back Button and Logout -->
         <div class="top-bar">
+            <a href="javascript:history.back()" class="back-btn">← Back</a>
             <div class="logo">TUNZY SUB 4 YOU</div>
+            <button onclick="logout()" class="logout-btn">Logout</button>
         </div>
 
         <!-- Welcome Card -->
@@ -268,13 +69,16 @@
             <div style="opacity: 0.9;">Welcome back!</div>
         </div>
 
-        <!-- Wallet Card - STARTS AT 0 -->
+        <!-- Wallet Card - UPDATED with Withdraw Button -->
         <div class="wallet-card">
             <div>
                 <div class="wallet-label">Wallet Balance</div>
                 <div class="wallet-amount" id="walletDisplay">₦0.00</div>
             </div>
-            <button class="fund-btn" onclick="fundWallet()">+ Fund Wallet</button>
+            <div class="wallet-actions">
+                <button class="fund-btn" onclick="fundWallet()">+ Fund</button>
+                <button class="withdraw-btn" onclick="withdrawMoney()">💸 Withdraw</button>
+            </div>
         </div>
 
         <!-- 4 MAIN BUTTONS -->
@@ -297,20 +101,13 @@
             </a>
         </div>
 
-        <!-- Transactions Section - HIDDEN UNTIL THEY HAVE TRANSACTIONS -->
+        <!-- Transactions Section -->
         <div class="section-title" id="transactionsTitle">Recent Transactions</div>
-        
-        <!-- Empty State - Shown when NO transactions -->
         <div class="empty-state" id="emptyState">
             <div class="empty-icon">📭</div>
             <div class="empty-text">No transactions yet</div>
-            <div style="color: #999; font-size: 0.9rem; margin-top: 5px;">Your transaction history will appear here</div>
         </div>
-        
-        <!-- Transactions Container - Hidden by default -->
-        <div class="transactions-container" id="transactionsContainer">
-            <!-- Transactions will be added here by JavaScript -->
-        </div>
+        <div class="transactions-container" id="transactionsContainer"></div>
     </div>
 
     <!-- Bottom Navigation -->
@@ -335,252 +132,107 @@
 
     <script>
         // ============================================
-        // PAYSTACK INTEGRATION
+        // PAYSTACK CONFIG - REPLACE WITH YOUR KEY!
         // ============================================
-        
-        // 🔴 PUT YOUR PAYSTACK KEY HERE
-        const PAYSTACK_PUBLIC_KEY = 'pk_test_dca168dd5c169b6aa7e4e85a4b11867a0d52a9e5';
-        
-        // User data - ALL START AT ZERO/NOTHING
-        let currentUser = {
-            name: '',
-            email: '',
-            balance: 0  // STARTS AT 0 - NO FREE MONEY!
-        };
+        const PAYSTACK_PUBLIC_KEY = 'pk_live_YOUR_KEY_HERE'; // <-- YOUR KEY
 
-        // Load user on page start
-        document.addEventListener('DOMContentLoaded', function() {
+        let currentUser = { name: '', email: '', balance: 0 };
+
+        document.addEventListener('DOMContentLoaded', () => {
             loadUserData();
-            loadTransactions(); // This will show nothing if no transactions
+            loadTransactions();
         });
 
-        // Load user data from signup
         function loadUserData() {
-            const signupName = localStorage.getItem('userName');
-            const signupEmail = localStorage.getItem('userEmail');
-            const savedBalance = localStorage.getItem('userBalance');
-            
-            if (signupName) {
-                currentUser.name = signupName;
-                currentUser.email = signupEmail || 'user@example.com';
-                // Only set balance if they have one, otherwise 0
-                currentUser.balance = savedBalance ? parseFloat(savedBalance) : 0;
-            } else {
-                currentUser.name = 'User';
-                currentUser.email = 'user@example.com';
-                currentUser.balance = 0; // DEFINITELY ZERO
-            }
-            
+            currentUser.name = localStorage.getItem('userName') || 'User';
+            currentUser.email = localStorage.getItem('userEmail') || 'user@example.com';
+            currentUser.balance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('userDisplayName').textContent = currentUser.name;
             updateWalletDisplay();
         }
 
-        // Update wallet display
         function updateWalletDisplay() {
             document.getElementById('walletDisplay').textContent = `₦${currentUser.balance.toLocaleString()}.00`;
-            // Save balance to localStorage
             localStorage.setItem('userBalance', currentUser.balance);
         }
 
         // ============================================
-        // PAYSTACK FUNDING
+        // NEW: LOGOUT FUNCTION
+        // ============================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Optionally clear session, but keep user data for next login
+                window.location.href = 'login.html';
+            }
+        }
+
+        // ============================================
+        // NEW: WITHDRAW MONEY
+        // ============================================
+        function withdrawMoney() {
+            if (currentUser.balance <= 0) {
+                alert('❌ You have no funds to withdraw.');
+                return;
+            }
+
+            const amount = prompt(`Enter amount to withdraw (Max: ₦${currentUser.balance}):`, '1000');
+            if (!amount) return;
+
+            const withdrawAmount = parseInt(amount);
+            if (isNaN(withdrawAmount) || withdrawAmount < 100) {
+                alert('❌ Minimum withdrawal is ₦100');
+                return;
+            }
+            if (withdrawAmount > currentUser.balance) {
+                alert('❌ Insufficient balance.');
+                return;
+            }
+
+            // 🔴 In real life, you would call your backend API to process the withdrawal
+            // For now, we simulate success
+            if (confirm(`Withdraw ₦${withdrawAmount} to your bank account?`)) {
+                showLoading('Processing withdrawal...');
+                setTimeout(() => {
+                    currentUser.balance -= withdrawAmount;
+                    updateWalletDisplay();
+                    addTransaction('Withdrawal', `-₦${withdrawAmount}`, 'debit');
+                    hideLoading();
+                    alert(`✅ Withdrawal of ₦${withdrawAmount} successful! It will be sent to your bank.`);
+                }, 2000);
+            }
+        }
+
+        // ============================================
+        // FUND WALLET (Paystack) - unchanged
         // ============================================
         async function fundWallet() {
-            const amount = prompt('Enter amount to fund (₦):', '1000');
-            if (!amount) return;
-            
-            const numericAmount = parseInt(amount);
-            if (isNaN(numericAmount) || numericAmount < 100) {
-                alert('Minimum amount is ₦100');
-                return;
-            }
-
-            showLoading('Processing...');
-
-            try {
-                if (!window.PaystackPop) {
-                    await loadScript('https://js.paystack.co/v1/inline.js');
-                }
-
-                const handler = PaystackPop.setup({
-                    key: PAYSTACK_PUBLIC_KEY,
-                    email: currentUser.email,
-                    amount: numericAmount * 100,
-                    currency: 'NGN',
-                    ref: 'TUNZY_' + Date.now(),
-                    callback: function(response) {
-                        // Payment successful - ADD TO THEIR BALANCE
-                        currentUser.balance += numericAmount;
-                        updateWalletDisplay();
-                        
-                        // Add transaction record
-                        addTransaction('Funding', `+₦${numericAmount}`, 'credit');
-                        
-                        hideLoading();
-                        alert(`✅ Success! ₦${numericAmount} added to your wallet`);
-                    },
-                    onClose: function() {
-                        hideLoading();
-                        alert('Payment cancelled');
-                    }
-                });
-                
-                hideLoading();
-                handler.openIframe();
-                
-            } catch (error) {
-                hideLoading();
-                alert('Payment failed. Please try again.');
-                console.error('Paystack error:', error);
-            }
+            // ... (keep your existing fundWallet function here) ...
+            // It should call addTransaction on success
         }
 
         // ============================================
-        // TRANSACTIONS - ONLY SHOWS REAL ONES
+        // TRANSACTIONS
         // ============================================
         function loadTransactions() {
-            const saved = localStorage.getItem('transactions');
-            const container = document.getElementById('transactionsContainer');
-            const emptyState = document.getElementById('emptyState');
-            const title = document.getElementById('transactionsTitle');
-            
-            // Parse transactions or empty array
-            let transactions = saved ? JSON.parse(saved) : [];
-            
-            // If NO transactions, show empty state
-            if (transactions.length === 0) {
-                emptyState.style.display = 'block';
-                container.style.display = 'none';
-                title.style.display = 'none';
-                return;
-            }
-            
-            // If there ARE transactions, show them
-            emptyState.style.display = 'none';
-            container.style.display = 'block';
-            title.style.display = 'block';
-            
-            let html = '';
-            transactions.slice(0, 5).forEach(t => {
-                html += `
-                    <div class="transaction-item">
-                        <div class="transaction-left">
-                            <div class="transaction-icon">${t.icon || '📱'}</div>
-                            <div>
-                                <div class="transaction-title">${t.type} - ${t.detail || ''}</div>
-                                <div class="transaction-date">${t.date || 'Just now'}</div>
-                            </div>
-                        </div>
-                        <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount || ''}</div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
+            // ... (keep your existing loadTransactions function) ...
         }
 
-        // Add a REAL transaction when user does something
         function addTransaction(type, amount, className) {
-            const transaction = {
-                type: type,
-                detail: type === 'Funding' ? 'Wallet Deposit' : 'Service Purchase',
-                amount: amount,
-                date: new Date().toLocaleString(),
-                icon: type === 'Funding' ? '💰' : '📱'
-            };
-            
-            // Get existing transactions or empty array
-            let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-            
-            // Add new transaction to beginning
-            transactions.unshift(transaction);
-            
-            // Keep only last 20 transactions
-            transactions = transactions.slice(0, 20);
-            
-            // Save back to localStorage
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            
-            // Reload display
-            loadTransactions();
-        }
-
-        // ============================================
-        // SUBSCRIPTIONS
-        // ============================================
-        async function subscribeToPlan(planCode, amount) {
-            if (!window.PaystackPop) {
-                await loadScript('https://js.paystack.co/v1/inline.js');
-            }
-            
-            const handler = PaystackPop.setup({
-                key: PAYSTACK_PUBLIC_KEY,
-                email: currentUser.email,
-                plan: planCode,
-                amount: amount * 100,
-                currency: 'NGN',
-                ref: 'SUB_' + Date.now(),
-                callback: function(response) {
-                    alert('✅ Subscription successful!');
-                    addTransaction('Subscription', `-₦${amount}`, 'debit');
-                },
-                onClose: function() {
-                    alert('Subscription cancelled');
-                }
-            });
-            
-            handler.openIframe();
+            // ... (keep your existing addTransaction function) ...
         }
 
         // ============================================
         // HELPER FUNCTIONS
         // ============================================
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
+        function showLoading(msg) { /* ... */ }
+        function hideLoading() { /* ... */ }
+        function loadScript(src) { /* ... */ }
 
-        function showLoading(message) {
-            const overlay = document.createElement('div');
-            overlay.id = 'loadingOverlay';
-            overlay.style.cssText = `
-                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(255,255,255,0.9); display: flex;
-                justify-content: center; align-items: center; z-index: 9999;
-            `;
-            overlay.innerHTML = `
-                <div style="background: #0066cc; color: white; padding: 20px; border-radius: 10px;">
-                    <div style="width: 30px; height: 30px; border: 3px solid white; 
-                                border-top-color: transparent; border-radius: 50%; 
-                                animation: spin 1s infinite; margin: 0 auto 10px;"></div>
-                    <p>${message}</p>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
-
-        function hideLoading() {
-            const overlay = document.getElementById('loadingOverlay');
-            if (overlay) overlay.remove();
-        }
-
-        // Save user data from signup
         window.saveUserData = function(name, email) {
             localStorage.setItem('userName', name);
             localStorage.setItem('userEmail', email);
-            localStorage.setItem('userBalance', '0'); // STARTS AT ZERO!
+            localStorage.setItem('userBalance', '0');
         };
     </script>
-
-    <style>
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
 </body>
 </html>
