@@ -96,3 +96,163 @@
     <script src="js/admin.js"></script>
 </body>
 </html>
+<!-- Add this function to admin.js or directly in admin-dashboard.html -->
+
+<script>
+    // Data Plans Management Functions
+    function loadDataPlansManagement() {
+        const content = document.getElementById('contentArea');
+        content.innerHTML = `
+            <div class="table-container">
+                <div class="table-header">
+                    <h2>Data Plans Management</h2>
+                    <button class="btn btn-success" onclick="showAddPlanModal()">+ Add New Plan</button>
+                </div>
+                
+                <!-- MTN Plans -->
+                <div class="api-key-item">
+                    <h3 style="color: #ffcc00;">📱 MTN Nigeria</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Price (₦)</th>
+                                <th>Type</th>
+                                <th>API Code</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mtnPlansTable">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Glo Plans -->
+                <div class="api-key-item">
+                    <h3 style="color: #00a859;">📱 Glo</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Price (₦)</th>
+                                <th>Type</th>
+                                <th>API Code</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gloPlansTable">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Airtel Plans -->
+                <div class="api-key-item">
+                    <h3 style="color: #e60000;">📱 Airtel</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Price (₦)</th>
+                                <th>Type</th>
+                                <th>API Code</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="airtelPlansTable">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 9mobile Plans -->
+                <div class="api-key-item">
+                    <h3 style="color: #00aeef;">📱 9mobile</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Price (₦)</th>
+                                <th>Type</th>
+                                <th>API Code</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="9mobilePlansTable">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        
+        // Load all plans
+        loadAllPlans();
+    }
+    
+    function loadAllPlans() {
+        // This would load from database
+        // For now, using the dataPlans object
+        const plans = window.dataPlans || {
+            mtn: [
+                { name: '100MB', price: 100, type: 'daily', apiCode: 'mtn-daily-100mb', status: 'active' },
+                { name: '1GB', price: 500, type: 'monthly', apiCode: 'mtn-monthly-1gb', status: 'active' }
+            ]
+        };
+        
+        // Populate tables
+        for (let network in plans) {
+            const tableId = `${network}PlansTable`;
+            const tbody = document.getElementById(tableId);
+            if (tbody) {
+                let html = '';
+                plans[network].forEach(plan => {
+                    html += `
+                        <tr>
+                            <td>${plan.name}</td>
+                            <td>₦${plan.price}</td>
+                            <td>${plan.type}</td>
+                            <td><code>${plan.apiCode}</code></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-small" onclick="editPlan('${network}', '${plan.id}')">Edit</button>
+                                <button class="btn btn-danger btn-small" onclick="deletePlan('${network}', '${plan.id}')">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            }
+        }
+    }
+    
+    function showAddPlanModal() {
+        const network = prompt('Enter network (mtn/glo/airtel/9mobile):');
+        if (!network) return;
+        
+        const name = prompt('Enter plan name (e.g., 1GB):');
+        const price = prompt('Enter price (₦):');
+        const type = prompt('Enter type (daily/weekly/monthly):');
+        const apiCode = prompt('Enter API code:');
+        
+        if (name && price && type && apiCode) {
+            alert(`✅ Plan added for ${network}`);
+            // Here you would save to database
+        }
+    }
+    
+    function editPlan(network, planId) {
+        alert(`Edit plan ${planId} for ${network}`);
+    }
+    
+    function deletePlan(network, planId) {
+        if (confirm(`Delete plan ${planId}?`)) {
+            alert('Plan deleted');
+        }
+    }
+</script>
