@@ -11,187 +11,98 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-        }
         .login-box {
             background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .logo {
+            padding: 40px;
+            border-radius: 10px;
+            width: 350px;
             text-align: center;
+        }
+        h2 {
+            color: #0066cc;
             margin-bottom: 30px;
         }
-        .logo h1 {
-            color: #0066cc;
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-        .admin-badge {
-            background: #1a1a2e;
-            color: white;
-            padding: 8px;
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-        .form-group input {
+        button {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-        }
-        .form-group input:focus {
-            border-color: #0066cc;
-            outline: none;
-        }
-        .login-btn {
-            width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: #0066cc;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
-            margin: 10px 0;
+            margin: 20px 0;
         }
-        .login-btn:hover {
+        button:hover {
             background: #004d99;
         }
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 20px 0;
-            display: none;
+        .error {
+            color: red;
+            margin: 10px 0;
         }
-        .success-message {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 20px 0;
-            display: none;
-        }
-        .back-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .back-link a {
-            color: #666;
-            text-decoration: none;
+        .success {
+            color: green;
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <div class="logo">
-                <h1>🔵 TUNZY ADMIN</h1>
-                <p>Secure Admin Portal</p>
-            </div>
-
-            <div class="admin-badge">
-                ⚡ Restricted Access - Administrators Only
-            </div>
-
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
-
-            <form id="adminLoginForm">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="username" placeholder="Enter username" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" placeholder="Enter password" required>
-                </div>
-
-                <button type="submit" class="login-btn">Access Admin Panel</button>
-            </form>
-
-            <div class="back-link">
-                <a href="index.html">← Return to Homepage</a>
-            </div>
-        </div>
+    <div class="login-box">
+        <h2>🔵 TUNZY ADMIN</h2>
+        
+        <div id="errorMsg" class="error"></div>
+        <div id="successMsg" class="success"></div>
+        
+        <input type="text" id="username" placeholder="Username" value="admin">
+        <input type="password" id="password" placeholder="Password" value="Admin123">
+        
+        <button onclick="login()">Login to Admin Panel</button>
     </div>
 
     <script>
-        // ============================================
-        // SIMPLE ADMIN LOGIN - NO REDIRECT LOOPS!
-        // ============================================
+        // Clear any existing admin session on page load
+        localStorage.removeItem('adminLoggedIn');
         
-        const ADMIN_USERNAME = 'admin';
-        const ADMIN_PASSWORD = 'Admin123';
-
-        // IMPORTANT: Check if already logged in - BUT ONLY ONCE and STOP if on login page!
-        // We check if we're NOT already on the dashboard before redirecting
-        const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-        const currentPath = window.location.pathname;
-        
-        // Only redirect if logged in AND not already on dashboard
-        if (isLoggedIn && !currentPath.includes('admin-dashboard.html')) {
-            window.location.replace('admin-dashboard.html');
-        }
-
-        // Handle login form
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Stop form from submitting normally
-            
-            const username = document.getElementById('username').value.trim();
+        function login() {
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Hide any previous messages
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
+            // Clear messages
+            document.getElementById('errorMsg').innerHTML = '';
+            document.getElementById('successMsg').innerHTML = '';
             
             // Check credentials
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                // Show success
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
+            if (username === 'admin' && password === 'Admin123') {
+                document.getElementById('successMsg').innerHTML = 'Login successful! Redirecting...';
                 
                 // Set login flag
                 localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminUser', username);
                 
                 // Redirect to dashboard
                 setTimeout(() => {
                     window.location.href = 'admin-dashboard.html';
                 }, 1000);
             } else {
-                // Show error
-                document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('errorMessage').textContent = 'Invalid username or password';
-                document.getElementById('password').value = '';
+                document.getElementById('errorMsg').innerHTML = 'Invalid username or password';
             }
+        }
+        
+        // Allow Enter key
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
         });
     </script>
 </body>
