@@ -134,8 +134,8 @@
 
         /* Network logo container */
         .network-logo {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             margin: 0 auto 10px;
             display: flex;
             align-items: center;
@@ -175,6 +175,10 @@
             gap: 10px;
             overflow-x: auto;
             scrollbar-width: none;
+        }
+
+        .quick-actions::-webkit-scrollbar {
+            display: none;
         }
 
         .quick-action-item {
@@ -278,7 +282,7 @@
             <div class="header-top">
                 <div class="logo-circle">
                     <!-- 🔴 YOUR LOGO - JPG FORMAT -->
-                    <img src="assets/my-logo.jpg" alt="TUNZY">
+                    <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/50/0066cc/ffffff?text=T'">
                 </div>
                 <div class="menu-icon">☰</div>
             </div>
@@ -295,42 +299,42 @@
             <button class="fund-button" onclick="fundWallet()">Fund</button>
         </div>
 
-        <!-- Services Grid - ALL NETWORK LOGOS -->
+        <!-- Services Grid - ALL NETWORK LOGOS WITH CORRECT FILENAMES -->
         <div class="services-grid">
-            <!-- MTN Data -->
+            <!-- MTN Data - mtn-logo.png -->
             <div class="service-item" onclick="location.href='buy-data.html?network=mtn'">
                 <div class="network-logo">
-                    <img src="assets/networks/mtn-logo.jpg" alt="MTN" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <img src="assets/networks/mtn-logo.png" alt="MTN" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
                     <span style="display:none; font-weight:bold; color:#ffcc00;">MTN</span>
                 </div>
                 <div class="service-title">Data Plans</div>
                 <div class="service-subtitle">1GB · ₦500</div>
             </div>
 
-            <!-- GLO Data -->
+            <!-- GLO Data - glo-logo.png -->
             <div class="service-item" onclick="location.href='buy-data.html?network=glo'">
                 <div class="network-logo">
-                    <img src="assets/networks/glo-logo.jpg" alt="GLO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <img src="assets/networks/glo-logo.png" alt="GLO" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
                     <span style="display:none; font-weight:bold; color:#00a859;">GLO</span>
                 </div>
                 <div class="service-title">Data Plans</div>
                 <div class="service-subtitle">1GB · ₦500</div>
             </div>
 
-            <!-- Airtel Data -->
+            <!-- Airtel Data - airtel-logo.jpeg -->
             <div class="service-item" onclick="location.href='buy-data.html?network=airtel'">
                 <div class="network-logo">
-                    <img src="assets/networks/airtel-logo.jpg" alt="AIRTEL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
                     <span style="display:none; font-weight:bold; color:#e60000;">AIRTEL</span>
                 </div>
                 <div class="service-title">Data Plans</div>
                 <div class="service-subtitle">1GB · ₦500</div>
             </div>
 
-            <!-- 9mobile Data (Etisalat) -->
+            <!-- 9mobile Data - 9mobile-logo.jpeg -->
             <div class="service-item" onclick="location.href='buy-data.html?network=9mobile'">
                 <div class="network-logo">
-                    <img src="assets/networks/etisalat-logo.jpg" alt="9MOBILE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
                     <span style="display:none; font-weight:bold; color:#00aeef;">9MOBILE</span>
                 </div>
                 <div class="service-title">Data Plans</div>
@@ -340,7 +344,7 @@
             <!-- Airtime -->
             <div class="service-item" onclick="location.href='airtime.html'">
                 <div class="network-logo">
-                    <img src="assets/networks/airtime-icon.jpg" alt="AIRTIME" onerror="this.innerHTML='📞'">
+                    <img src="assets/networks/airtime-icon.png" alt="AIRTIME" onerror="this.innerHTML='📞'">
                 </div>
                 <div class="service-title">Airtime</div>
                 <div class="service-subtitle">All networks</div>
@@ -349,7 +353,7 @@
             <!-- Cable TV -->
             <div class="service-item" onclick="location.href='tv.html'">
                 <div class="network-logo">
-                    <img src="assets/networks/tv-icon.jpg" alt="TV" onerror="this.innerHTML='📺'">
+                    <img src="assets/networks/tv-icon.png" alt="TV" onerror="this.innerHTML='📺'">
                 </div>
                 <div class="service-title">Cable TV</div>
                 <div class="service-subtitle">DSTV, GOtv</div>
@@ -358,7 +362,7 @@
             <!-- Electricity -->
             <div class="service-item" onclick="location.href='electricity.html'">
                 <div class="network-logo">
-                    <img src="assets/networks/electricity-icon.jpg" alt="POWER" onerror="this.innerHTML='💡'">
+                    <img src="assets/networks/electricity-icon.png" alt="POWER" onerror="this.innerHTML='💡'">
                 </div>
                 <div class="service-title">Electricity</div>
                 <div class="service-subtitle">Prepaid</div>
@@ -367,7 +371,7 @@
             <!-- Results -->
             <div class="service-item" onclick="location.href='results.html'">
                 <div class="network-logo">
-                    <img src="assets/networks/results-icon.jpg" alt="EXAMS" onerror="this.innerHTML='📊'">
+                    <img src="assets/networks/results-icon.png" alt="EXAMS" onerror="this.innerHTML='📊'">
                 </div>
                 <div class="service-title">Results</div>
                 <div class="service-subtitle">WAEC, NECO</div>
