@@ -54,6 +54,7 @@
             border-radius: 15px;
             text-align: center;
             margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
         }
 
         .profile-avatar {
@@ -66,17 +67,19 @@
             justify-content: center;
             margin: 0 auto 15px;
             color: white;
-            font-size: 40px;
+            font-size: 36px;
         }
 
         .profile-name {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             margin-bottom: 5px;
+            color: #333;
         }
 
         .profile-email {
             color: #666;
+            font-size: 14px;
             margin-bottom: 15px;
         }
 
@@ -92,10 +95,11 @@
             padding: 15px;
             border-radius: 10px;
             text-align: center;
+            border: 1px solid #e0e0e0;
         }
 
         .stat-value {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #0066cc;
             margin-bottom: 5px;
@@ -118,12 +122,16 @@
             cursor: pointer;
             margin: 20px 0;
         }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
     </style>
 </head>
 <body>
     <div class="app-container">
         <div class="header">
-            <a href="index.html" class="back-btn">←</a>
+            <a href="dashboard.html" class="back-btn">←</a>
             <h1>My Profile</h1>
         </div>
 
@@ -151,26 +159,25 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const name = localStorage.getItem('userName');
-            const email = localStorage.getItem('userEmail');
+            const user = JSON.parse(localStorage.getItem('currentUser'));
             const balance = localStorage.getItem('userBalance') || '0';
             const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
             
-            if (!name) {
-                window.location.href = 'login.html';
+            if (!user) {
+                window.location.href = 'index.html';
                 return;
             }
             
-            document.getElementById('profileName').textContent = name;
-            document.getElementById('profileEmail').textContent = email;
+            document.getElementById('profileName').textContent = user.name || 'User';
+            document.getElementById('profileEmail').textContent = user.email || '';
             document.getElementById('statBalance').textContent = `₦${parseFloat(balance).toLocaleString()}`;
             document.getElementById('statTransactions').textContent = transactions.length;
         });
 
         function logout() {
-            if (confirm('Logout?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             }
         }
     </script>
