@@ -48,149 +48,123 @@
             padding: 20px;
         }
 
-        .contact-card {
-            background: linear-gradient(135deg, #0066cc, #004d99);
-            color: white;
-            padding: 30px 20px;
-            border-radius: 15px;
+        .support-title {
             text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .contact-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        .contact-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .contact-number {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .contact-note {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        /* WhatsApp Options */
-        .whatsapp-section {
-            margin: 25px 0;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
             color: #333;
-            margin-bottom: 15px;
-            padding-left: 5px;
+            margin-bottom: 30px;
+            font-size: 18px;
         }
 
-        .whatsapp-card {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
+        /* Button Styles */
+        .whatsapp-btn {
+            width: 100%;
+            background: #25D366;
+            color: white;
+            border: none;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-
-        .whatsapp-card:hover {
-            border-color: #25D366;
-            background: #e8f5e9;
-        }
-
-        .whatsapp-icon {
-            font-size: 40px;
-            color: #25D366;
-        }
-
-        .whatsapp-info h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .whatsapp-info p {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .whatsapp-link {
-            color: #25D366;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .channel-card, .group-card {
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
+            gap: 20px;
             cursor: pointer;
             transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
-        .channel-card:hover, .group-card:hover {
-            border-color: #0066cc;
-            background: #e6f0ff;
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
         }
 
-        .card-title {
-            font-weight: 600;
-            color: #0066cc;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .card-link {
-            color: #666;
-            font-size: 13px;
-            word-break: break-all;
-            background: white;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .copy-btn {
+        .channel-btn {
+            width: 100%;
             background: #0066cc;
             color: white;
             border: none;
-            padding: 5px 15px;
             border-radius: 15px;
-            font-size: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
             cursor: pointer;
-            margin-left: 10px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
-        .copy-btn:hover {
+        .channel-btn:hover {
             background: #004d99;
+            transform: translateY(-2px);
+        }
+
+        .group-btn {
+            width: 100%;
+            background: #128C7E;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .group-btn:hover {
+            background: #0e6b5f;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            font-size: 40px;
+            background: rgba(255,255,255,0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .btn-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .btn-text p {
+            font-size: 13px;
+            opacity: 0.9;
         }
 
         .faq-section {
             margin-top: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .faq-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0066cc;
+            margin-bottom: 15px;
         }
 
         .faq-item {
-            background: #f8f9fa;
+            background: white;
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 10px;
             border: 1px solid #e0e0e0;
-            cursor: pointer;
         }
 
         .faq-question {
@@ -198,6 +172,7 @@
             color: #333;
             display: flex;
             justify-content: space-between;
+            cursor: pointer;
         }
 
         .faq-answer {
@@ -205,6 +180,8 @@
             color: #666;
             font-size: 14px;
             display: none;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
         }
 
         .faq-item.active .faq-answer {
@@ -220,86 +197,63 @@
         </div>
 
         <div class="container">
-            <!-- Direct WhatsApp Contact -->
-            <div class="contact-card">
-                <div class="contact-icon">📱</div>
-                <div class="contact-title">Chat with Us</div>
-                <div class="contact-number">+234 906 734 5425</div>
-                <div class="contact-note">24/7 Support on WhatsApp</div>
+            <div class="support-title">
+                How can we help you today?
             </div>
 
-            <!-- WhatsApp Options -->
-            <div class="whatsapp-section">
-                <div class="section-title">Connect on WhatsApp</div>
-                
-                <!-- Direct Chat -->
-                <div class="whatsapp-card" onclick="window.open('https://wa.me/2349067345425', '_blank')">
-                    <div class="whatsapp-icon">💬</div>
-                    <div class="whatsapp-info">
-                        <h3>Chat with Support</h3>
-                        <p>Click to start conversation</p>
-                        <span class="whatsapp-link">wa.me/+2349067345425</span>
-                    </div>
+            <!-- WhatsApp Chat Button -->
+            <button class="whatsapp-btn" onclick="window.open('https://wa.me/2349067345425', '_blank')">
+                <div class="btn-icon">💬</div>
+                <div class="btn-text">
+                    <h3>Chat on WhatsApp</h3>
+                    <p>Talk to support instantly</p>
                 </div>
+            </button>
 
-                <!-- WhatsApp Channel -->
-                <div class="channel-card" onclick="window.open('https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s', '_blank')">
-                    <div class="card-title">📢 Follow Our WhatsApp Channel</div>
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <span class="card-link">https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s</span>
-                        <button class="copy-btn" onclick="copyToClipboard('https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s', event)">Copy</button>
-                    </div>
-                    <p style="color: #666; font-size: 12px; margin-top: 8px;">Get latest updates and offers</p>
+            <!-- Channel Button -->
+            <button class="channel-btn" onclick="window.open('https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s', '_blank')">
+                <div class="btn-icon">📢</div>
+                <div class="btn-text">
+                    <h3>Join Our Channel</h3>
+                    <p>Get latest updates & offers</p>
                 </div>
+            </button>
 
-                <!-- WhatsApp Group -->
-                <div class="group-card" onclick="window.open('https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH', '_blank')">
-                    <div class="card-title">👥 Join Our WhatsApp Group</div>
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <span class="card-link">https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH</span>
-                        <button class="copy-btn" onclick="copyToClipboard('https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH', event)">Copy</button>
-                    </div>
-                    <p style="color: #666; font-size: 12px; margin-top: 8px;">Connect with other users</p>
+            <!-- Group Button -->
+            <button class="group-btn" onclick="window.open('https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH', '_blank')">
+                <div class="btn-icon">👥</div>
+                <div class="btn-text">
+                    <h3>Join Community Group</h3>
+                    <p>Connect with other users</p>
                 </div>
-            </div>
-
-            <!-- Current Offers from Your Channel -->
-            <div class="whatsapp-section">
-                <div class="section-title">🔥 Current Offers</div>
-                <div style="background: #e6f0ff; padding: 15px; border-radius: 12px; border-left: 4px solid #0066cc;">
-                    <p style="font-weight: 600; color: #0066cc; margin-bottom: 10px;">AVAILABLE SUB FOR NOW</p>
-                    <p style="margin-bottom: 5px;">📱 MTN 300 = 1GB (1-2 days)</p>
-                    <p style="margin-bottom: 5px;">📱 AIRTEL 850 = 3GB (2-3 days)</p>
-                    <p style="margin-top: 10px; color: #666; font-size: 12px;">Prices valid as of March 2024</p>
-                </div>
-            </div>
+            </button>
 
             <!-- FAQ Section -->
             <div class="faq-section">
-                <div class="section-title">Frequently Asked Questions</div>
+                <div class="faq-title">Frequently Asked Questions</div>
                 
                 <div class="faq-item" onclick="toggleFAQ(this)">
                     <div class="faq-question">
                         How do I buy data?
                         <span>▼</span>
                     </div>
-                    <div class="faq-answer">Click on the Data button on home screen, select network, choose plan, and confirm payment. Data is delivered instantly.</div>
+                    <div class="faq-answer">Click on Data button, select network, choose plan, and confirm payment. Data is delivered instantly.</div>
                 </div>
 
                 <div class="faq-item" onclick="toggleFAQ(this)">
                     <div class="faq-question">
-                        How long does transfer take?
+                        How long do transfers take?
                         <span>▼</span>
                     </div>
-                    <div class="faq-answer">Bank transfers are usually instant. Maximum processing time is 5 minutes during peak periods.</div>
+                    <div class="faq-answer">Transfers are usually instant. Maximum 5 minutes during peak periods.</div>
                 </div>
 
                 <div class="faq-item" onclick="toggleFAQ(this)">
                     <div class="faq-question">
-                        What's the channel for updates?
+                        Is my money safe?
                         <span>▼</span>
                     </div>
-                    <div class="faq-answer">Follow our WhatsApp channel for latest prices and offers: https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s</div>
+                    <div class="faq-answer">Yes! All transactions are secure and encrypted.</div>
                 </div>
             </div>
         </div>
@@ -308,13 +262,6 @@
     <script>
         function toggleFAQ(element) {
             element.classList.toggle('active');
-        }
-
-        function copyToClipboard(text, event) {
-            event.stopPropagation(); // Prevent card click
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Link copied to clipboard!');
-            });
         }
     </script>
 </body>
