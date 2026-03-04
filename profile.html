@@ -49,37 +49,98 @@
         }
 
         .profile-card {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #0066cc, #004d99);
+            color: white;
             padding: 30px 20px;
             border-radius: 15px;
             text-align: center;
             margin-bottom: 20px;
-            border: 1px solid #e0e0e0;
         }
 
         .profile-avatar {
             width: 80px;
             height: 80px;
-            background: #0066cc;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            color: white;
-            font-size: 36px;
+            color: #0066cc;
+            font-size: 40px;
         }
 
         .profile-name {
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 5px;
-            color: #333;
         }
 
         .profile-email {
-            color: #666;
+            opacity: 0.9;
             font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .menu-item {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            border-color: #0066cc;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #0066cc;
+        }
+
+        .menu-text {
+            flex: 1;
+        }
+
+        .menu-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .menu-subtitle {
+            font-size: 12px;
+            color: #666;
         }
 
         .logout-btn {
@@ -92,6 +153,7 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            margin: 20px 0;
         }
 
         .logout-btn:hover {
@@ -113,6 +175,41 @@
                 <div class="profile-email" id="profileEmail">loading@email.com</div>
             </div>
 
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statBalance">₦0</div>
+                    <div class="stat-label">Balance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statTransactions">0</div>
+                    <div class="stat-label">Transactions</div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="window.location.href='history.html'">
+                <div class="menu-icon">📊</div>
+                <div class="menu-text">
+                    <div class="menu-title">Transaction History</div>
+                    <div class="menu-subtitle">View all your transactions</div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="window.location.href='support.html'">
+                <div class="menu-icon">❓</div>
+                <div class="menu-text">
+                    <div class="menu-title">Support</div>
+                    <div class="menu-subtitle">Get help and contact us</div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="window.location.href='settings.html'">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-text">
+                    <div class="menu-title">Settings</div>
+                    <div class="menu-subtitle">Account preferences</div>
+                </div>
+            </div>
+
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
@@ -120,6 +217,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
+            const balance = localStorage.getItem('userBalance') || '0';
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
             
             if (!user) {
                 window.location.href = 'index.html';
@@ -128,6 +227,8 @@
             
             document.getElementById('profileName').textContent = user.name || 'User';
             document.getElementById('profileEmail').textContent = user.email || '';
+            document.getElementById('statBalance').textContent = `₦${parseFloat(balance).toLocaleString()}`;
+            document.getElementById('statTransactions').textContent = transactions.length;
         });
 
         function logout() {
