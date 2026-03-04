@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TUNZY SUB 4 YOU</title>
+    <title>Welcome - TUNZY SUB 4 YOU</title>
     <style>
         * {
             margin: 0;
@@ -13,37 +13,159 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
+            background: #0066cc;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
+        .slider-container {
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
             background: white;
-            min-height: 100vh;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .slides {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
             position: relative;
         }
 
-        .header {
-            background: #0066cc;
-            padding: 20px 20px 30px;
-            color: white;
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .header-top {
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 40px 20px 30px;
+            text-align: center;
+        }
+
+        .slide-overlay h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .slide-overlay p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(5px);
+            border: 2px solid white;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #0066cc;
+        }
+
+        .prev-btn {
+            left: 15px;
+        }
+
+        .next-btn {
+            right: 15px;
+        }
+
+        .skip-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(5px);
+            border: 2px solid white;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .skip-btn:hover {
+            background: white;
+            color: #0066cc;
+        }
+
+        .dots-container {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px white;
         }
 
         .logo-circle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             width: 50px;
             height: 50px;
             border-radius: 50%;
             background: white;
             overflow: hidden;
             border: 2px solid white;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .logo-circle img {
@@ -52,187 +174,149 @@
             object-fit: cover;
         }
 
-        .welcome-text {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .user-name {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .balance-section {
-            background: white;
-            margin: -20px 20px 0;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .balance-label {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-
-        .balance-amount {
-            font-size: 28px;
-            font-weight: 700;
-            color: #0066cc;
-        }
-
-        .fund-button {
+        .login-now-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+            padding: 18px;
             background: #0066cc;
-            color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 14px;
+            border-radius: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            background: #e0e0e0;
-            margin: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .service-item {
-            background: white;
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .service-item:hover {
-            background: #f8f9fa;
-        }
-
-        .service-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #0066cc;
-        }
-
-        .service-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .service-subtitle {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .bottom-nav {
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            position: fixed;
-            bottom: 0;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .nav-item {
+            z-index: 10;
             text-align: center;
             text-decoration: none;
-            color: #999;
-            font-size: 12px;
+            display: block;
+            box-shadow: 0 5px 20px rgba(0,102,204,0.4);
+            transition: all 0.3s;
         }
 
-        .nav-item.active {
-            color: #0066cc;
-        }
-
-        body {
-            padding-bottom: 70px;
+        .login-now-btn:hover {
+            background: #004d99;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <div class="header-top">
-                <div class="logo-circle">
-                    <img src="assets/my-logo.jpg" alt="TUNZY">
+    <div class="slider-container">
+        <div class="logo-circle">
+            <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/50/0066cc/ffffff?text=T'">
+        </div>
+
+        <a href="login-page.html" class="skip-btn">Skip →</a>
+
+        <div class="slides" id="slides">
+            <div class="slide">
+                <img src="assets/firstimage.jpg" alt="Welcome" onerror="this.src='https://via.placeholder.com/400x600/0066cc/ffffff?text=Welcome+to+TUNZY'">
+                <div class="slide-overlay">
+                    <h2>Welcome to TUNZY SUB 4 YOU</h2>
+                    <p>Your one-stop platform for all digital subscriptions</p>
                 </div>
-                <div>☰</div>
             </div>
-            <div class="welcome-text">Welcome back,</div>
-            <div class="user-name" id="userDisplay">Loading...</div>
-        </div>
 
-        <!-- REAL BALANCE - NO FAKE NUMBERS -->
-        <div class="balance-section">
-            <div>
-                <div class="balance-label">Wallet Balance</div>
-                <div class="balance-amount" id="balanceDisplay">₦0.00</div>
+            <div class="slide">
+                <img src="assets/secondimage.jpg" alt="Buy Data" onerror="this.src='https://via.placeholder.com/400x600/004d99/ffffff?text=Buy+Data+and+Airtime'">
+                <div class="slide-overlay">
+                    <h2>Buy Data & Airtime</h2>
+                    <p>MTN, GLO, Airtel, 9mobile at the best rates</p>
+                </div>
             </div>
-            <button class="fund-button" onclick="window.location.href='fund.html'">Fund</button>
+
+            <div class="slide">
+                <img src="assets/thirdimage.jpg" alt="Pay Bills" onerror="this.src='https://via.placeholder.com/400x600/003366/ffffff?text=Pay+Your+Bills'">
+                <div class="slide-overlay">
+                    <h2>Pay Bills Easily</h2>
+                    <p>Electricity, Cable TV, Results and more</p>
+                </div>
+            </div>
         </div>
 
-        <!-- SERVICES - Buy Data is first! -->
-        <div class="services-grid">
-            <a href="buy-data.html" class="service-item">
-                <div class="service-icon">📱</div>
-                <div class="service-title">Buy Data</div>
-                <div class="service-subtitle">All networks</div>
-            </a>
-            <a href="airtime.html" class="service-item">
-                <div class="service-icon">📞</div>
-                <div class="service-title">Airtime</div>
-                <div class="service-subtitle">Recharge</div>
-            </a>
-            <a href="tv.html" class="service-item">
-                <div class="service-icon">📺</div>
-                <div class="service-title">Cable TV</div>
-                <div class="service-subtitle">DSTV, GOtv</div>
-            </a>
-            <a href="electricity.html" class="service-item">
-                <div class="service-icon">💡</div>
-                <div class="service-title">Electricity</div>
-                <div class="service-subtitle">Prepaid</div>
-            </a>
-        </div>
-    </div>
+        <div class="nav-btn prev-btn" onclick="prevSlide()" id="prevBtn">‹</div>
+        <div class="nav-btn next-btn" onclick="nextSlide()" id="nextBtn">›</div>
 
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item active">Home</a>
-        <a href="services.html" class="nav-item">Services</a>
-        <a href="history.html" class="nav-item">History</a>
-        <a href="profile.html" class="nav-item">Profile</a>
+        <div class="dots-container" id="dotsContainer">
+            <span class="dot active" onclick="goToSlide(0)"></span>
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+        </div>
+
+        <a href="login-page.html" class="login-now-btn">Get Started Now</a>
     </div>
 
     <script>
-        // Load REAL user data - NO FAKE STUFF
-        document.addEventListener('DOMContentLoaded', function() {
-            const userName = localStorage.getItem('userName');
-            const balance = localStorage.getItem('userBalance');
+        let currentSlide = 0;
+        const slides = document.getElementById('slides');
+        const totalSlides = 3;
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlider() {
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
             
-            if (!userName) {
-                window.location.href = 'login.html';
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlider();
+            } else {
+                window.location.href = 'login-page.html';
                 return;
             }
-            
-            document.getElementById('userDisplay').textContent = userName;
-            document.getElementById('balanceDisplay').textContent = `₦${parseFloat(balance || 0).toLocaleString()}.00`;
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlider();
+            }
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
+        let autoSlide = setInterval(() => {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlider();
+            } else {
+                clearInterval(autoSlide);
+            }
+        }, 3000);
+
+        document.querySelector('.slider-container').addEventListener('mouseenter', () => {
+            clearInterval(autoSlide);
+        });
+
+        document.querySelector('.slider-container').addEventListener('mouseleave', () => {
+            autoSlide = setInterval(() => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlider();
+                } else {
+                    clearInterval(autoSlide);
+                }
+            }, 3000);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
         });
     </script>
 </body>
