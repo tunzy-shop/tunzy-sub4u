@@ -55,34 +55,16 @@
             flex: 1;
         }
 
-        /* Welcome Card */
-        .welcome-card {
-            padding: 20px;
-        }
-
-        .welcome-text {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .user-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: #333;
-        }
-
         /* Balance Card */
         .balance-card {
-            background: white;
-            margin: 0 20px 20px;
+            background: #0066cc;
+            color: white;
+            margin: 20px;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #e0e0e0;
         }
 
         .balance-left {
@@ -92,16 +74,14 @@
         }
 
         .balance-label {
-            color: #666;
             font-size: 14px;
+            opacity: 0.9;
             margin-bottom: 5px;
         }
 
         .balance-amount {
             font-size: 28px;
             font-weight: 700;
-            color: #0066cc;
-            transition: all 0.3s;
         }
 
         .balance-amount.hidden {
@@ -109,45 +89,35 @@
         }
 
         .eye-btn {
-            background: none;
+            background: rgba(255,255,255,0.2);
             border: none;
             font-size: 20px;
             cursor: pointer;
-            color: #999;
-            padding: 5px;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .eye-btn:hover {
-            color: #0066cc;
+            background: rgba(255,255,255,0.3);
         }
 
-        .fund-btn {
-            background: #0066cc;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .fund-btn:hover {
-            background: #004d99;
-        }
-
-        /* Services Grid */
+        /* Services Grid - 2 Rows of 4 Columns = 8 Buttons */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            padding: 0 20px;
-            margin: 20px 0;
+            padding: 20px;
         }
 
         .service-card {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px 5px;
             border-radius: 12px;
             text-align: center;
             text-decoration: none;
@@ -162,18 +132,19 @@
             box-shadow: 0 5px 15px rgba(0,102,204,0.1);
         }
 
-        .service-title {
-            font-weight: 600;
-            color: #0066cc;
+        .service-icon {
+            font-size: 24px;
             margin-bottom: 5px;
+            color: #0066cc;
         }
 
-        .service-desc {
+        .service-title {
             font-size: 12px;
-            color: #666;
+            font-weight: 500;
+            color: #0066cc;
         }
 
-        /* Bottom Navigation */
+        /* Bottom Navigation - EXACTLY LIKE YOUR IMAGE */
         .bottom-nav {
             background: white;
             border-top: 1px solid #e0e0e0;
@@ -191,7 +162,7 @@
             text-align: center;
             text-decoration: none;
             color: #999;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
         }
 
@@ -199,8 +170,28 @@
             color: #0066cc;
         }
 
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
         body {
             padding-bottom: 70px;
+        }
+
+        /* Welcome text */
+        .welcome-text {
+            padding: 10px 20px 0;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .user-name {
+            padding: 0 20px 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #0066cc;
         }
     </style>
 </head>
@@ -225,13 +216,11 @@
             <span class="app-title">TUNZY SUB 4 YOU</span>
         </div>
 
-        <!-- Welcome Card -->
-        <div class="welcome-card">
-            <div class="welcome-text">Welcome back,</div>
-            <div class="user-name" id="userName">Loading...</div>
-        </div>
+        <!-- Welcome -->
+        <div class="welcome-text">Welcome back,</div>
+        <div class="user-name" id="userName">Loading...</div>
 
-        <!-- Balance Card with Eye Button - REAL BALANCE -->
+        <!-- Balance Card with Eye Button -->
         <div class="balance-card">
             <div class="balance-left">
                 <div>
@@ -240,81 +229,100 @@
                 </div>
                 <button class="eye-btn" onclick="toggleBalance()" id="eyeBtn">👁️</button>
             </div>
-            <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- Services Grid -->
+        <!-- Services Grid - 8 BUTTONS LIKE YOUR IMAGE -->
         <div class="services-grid">
-            <a href="buy-data.html" class="service-card">
-                <div class="service-title">Buy Data</div>
-                <div class="service-desc">All networks</div>
-            </a>
+            <!-- Row 1 -->
             <a href="airtime.html" class="service-card">
+                <div class="service-icon">📞</div>
                 <div class="service-title">Airtime</div>
-                <div class="service-desc">Recharge</div>
+            </a>
+            <a href="buy-data.html" class="service-card">
+                <div class="service-icon">📱</div>
+                <div class="service-title">Data</div>
             </a>
             <a href="tv.html" class="service-card">
+                <div class="service-icon">📺</div>
                 <div class="service-title">Cable TV</div>
-                <div class="service-desc">DSTV, GOTv</div>
             </a>
             <a href="electricity.html" class="service-card">
+                <div class="service-icon">💡</div>
                 <div class="service-title">Electricity</div>
-                <div class="service-desc">Prepaid</div>
+            </a>
+            
+            <!-- Row 2 -->
+            <a href="savings.html" class="service-card">
+                <div class="service-icon">💰</div>
+                <div class="service-title">Savings</div>
+            </a>
+            <a href="exam.html" class="service-card">
+                <div class="service-icon">📊</div>
+                <div class="service-title">Exam</div>
+            </a>
+            <a href="airtime-to-cash.html" class="service-card">
+                <div class="service-icon">💱</div>
+                <div class="service-title">Airtime to Cash</div>
+            </a>
+            <a href="transfer.html" class="service-card">
+                <div class="service-icon">🏦</div>
+                <div class="service-title">Transfer</div>
             </a>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation - EXACTLY LIKE YOUR IMAGE -->
     <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">Home</a>
-        <a href="services.html" class="nav-item">Services</a>
-        <a href="history.html" class="nav-item">History</a>
-        <a href="profile.html" class="nav-item">Profile</a>
+        <a href="dashboard.html" class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div>Home</div>
+        </a>
+        <a href="buy-data.html" class="nav-item">
+            <div class="nav-icon">📱</div>
+            <div>Data</div>
+        </a>
+        <a href="savings.html" class="nav-item">
+            <div class="nav-icon">💰</div>
+            <div>Savings</div>
+        </a>
+        <a href="history.html" class="nav-item">
+            <div class="nav-icon">📊</div>
+            <div>History</div>
+        </a>
+        <a href="support.html" class="nav-item">
+            <div class="nav-icon">❓</div>
+            <div>Support</div>
+        </a>
     </div>
 
     <script>
         let balanceVisible = true;
         let currentBalance = 0;
 
-        // Load REAL user data from localStorage
+        // Load REAL user data
         document.addEventListener('DOMContentLoaded', function() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
-            
-            // Get REAL balance from localStorage - NO FAKE NUMBERS!
             currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             
-            // Show REAL user name
             document.getElementById('userName').textContent = user?.name || 'User';
-            
-            // Update balance with REAL amount
             updateBalanceDisplay();
         });
 
-        // Update balance display with REAL amount
         function updateBalanceDisplay() {
             const balanceElement = document.getElementById('balanceAmount');
             if (balanceVisible) {
-                // Show REAL balance with proper formatting
                 balanceElement.textContent = `₦${currentBalance.toLocaleString()}.00`;
                 balanceElement.classList.remove('hidden');
             } else {
-                // Hide balance
                 balanceElement.textContent = '••••••';
                 balanceElement.classList.add('hidden');
             }
         }
 
-        // Toggle balance visibility (eye button)
         function toggleBalance() {
             balanceVisible = !balanceVisible;
             const eyeBtn = document.getElementById('eyeBtn');
             eyeBtn.textContent = balanceVisible ? '👁️' : '👁️‍🗨️';
-            updateBalanceDisplay();
-        }
-
-        // Function to update balance after funding (called from fund.html)
-        function refreshBalance() {
-            currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             updateBalanceDisplay();
         }
     </script>
