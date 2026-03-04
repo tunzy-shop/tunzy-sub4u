@@ -48,6 +48,7 @@
             padding: 20px;
         }
 
+        /* Profile Card */
         .profile-card {
             background: linear-gradient(135deg, #0066cc, #004d99);
             color: white;
@@ -81,6 +82,7 @@
             font-size: 14px;
         }
 
+        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -108,6 +110,93 @@
             color: #666;
         }
 
+        /* Settings Section */
+        .settings-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .settings-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0066cc;
+            margin-bottom: 15px;
+        }
+
+        .setting-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e0e0e0;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .setting-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #0066cc;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Menu Items */
         .menu-item {
             background: #f8f9fa;
             padding: 15px 20px;
@@ -143,6 +232,12 @@
             color: #666;
         }
 
+        .menu-value {
+            color: #0066cc;
+            font-weight: 500;
+        }
+
+        /* Logout Button */
         .logout-btn {
             width: 100%;
             padding: 15px;
@@ -154,10 +249,84 @@
             font-weight: 600;
             cursor: pointer;
             margin: 20px 0;
+            transition: all 0.3s;
         }
 
         .logout-btn:hover {
             background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* PIN Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 350px;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 8px;
+        }
+
+        .modal-content input:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal-btn.cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .modal-btn.save {
+            background: #0066cc;
+            color: white;
         }
     </style>
 </head>
@@ -169,12 +338,14 @@
         </div>
 
         <div class="profile-section">
+            <!-- Profile Card -->
             <div class="profile-card">
                 <div class="profile-avatar">👤</div>
                 <div class="profile-name" id="profileName">Loading...</div>
                 <div class="profile-email" id="profileEmail">loading@email.com</div>
             </div>
 
+            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value" id="statBalance">₦0</div>
@@ -186,31 +357,102 @@
                 </div>
             </div>
 
-            <div class="menu-item" onclick="window.location.href='history.html'">
-                <div class="menu-icon">📊</div>
-                <div class="menu-text">
-                    <div class="menu-title">Transaction History</div>
-                    <div class="menu-subtitle">View all your transactions</div>
+            <!-- Security Settings -->
+            <div class="settings-section">
+                <div class="settings-title">🔒 Security Settings</div>
+                
+                <!-- PIN Toggle -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-name">Transaction PIN</div>
+                        <div class="setting-desc">Require PIN for transfers</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="pinToggle" onchange="togglePIN()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Biometric Toggle -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-name">Biometric Login</div>
+                        <div class="setting-desc">Use fingerprint/face ID</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="bioToggle" onchange="toggleBio()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- 2FA Toggle -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-name">Two-Factor Auth</div>
+                        <div class="setting-desc">Extra security layer</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="twofaToggle" onchange="toggle2FA()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
 
+            <!-- Account Settings -->
+            <div class="settings-section">
+                <div class="settings-title">⚙️ Account Settings</div>
+                
+                <div class="menu-item" onclick="changePassword()">
+                    <div class="menu-icon">🔑</div>
+                    <div class="menu-text">
+                        <div class="menu-title">Change Password</div>
+                        <div class="menu-subtitle">Update your password</div>
+                    </div>
+                </div>
+
+                <div class="menu-item" onclick="changePhone()">
+                    <div class="menu-icon">📱</div>
+                    <div class="menu-text">
+                        <div class="menu-title">Phone Number</div>
+                        <div class="menu-subtitle" id="profilePhone">08012345678</div>
+                    </div>
+                </div>
+
+                <div class="menu-item" onclick="changeEmail()">
+                    <div class="menu-icon">📧</div>
+                    <div class="menu-text">
+                        <div class="menu-title">Email Address</div>
+                        <div class="menu-subtitle" id="profileEmailDisplay">user@email.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Menu -->
             <div class="menu-item" onclick="window.location.href='support.html'">
                 <div class="menu-icon">❓</div>
                 <div class="menu-text">
-                    <div class="menu-title">Support</div>
-                    <div class="menu-subtitle">Get help and contact us</div>
+                    <div class="menu-title">Help & Support</div>
+                    <div class="menu-subtitle">Contact us, FAQs</div>
                 </div>
+                <div class="menu-value">→</div>
             </div>
 
-            <div class="menu-item" onclick="window.location.href='settings.html'">
-                <div class="menu-icon">⚙️</div>
-                <div class="menu-text">
-                    <div class="menu-title">Settings</div>
-                    <div class="menu-subtitle">Account preferences</div>
-                </div>
-            </div>
-
+            <!-- Logout Button -->
             <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- PIN Setup Modal -->
+    <div class="modal" id="pinModal">
+        <div class="modal-content">
+            <h3>Set Transaction PIN</h3>
+            <p style="color: #666; margin-bottom: 15px;">Enter a 4-digit PIN</p>
+            <input type="password" id="pinInput" maxlength="4" placeholder="••••">
+            <input type="password" id="pinConfirm" maxlength="4" placeholder="Confirm PIN">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closePINModal()">Cancel</button>
+                <button class="modal-btn save" onclick="savePIN()">Save PIN</button>
+            </div>
         </div>
     </div>
 
@@ -227,9 +469,92 @@
             
             document.getElementById('profileName').textContent = user.name || 'User';
             document.getElementById('profileEmail').textContent = user.email || '';
+            document.getElementById('profileEmailDisplay').textContent = user.email || '';
             document.getElementById('statBalance').textContent = `₦${parseFloat(balance).toLocaleString()}`;
             document.getElementById('statTransactions').textContent = transactions.length;
+            
+            // Load saved settings
+            loadSettings();
         });
+
+        // Load saved settings
+        function loadSettings() {
+            const pinEnabled = localStorage.getItem('pinEnabled') === 'true';
+            const bioEnabled = localStorage.getItem('bioEnabled') === 'true';
+            const twofaEnabled = localStorage.getItem('twofaEnabled') === 'true';
+            
+            document.getElementById('pinToggle').checked = pinEnabled;
+            document.getElementById('bioToggle').checked = bioEnabled;
+            document.getElementById('twofaToggle').checked = twofaEnabled;
+        }
+
+        // PIN Toggle
+        function togglePIN() {
+            const isChecked = document.getElementById('pinToggle').checked;
+            
+            if (isChecked) {
+                // Show PIN setup modal
+                document.getElementById('pinModal').classList.add('active');
+            } else {
+                // Disable PIN
+                localStorage.setItem('pinEnabled', 'false');
+                localStorage.removeItem('transactionPIN');
+                alert('PIN disabled');
+            }
+        }
+
+        function closePINModal() {
+            document.getElementById('pinModal').classList.remove('active');
+            document.getElementById('pinToggle').checked = false;
+            document.getElementById('pinInput').value = '';
+            document.getElementById('pinConfirm').value = '';
+        }
+
+        function savePIN() {
+            const pin = document.getElementById('pinInput').value;
+            const confirm = document.getElementById('pinConfirm').value;
+            
+            if (pin.length !== 4 || confirm.length !== 4) {
+                alert('PIN must be 4 digits');
+                return;
+            }
+            
+            if (pin !== confirm) {
+                alert('PINs do not match');
+                return;
+            }
+            
+            // Save PIN (in real app, this would be hashed)
+            localStorage.setItem('transactionPIN', pin);
+            localStorage.setItem('pinEnabled', 'true');
+            
+            alert('PIN set successfully!');
+            closePINModal();
+        }
+
+        function toggleBio() {
+            const isChecked = document.getElementById('bioToggle').checked;
+            localStorage.setItem('bioEnabled', isChecked);
+            alert(isChecked ? 'Biometric login enabled' : 'Biometric login disabled');
+        }
+
+        function toggle2FA() {
+            const isChecked = document.getElementById('twofaToggle').checked;
+            localStorage.setItem('twofaEnabled', isChecked);
+            alert(isChecked ? 'Two-factor authentication enabled' : 'Two-factor authentication disabled');
+        }
+
+        function changePassword() {
+            alert('Change password feature coming soon!');
+        }
+
+        function changePhone() {
+            alert('Change phone number feature coming soon!');
+        }
+
+        function changeEmail() {
+            alert('Change email feature coming soon!');
+        }
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
