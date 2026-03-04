@@ -221,24 +221,59 @@
             border-radius: 8px;
             display: none;
         }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            margin: 10px 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: auto;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+    <script>
+        // ============================================
+        // CHECK IF USER IS LOGGED IN
+        // ============================================
+        (function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+        })();
+    </script>
+
     <div class="app-container">
         <div class="header">
-            <a href="index.html" class="back-btn">←</a>
+            <a href="dashboard.html" class="back-btn">←</a>
             <h1>Buy Data</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
-        <!-- REAL BALANCE - NO FAKE -->
+        <!-- Balance Display -->
         <div class="balance-info">
             <span class="balance-label">Your Balance</span>
             <span class="balance-value" id="balanceDisplay">₦0.00</span>
         </div>
 
         <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
 
-        <!-- NETWORKS WITH IMAGES -->
+        <!-- Networks with images -->
         <div class="networks-section">
             <h3>Select Network</h3>
             <div class="networks-grid" id="networksGrid">
@@ -271,10 +306,10 @@
         <!-- Phone Number -->
         <div class="phone-section">
             <label>Phone Number</label>
-            <input type="tel" id="phoneNumber" placeholder="08012345678">
+            <input type="tel" id="phoneNumber" placeholder="08012345678" value="08012345678">
         </div>
 
-        <!-- Data Plans - Will be populated based on network -->
+        <!-- Data Plans -->
         <div class="plans-section">
             <h3>Select Plan</h3>
             <div class="plans-container" id="plansContainer">
@@ -288,37 +323,41 @@
 
     <script>
         // ============================================
-        // 🔴 YOUR PAYSTACK PUBLIC KEY - PASTE HERE!
+        // VTPASS CONFIGURATION - PASTE YOUR KEYS HERE!
         // ============================================
-        const PAYSTACK_PUBLIC_KEY = 'pk_test_dca168dd5c169b6aa7e4e85a4b11867a0d52a9e5'; // <-- PASTE YOUR KEY HERE
+        const VTPASS = {
+            BASE_URL: 'https://api.vtpass.com/api',
+            PUBLIC_KEY: 'YOUR_VTPASS_PUBLIC_KEY',  // ← PASTE YOUR PUBLIC KEY HERE
+            SECRET_KEY: 'YOUR_VTPASS_SECRET_KEY'   // ← PASTE YOUR SECRET KEY HERE
+        };
 
-        // REAL data plans
+        // Data plans
         const dataPlans = {
             mtn: [
-                { size: '100MB', price: 100, validity: 'Daily' },
-                { size: '350MB', price: 200, validity: 'Daily' },
-                { size: '750MB', price: 300, validity: 'Daily' },
-                { size: '1GB', price: 500, validity: 'Monthly' },
-                { size: '2GB', price: 1000, validity: 'Monthly' },
-                { size: '5GB', price: 2000, validity: 'Monthly' }
+                { size: '100MB', price: 100, validity: 'Daily', code: 'mtn-daily-100mb' },
+                { size: '350MB', price: 200, validity: 'Daily', code: 'mtn-daily-350mb' },
+                { size: '750MB', price: 300, validity: 'Daily', code: 'mtn-daily-750mb' },
+                { size: '1GB', price: 500, validity: 'Monthly', code: 'mtn-monthly-1gb' },
+                { size: '2GB', price: 1000, validity: 'Monthly', code: 'mtn-monthly-2gb' },
+                { size: '5GB', price: 2000, validity: 'Monthly', code: 'mtn-monthly-5gb' }
             ],
             glo: [
-                { size: '500MB', price: 300, validity: 'Weekly' },
-                { size: '1GB', price: 500, validity: 'Weekly' },
-                { size: '2GB', price: 800, validity: 'Monthly' },
-                { size: '3GB', price: 1200, validity: 'Monthly' }
+                { size: '500MB', price: 300, validity: 'Weekly', code: 'glo-weekly-500mb' },
+                { size: '1GB', price: 500, validity: 'Weekly', code: 'glo-weekly-1gb' },
+                { size: '2GB', price: 800, validity: 'Monthly', code: 'glo-monthly-2gb' },
+                { size: '3GB', price: 1200, validity: 'Monthly', code: 'glo-monthly-3gb' }
             ],
             airtel: [
-                { size: '500MB', price: 300, validity: 'Weekly' },
-                { size: '1GB', price: 500, validity: 'Weekly' },
-                { size: '2GB', price: 900, validity: 'Monthly' },
-                { size: '3GB', price: 1300, validity: 'Monthly' }
+                { size: '500MB', price: 300, validity: 'Weekly', code: 'airtel-weekly-500mb' },
+                { size: '1GB', price: 500, validity: 'Weekly', code: 'airtel-weekly-1gb' },
+                { size: '2GB', price: 900, validity: 'Monthly', code: 'airtel-monthly-2gb' },
+                { size: '3GB', price: 1300, validity: 'Monthly', code: 'airtel-monthly-3gb' }
             ],
             '9mobile': [
-                { size: '500MB', price: 250, validity: 'Weekly' },
-                { size: '1GB', price: 500, validity: 'Weekly' },
-                { size: '2GB', price: 700, validity: 'Monthly' },
-                { size: '3GB', price: 1000, validity: 'Monthly' }
+                { size: '500MB', price: 250, validity: 'Weekly', code: '9mobile-weekly-500mb' },
+                { size: '1GB', price: 500, validity: 'Weekly', code: '9mobile-weekly-1gb' },
+                { size: '2GB', price: 700, validity: 'Monthly', code: '9mobile-monthly-2gb' },
+                { size: '3GB', price: 1000, validity: 'Monthly', code: '9mobile-monthly-3gb' }
             ]
         };
 
@@ -326,10 +365,11 @@
         let currentNetwork = 'mtn';
         let selectedPlan = null;
         let selectedPrice = 0;
+        let selectedCode = '';
         let userBalance = 0;
         let userEmail = '';
 
-        // Load REAL user data
+        // Load user data
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             userEmail = localStorage.getItem('userEmail') || '';
@@ -340,20 +380,25 @@
             selectNetwork('mtn');
         });
 
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+
         // Select network
         function selectNetwork(network) {
             currentNetwork = network;
             
-            // Update UI
             document.querySelectorAll('.network-card').forEach(card => {
                 card.classList.remove('selected');
             });
             document.getElementById(`net-${network}`).classList.add('selected');
             
-            // Load plans for this network
             loadPlans(network);
             
-            // Reset selection
             selectedPlan = null;
             updatePurchaseButton();
         }
@@ -366,7 +411,7 @@
             let html = '';
             plans.forEach(plan => {
                 html += `
-                    <div class="plan-card" onclick="selectPlan('${plan.size}', ${plan.price})">
+                    <div class="plan-card" onclick="selectPlan('${plan.size}', ${plan.price}, '${plan.code}')">
                         <div class="plan-size">${plan.size}</div>
                         <div class="plan-price">₦${plan.price}</div>
                         <div class="plan-validity">${plan.validity}</div>
@@ -378,9 +423,10 @@
         }
 
         // Select plan
-        function selectPlan(size, price) {
+        function selectPlan(size, price, code) {
             selectedPlan = size;
             selectedPrice = price;
+            selectedCode = code;
             
             document.querySelectorAll('.plan-card').forEach(card => {
                 card.classList.remove('selected');
@@ -404,8 +450,40 @@
             }
         }
 
+        // Show error
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = message;
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Show success
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.textContent = message;
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Show loading
+        function showLoading() {
+            const btn = document.getElementById('purchaseBtn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+        }
+
+        // Hide loading
+        function hideLoading() {
+            updatePurchaseButton();
+        }
+
         // ============================================
-        // PURCHASE DATA WITH PAYSTACK
+        // PURCHASE DATA FUNCTION
         // ============================================
         async function purchaseData() {
             const phone = document.getElementById('phoneNumber').value;
@@ -420,112 +498,71 @@
                 return;
             }
 
-            // Check if user has enough balance
+            // Check balance
             if (userBalance < selectedPrice) {
-                // Not enough balance - offer to fund via Paystack
                 if (confirm(`Insufficient balance! Need ₦${selectedPrice - userBalance} more. Fund wallet now?`)) {
-                    fundWallet(selectedPrice - userBalance);
+                    window.location.href = 'fund.html';
                 }
                 return;
             }
 
-            // Process purchase with balance
-            processPurchase(phone);
-        }
+            showLoading();
 
-        // Process purchase
-        function processPurchase(phone) {
-            // Deduct from balance
-            userBalance -= selectedPrice;
-            localStorage.setItem('userBalance', userBalance);
-            
-            // Record transaction
-            const transaction = {
-                type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
-                amount: `-₦${selectedPrice}`,
-                date: new Date().toLocaleString()
-            };
-            
-            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            transactions.unshift(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-            
-            // Update display
-            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            
-            alert(`✅ Success! ${selectedPlan} data sent to ${phone}`);
-            
-            // Reset
-            selectedPlan = null;
-            updatePurchaseButton();
-        }
-
-        // ============================================
-        // FUND WALLET WITH PAYSTACK
-        // ============================================
-        async function fundWallet(amount) {
             try {
-                // Load Paystack if not loaded
-                if (!window.PaystackPop) {
-                    await loadScript('https://js.paystack.co/v1/inline.js');
-                }
-
-                const handler = PaystackPop.setup({
-                    key: PAYSTACK_PUBLIC_KEY,      // YOUR KEY HERE
-                    email: userEmail,
-                    amount: amount * 100,            // Convert to kobo
-                    currency: 'NGN',
-                    ref: 'TUNZY_' + Date.now(),
-                    callback: function(response) {
-                        // Payment successful
-                        userBalance += amount;
-                        localStorage.setItem('userBalance', userBalance);
-                        document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-                        
-                        // Record transaction
-                        const transaction = {
-                            type: 'Wallet Funding',
-                            amount: `+₦${amount}`,
-                            date: new Date().toLocaleString()
-                        };
-                        
-                        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-                        transactions.unshift(transaction);
-                        localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-                        
-                        alert(`✅ Wallet funded with ₦${amount}`);
+                // Make API call to VTPASS
+                const response = await fetch(`${VTPASS.BASE_URL}/pay`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'api-key': VTPASS.PUBLIC_KEY,
+                        'secret-key': VTPASS.SECRET_KEY
                     },
-                    onClose: function() {
-                        alert('Payment cancelled');
-                    }
+                    body: JSON.stringify({
+                        serviceID: currentNetwork,
+                        phone: phone,
+                        variation_code: selectedCode,
+                        amount: selectedPrice,
+                        request_id: 'TUNZY_' + Date.now() + '_' + Math.random().toString(36).substring(7)
+                    })
                 });
-                
-                handler.openIframe();
+
+                const data = await response.json();
+
+                if (data.code === '000' || data.response_description?.toLowerCase().includes('success')) {
+                    // Success - deduct from balance
+                    userBalance -= selectedPrice;
+                    localStorage.setItem('userBalance', userBalance);
+                    
+                    // Update display
+                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+                    
+                    // Record transaction
+                    const transaction = {
+                        type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
+                        amount: `-₦${selectedPrice}`,
+                        date: new Date().toLocaleString()
+                    };
+                    
+                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                    transactions.unshift(transaction);
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    
+                    showSuccess(`✅ Success! ${selectedPlan} data sent to ${phone}`);
+                    
+                    // Reset
+                    selectedPlan = null;
+                    updatePurchaseButton();
+                    
+                } else {
+                    showError(data.response_description || 'Purchase failed');
+                }
                 
             } catch (error) {
-                alert('Payment failed. Please try again.');
+                showError('Network error. Please try again.');
                 console.error(error);
             }
-        }
-
-        // Helper functions
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = message;
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 3000);
-        }
-
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
+            
+            hideLoading();
         }
 
         // Phone input listener
