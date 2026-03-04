@@ -33,6 +33,21 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
+        .back-to-slider {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .back-to-slider a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-to-slider a:hover {
+            color: #0066cc;
+        }
+
         .logo {
             text-align: center;
             margin-bottom: 30px;
@@ -49,6 +64,7 @@
             justify-content: center;
             overflow: hidden;
             border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .logo-circle img {
@@ -135,6 +151,10 @@
 <body>
     <div class="signup-container">
         <div class="signup-box">
+            <div class="back-to-slider">
+                <a href="index.html">← Back to Welcome</a>
+            </div>
+
             <div class="logo">
                 <div class="logo-circle">
                     <img src="assets/my-logo.jpg" alt="TUNZY">
@@ -174,7 +194,7 @@
                 <button type="submit" class="signup-btn">Create Account</button>
 
                 <div class="login-link">
-                    Already have an account? <a href="login.html">Sign In</a>
+                    Already have an account? <a href="login-page.html">Sign In</a>
                 </div>
             </form>
         </div>
@@ -190,10 +210,8 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
-            // Clear previous error
             document.getElementById('errorMessage').style.display = 'none';
             
-            // Validate
             if (!name || !email || !phone || !password) {
                 showError('All fields are required');
                 return;
@@ -209,7 +227,6 @@
                 return;
             }
             
-            // Check if user exists
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const existingUser = users.find(u => u.email === email);
             
@@ -218,26 +235,21 @@
                 return;
             }
             
-            // Create new user
             const newUser = {
                 name: name,
                 email: email,
                 phone: phone,
                 password: password,
                 balance: 0,
-                role: 'user',
                 created: new Date().toISOString()
             };
             
-            // Save to users list
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
             
-            // Auto login
             localStorage.setItem('currentUser', JSON.stringify({
                 email: email,
-                name: name,
-                role: 'user'
+                name: name
             }));
             
             localStorage.setItem('userName', name);
@@ -245,7 +257,7 @@
             localStorage.setItem('userBalance', '0');
             
             alert('✅ Account created successfully!');
-            window.location.href = 'index.html';
+            window.location.href = 'login-page.html';
         });
 
         function showError(message) {
