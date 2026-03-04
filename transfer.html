@@ -369,3 +369,20 @@
     </script>
 </body>
 </html>
+async function processTransfer() {
+    // Check if PIN is enabled
+    const pinEnabled = localStorage.getItem('pinEnabled') === 'true';
+    
+    if (pinEnabled) {
+        const userPIN = prompt('Enter your transaction PIN:');
+        const savedPIN = localStorage.getItem('transactionPIN');
+        
+        if (!userPIN || userPIN !== savedPIN) {
+            alert('Invalid PIN! Transaction cancelled.');
+            return;
+        }
+    }
+    
+    // Rest of your transfer code...
+    // ...
+}
