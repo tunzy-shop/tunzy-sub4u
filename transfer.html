@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer - TUNZY SUB 4 YOU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #0066cc;
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .balance-info {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .balance-label {
+            color: #666;
+        }
+
+        .balance-value {
+            font-weight: bold;
+            color: #0066cc;
+            font-size: 18px;
+        }
+
+        .transfer-form {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+
+        .bank-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+        }
+
+        .bank-label {
+            color: #666;
+        }
+
+        .bank-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .transfer-btn {
+            width: 100%;
+            padding: 18px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .transfer-btn:hover {
+            background: #004d99;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            margin: 10px 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            margin: 10px 20px;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1>Transfer to Bank</h1>
+        </div>
+
+        <div class="balance-info">
+            <span class="balance-label">Available Balance</span>
+            <span class="balance-value" id="balanceDisplay">₦0.00</span>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <div class="transfer-form">
+            <div class="form-group">
+                <label>Select Bank</label>
+                <select id="bankSelect">
+                    <option value="">Choose bank</option>
+                    <option value="access">Access Bank</option>
+                    <option value="gtb">GTBank</option>
+                    <option value="uba">UBA</option>
+                    <option value="firstbank">First Bank</option>
+                    <option value="zenith">Zenith Bank</option>
+                    <option value="union">Union Bank</option>
+                    <option value="fcmb">FCMB</option>
+                    <option value="sterling">Sterling Bank</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Account Number</label>
+                <input type="text" id="accountNumber" placeholder="Enter 10-digit account number" maxlength="10">
+            </div>
+
+            <div class="form-group">
+                <label>Account Name</label>
+                <input type="text" id="accountName" placeholder="Account name will appear here" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Amount (₦)</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="100">
+            </div>
+
+            <div class="form-group">
+                <label>Narration (Optional)</label>
+                <input type="text" id="narration" placeholder="What's this for?">
+            </div>
+
+            <div class="bank-details" id="bankDetails" style="display: none;">
+                <h4 style="margin-bottom: 10px; color: #333;">Transfer Summary</h4>
+                <div class="bank-row">
+                    <span class="bank-label">Bank:</span>
+                    <span class="bank-value" id="summaryBank">-</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">Account:</span>
+                    <span class="bank-value" id="summaryAccount">-</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">Name:</span>
+                    <span class="bank-value" id="summaryName">-</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">Amount:</span>
+                    <span class="bank-value" id="summaryAmount">-</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">Fee:</span>
+                    <span class="bank-value" id="summaryFee">₦0.00</span>
+                </div>
+                <div class="bank-row" style="font-weight: bold; color: #0066cc;">
+                    <span class="bank-label">Total Debit:</span>
+                    <span class="bank-value" id="summaryTotal">-</span>
+                </div>
+            </div>
+
+            <button class="transfer-btn" onclick="processTransfer()">Transfer Now</button>
+        </div>
+    </div>
+
+    <script>
+        let userBalance = 0;
+        const transferFee = 0; // You can set fee here e.g., 50 for ₦50 fee
+
+        document.addEventListener('DOMContentLoaded', function() {
+            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+        });
+
+        // Simulate account name lookup
+        document.getElementById('accountNumber').addEventListener('input', function() {
+            const accNum = this.value;
+            if (accNum.length === 10) {
+                // In real app, you'd call your bank API
+                document.getElementById('accountName').value = 'JOHN DOE'; // Simulated
+                showBankDetails();
+            } else {
+                document.getElementById('accountName').value = '';
+                document.getElementById('bankDetails').style.display = 'none';
+            }
+        });
+
+        document.getElementById('amount').addEventListener('input', showBankDetails);
+        document.getElementById('bankSelect').addEventListener('change', showBankDetails);
+
+        function showBankDetails() {
+            const bank = document.getElementById('bankSelect').value;
+            const account = document.getElementById('accountNumber').value;
+            const name = document.getElementById('accountName').value;
+            const amount = document.getElementById('amount').value;
+
+            if (bank && account.length === 10 && name && amount) {
+                document.getElementById('bankDetails').style.display = 'block';
+                
+                const bankName = document.getElementById('bankSelect').options[document.getElementById('bankSelect').selectedIndex].text;
+                document.getElementById('summaryBank').textContent = bankName;
+                document.getElementById('summaryAccount').textContent = account;
+                document.getElementById('summaryName').textContent = name;
+                document.getElementById('summaryAmount').textContent = `₦${parseInt(amount).toLocaleString()}.00`;
+                
+                const total = parseInt(amount) + transferFee;
+                document.getElementById('summaryTotal').textContent = `₦${total.toLocaleString()}.00`;
+            } else {
+                document.getElementById('bankDetails').style.display = 'none';
+            }
+        }
+
+        function processTransfer() {
+            const bank = document.getElementById('bankSelect').value;
+            const account = document.getElementById('accountNumber').value;
+            const name = document.getElementById('accountName').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const narration = document.getElementById('narration').value || 'Transfer';
+
+            if (!bank || !account || account.length !== 10 || !name || !amount) {
+                showError('Please fill all fields correctly');
+                return;
+            }
+
+            if (amount < 100) {
+                showError('Minimum transfer amount is ₦100');
+                return;
+            }
+
+            const totalDebit = amount + transferFee;
+
+            if (userBalance < totalDebit) {
+                showError(`Insufficient balance. You need ₦${totalDebit - userBalance} more`);
+                return;
+            }
+
+            if (confirm(`Transfer ₦${amount} to ${name}?`)) {
+                showLoading();
+
+                // Simulate transfer processing
+                setTimeout(() => {
+                    // Deduct from balance
+                    userBalance -= totalDebit;
+                    localStorage.setItem('userBalance', userBalance);
+
+                    // Record transaction
+                    const transaction = {
+                        type: 'Bank Transfer',
+                        amount: `-₦${totalDebit}`,
+                        date: new Date().toLocaleString(),
+                        details: `To ${name} - ${bank}`
+                    };
+
+                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                    transactions.unshift(transaction);
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+
+                    hideLoading();
+                    showSuccess(`✅ Transfer of ₦${amount} to ${name} successful!`);
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                }, 2000);
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = message;
+            setTimeout(() => errorDiv.style.display = 'none', 3000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.textContent = message;
+        }
+
+        function showLoading() {
+            const btn = document.querySelector('.transfer-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+        }
+
+        function hideLoading() {
+            const btn = document.querySelector('.transfer-btn');
+            btn.disabled = false;
+            btn.textContent = 'Transfer Now';
+        }
+    </script>
+</body>
+</html>
