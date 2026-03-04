@@ -44,12 +44,34 @@
             font-weight: 600;
         }
 
+        .filter-tabs {
+            display: flex;
+            padding: 15px 20px;
+            gap: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .filter-tab {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter-tab.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
         .transactions-list {
             padding: 20px;
         }
 
         .transaction-item {
-            background: white;
+            background: #f8f9fa;
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 10px;
@@ -87,7 +109,6 @@
             text-align: center;
             padding: 50px 20px;
             color: #999;
-            font-size: 14px;
         }
     </style>
 </head>
@@ -98,23 +119,42 @@
             <h1>Transaction History</h1>
         </div>
 
+        <div class="filter-tabs">
+            <span class="filter-tab active" onclick="filterTransactions('all')">All</span>
+            <span class="filter-tab" onclick="filterTransactions('credit')">Credits</span>
+            <span class="filter-tab" onclick="filterTransactions('debit')">Debits</span>
+        </div>
+
         <div class="transactions-list" id="transactionsList">
-            <!-- ONLY REAL TRANSACTIONS SHOW HERE -->
+            <!-- Filled by JavaScript -->
         </div>
     </div>
 
     <script>
+        let allTransactions = [];
+
         document.addEventListener('DOMContentLoaded', function() {
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            allTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            displayTransactions('all');
+        });
+
+        function displayTransactions(filter) {
             const list = document.getElementById('transactionsList');
             
-            if (transactions.length === 0) {
-                list.innerHTML = '<div class="empty-state">No transactions yet</div>';
+            let filtered = allTransactions;
+            if (filter === 'credit') {
+                filtered = allTransactions.filter(t => t.amount?.startsWith('+'));
+            } else if (filter === 'debit') {
+                filtered = allTransactions.filter(t => t.amount?.startsWith('-'));
+            }
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state">No transactions found</div>';
                 return;
             }
             
             let html = '';
-            transactions.forEach(t => {
+            filtered.forEach(t => {
                 html += `
                     <div class="transaction-item">
                         <div class="transaction-info">
@@ -126,7 +166,15 @@
                 `;
             });
             list.innerHTML = html;
-        });
+        }
+
+        function filterTransactions(filter) {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            displayTransactions(filter);
+        }
     </script>
 </body>
 </html>
