@@ -31,12 +31,6 @@
             color: white;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
             gap: 15px;
         }
 
@@ -58,42 +52,24 @@
         .app-title {
             font-size: 18px;
             font-weight: 600;
-        }
-
-        .logout-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .logout-btn:hover {
-            background: #c82333;
+            flex: 1;
         }
 
         /* Welcome Card */
         .welcome-card {
-            background: linear-gradient(135deg, #0066cc, #004d99);
-            color: white;
-            padding: 25px;
-            margin: 20px;
-            border-radius: 15px;
+            padding: 20px;
         }
 
         .welcome-text {
             font-size: 14px;
-            opacity: 0.9;
+            color: #666;
             margin-bottom: 5px;
         }
 
         .user-name {
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: 5px;
+            color: #333;
         }
 
         /* Balance Card */
@@ -109,15 +85,39 @@
             border: 1px solid #e0e0e0;
         }
 
+        .balance-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .balance-label {
             color: #666;
-            font-size: 13px;
+            font-size: 14px;
             margin-bottom: 5px;
         }
 
         .balance-amount {
             font-size: 28px;
             font-weight: 700;
+            color: #0066cc;
+            transition: all 0.3s;
+        }
+
+        .balance-amount.hidden {
+            letter-spacing: 4px;
+        }
+
+        .eye-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+            padding: 5px;
+        }
+
+        .eye-btn:hover {
             color: #0066cc;
         }
 
@@ -136,142 +136,50 @@
             background: #004d99;
         }
 
-        /* Services Grid - 4 MAIN BUTTONS WITH TEXT ONLY (NO EMOJIS) */
+        /* Services Grid */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             padding: 0 20px;
             margin: 20px 0;
         }
 
-        .service-btn {
-            background: white;
-            padding: 15px 5px;
-            border-radius: 10px;
+        .service-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
             text-decoration: none;
             color: #333;
             border: 1px solid #e0e0e0;
             transition: all 0.3s;
-            display: block;
         }
 
-        .service-btn:hover {
+        .service-card:hover {
             border-color: #0066cc;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,102,204,0.1);
         }
 
-        .service-name {
-            font-size: 13px;
-            font-weight: 500;
+        .service-title {
+            font-weight: 600;
             color: #0066cc;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .service-desc {
-            font-size: 11px;
+            font-size: 12px;
             color: #666;
         }
 
-        /* Quick Actions */
-        .section-title {
-            padding: 0 20px;
-            margin: 25px 0 10px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .quick-actions {
-            padding: 0 20px;
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .quick-actions::-webkit-scrollbar {
-            display: none;
-        }
-
-        .quick-action-item {
-            background: #f8f9fa;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 1px solid #e0e0e0;
-            white-space: nowrap;
-            font-size: 14px;
-            color: #333;
-            cursor: pointer;
-        }
-
-        .quick-action-item:hover {
-            background: #0066cc;
-            color: white;
-        }
-
-        /* Transactions - ONLY SHOWS REAL TRANSACTIONS, NO FAKE */
-        .transactions-list {
-            padding: 0 20px;
-            margin-bottom: 20px;
-        }
-
-        .transaction-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e0e0e0;
-        }
-
-        .transaction-info {
-            flex: 1;
-        }
-
-        .transaction-service {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-            color: #333;
-        }
-
-        .transaction-date {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .transaction-amount {
-            font-weight: 600;
-            color: #0066cc;
-        }
-
-        .transaction-amount.credit {
-            color: #28a745;
-        }
-
-        .empty-state {
-            background: #f8f9fa;
-            padding: 30px 20px;
-            border-radius: 10px;
-            text-align: center;
-            color: #999;
-            font-size: 14px;
-            border: 1px dashed #e0e0e0;
-            margin: 0 20px;
-        }
-
-        /* Bottom Navigation - NO EMOJIS, JUST TEXT */
+        /* Bottom Navigation */
         .bottom-nav {
             background: white;
             border-top: 1px solid #e0e0e0;
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
+            padding: 15px 0;
             position: fixed;
             bottom: 0;
             max-width: 500px;
@@ -283,16 +191,12 @@
             text-align: center;
             text-decoration: none;
             color: #999;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
         }
 
         .nav-item.active {
             color: #0066cc;
-        }
-
-        .nav-text {
-            margin-top: 4px;
         }
 
         body {
@@ -313,15 +217,12 @@
     </script>
 
     <div class="app-container">
-        <!-- Header with Logo -->
+        <!-- Header with logo -->
         <div class="header">
-            <div class="header-left">
-                <div class="logo-circle">
-                    <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/45/0066cc/ffffff?text=T'">
-                </div>
-                <span class="app-title">TUNZY SUB 4 YOU</span>
+            <div class="logo-circle">
+                <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/45/0066cc/ffffff?text=T'">
             </div>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+            <span class="app-title">TUNZY SUB 4 YOU</span>
         </div>
 
         <!-- Welcome Card -->
@@ -330,118 +231,91 @@
             <div class="user-name" id="userName">Loading...</div>
         </div>
 
-        <!-- Balance Card -->
+        <!-- Balance Card with Eye Button - REAL BALANCE -->
         <div class="balance-card">
-            <div>
-                <div class="balance-label">Wallet Balance</div>
-                <div class="balance-amount" id="userBalance">₦0.00</div>
+            <div class="balance-left">
+                <div>
+                    <div class="balance-label">Wallet Balance</div>
+                    <div class="balance-amount" id="balanceAmount">₦0.00</div>
+                </div>
+                <button class="eye-btn" onclick="toggleBalance()" id="eyeBtn">👁️</button>
             </div>
             <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- Services Grid - 4 MAIN BUTTONS WITH TEXT ONLY -->
+        <!-- Services Grid -->
         <div class="services-grid">
-            <a href="buy-data.html" class="service-btn">
-                <div class="service-name">DATA</div>
-                <div class="service-desc">MTN · GLO</div>
-            </a>
-            <a href="airtime.html" class="service-btn">
-                <div class="service-name">AIRTIME</div>
+            <a href="buy-data.html" class="service-card">
+                <div class="service-title">Buy Data</div>
                 <div class="service-desc">All networks</div>
             </a>
-            <a href="tv.html" class="service-btn">
-                <div class="service-name">CABLE TV</div>
-                <div class="service-desc">DSTV · GOtv</div>
+            <a href="airtime.html" class="service-card">
+                <div class="service-title">Airtime</div>
+                <div class="service-desc">Recharge</div>
             </a>
-            <a href="electricity.html" class="service-btn">
-                <div class="service-name">POWER</div>
+            <a href="tv.html" class="service-card">
+                <div class="service-title">Cable TV</div>
+                <div class="service-desc">DSTV, GOTv</div>
+            </a>
+            <a href="electricity.html" class="service-card">
+                <div class="service-title">Electricity</div>
                 <div class="service-desc">Prepaid</div>
             </a>
         </div>
-
-        <!-- Quick Actions -->
-        <div class="section-title">Quick Actions</div>
-        <div class="quick-actions">
-            <span class="quick-action-item" onclick="window.location.href='buy-data.html?plan=1gb'">MTN 1GB</span>
-            <span class="quick-action-item" onclick="window.location.href='airtime.html'">Airtime</span>
-            <span class="quick-action-item" onclick="window.location.href='tv.html'">DSTV</span>
-            <span class="quick-action-item" onclick="window.location.href='electricity.html'">IKEDC</span>
-        </div>
-
-        <!-- Recent Transactions - NO FAKE, ONLY REAL -->
-        <div class="section-title">Recent Transactions</div>
-        <div id="transactionsContainer"></div>
     </div>
 
-    <!-- Bottom Navigation - TEXT ONLY -->
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">
-            <div class="nav-text">Home</div>
-        </a>
-        <a href="services.html" class="nav-item">
-            <div class="nav-text">Services</div>
-        </a>
-        <a href="history.html" class="nav-item">
-            <div class="nav-text">History</div>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <div class="nav-text">Profile</div>
-        </a>
+        <a href="dashboard.html" class="nav-item active">Home</a>
+        <a href="services.html" class="nav-item">Services</a>
+        <a href="history.html" class="nav-item">History</a>
+        <a href="profile.html" class="nav-item">Profile</a>
     </div>
 
     <script>
-        // Load user data
+        let balanceVisible = true;
+        let currentBalance = 0;
+
+        // Load REAL user data from localStorage
         document.addEventListener('DOMContentLoaded', function() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
-            const balance = localStorage.getItem('userBalance') || '0';
             
+            // Get REAL balance from localStorage - NO FAKE NUMBERS!
+            currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            
+            // Show REAL user name
             document.getElementById('userName').textContent = user?.name || 'User';
-            document.getElementById('userBalance').textContent = `₦${parseFloat(balance).toLocaleString()}.00`;
             
-            // Load transactions - ONLY REAL ONES
-            loadRealTransactions();
+            // Update balance with REAL amount
+            updateBalanceDisplay();
         });
 
-        // Load ONLY real transactions - NO FAKE
-        function loadRealTransactions() {
-            const container = document.getElementById('transactionsContainer');
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            
-            // If no transactions, show empty state - NO FAKE DATA
-            if (transactions.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        No transactions yet<br>
-                        <span style="font-size: 12px;">Your purchases will appear here</span>
-                    </div>
-                `;
-                return;
+        // Update balance display with REAL amount
+        function updateBalanceDisplay() {
+            const balanceElement = document.getElementById('balanceAmount');
+            if (balanceVisible) {
+                // Show REAL balance with proper formatting
+                balanceElement.textContent = `₦${currentBalance.toLocaleString()}.00`;
+                balanceElement.classList.remove('hidden');
+            } else {
+                // Hide balance
+                balanceElement.textContent = '••••••';
+                balanceElement.classList.add('hidden');
             }
-            
-            // Show only real transactions
-            let html = '<div class="transactions-list">';
-            transactions.slice(0, 5).forEach(t => {
-                html += `
-                    <div class="transaction-item">
-                        <div class="transaction-info">
-                            <div class="transaction-service">${t.type || 'Transaction'}</div>
-                            <div class="transaction-date">${t.date || ''}</div>
-                        </div>
-                        <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount || ''}</div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            
-            container.innerHTML = html;
         }
 
-        // Logout function
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            }
+        // Toggle balance visibility (eye button)
+        function toggleBalance() {
+            balanceVisible = !balanceVisible;
+            const eyeBtn = document.getElementById('eyeBtn');
+            eyeBtn.textContent = balanceVisible ? '👁️' : '👁️‍🗨️';
+            updateBalanceDisplay();
+        }
+
+        // Function to update balance after funding (called from fund.html)
+        function refreshBalance() {
+            currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            updateBalanceDisplay();
         }
     </script>
 </body>
