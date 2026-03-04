@@ -57,7 +57,6 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid #e0e0e0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .transaction-info {
@@ -66,8 +65,8 @@
 
         .transaction-service {
             font-weight: 600;
+            margin-bottom: 4px;
             color: #333;
-            margin-bottom: 5px;
         }
 
         .transaction-date {
@@ -88,18 +87,24 @@
             text-align: center;
             padding: 50px 20px;
             color: #999;
+            font-size: 14px;
+        }
+
+        .empty-state p {
+            margin-top: 10px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
     <div class="app-container">
         <div class="header">
-            <a href="index.html" class="back-btn">←</a>
+            <a href="dashboard.html" class="back-btn">←</a>
             <h1>Transaction History</h1>
         </div>
 
         <div class="transactions-list" id="transactionsList">
-            <!-- Filled by JavaScript -->
+            <!-- Filled by JavaScript - ONLY REAL TRANSACTIONS -->
         </div>
     </div>
 
@@ -109,7 +114,12 @@
             const list = document.getElementById('transactionsList');
             
             if (transactions.length === 0) {
-                list.innerHTML = '<div class="empty-state">No transactions yet</div>';
+                list.innerHTML = `
+                    <div class="empty-state">
+                        No transactions yet
+                        <p>Your purchase history will appear here</p>
+                    </div>
+                `;
                 return;
             }
             
@@ -118,10 +128,10 @@
                 html += `
                     <div class="transaction-item">
                         <div class="transaction-info">
-                            <div class="transaction-service">${t.type}</div>
-                            <div class="transaction-date">${t.date}</div>
+                            <div class="transaction-service">${t.type || 'Transaction'}</div>
+                            <div class="transaction-date">${t.date || ''}</div>
                         </div>
-                        <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount}</div>
+                        <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount || ''}</div>
                     </div>
                 `;
             });
