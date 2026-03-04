@@ -47,88 +47,71 @@
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1px;
-            background: #e0e0e0;
-            margin: 20px;
-            border-radius: 10px;
-            overflow: hidden;
+            gap: 15px;
+            padding: 20px;
         }
 
-        .service-item {
-            background: white;
-            padding: 25px 10px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .service-item:hover {
+        .service-card {
             background: #f8f9fa;
+            padding: 25px 15px;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
         }
 
-        .service-icon {
-            width: 50px;
-            height: 50px;
-            margin: 0 auto 10px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #0066cc;
+        .service-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
         }
 
         .service-title {
-            font-size: 14px;
             font-weight: 600;
-            color: #333;
+            color: #0066cc;
             margin-bottom: 5px;
         }
 
-        .service-subtitle {
+        .service-desc {
             font-size: 12px;
-            color: #999;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="app-container">
         <div class="header">
-            <a href="index.html" class="back-btn">←</a>
+            <a href="dashboard.html" class="back-btn">←</a>
             <h1>All Services</h1>
         </div>
 
         <div class="services-grid">
-            <div class="service-item" onclick="location.href='buy-data.html'">
-                <div class="service-icon">📱</div>
-                <div class="service-title">Data Bundle</div>
-                <div class="service-subtitle">All networks</div>
-            </div>
-            <div class="service-item" onclick="location.href='airtime.html'">
-                <div class="service-icon">📞</div>
-                <div class="service-title">Airtime</div>
-                <div class="service-subtitle">Recharge</div>
-            </div>
-            <div class="service-item" onclick="location.href='tv.html'">
-                <div class="service-icon">📺</div>
-                <div class="service-title">Cable TV</div>
-                <div class="service-subtitle">DSTV, GOtv</div>
-            </div>
-            <div class="service-item" onclick="location.href='electricity.html'">
-                <div class="service-icon">💡</div>
-                <div class="service-title">Electricity</div>
-                <div class="service-subtitle">Prepaid</div>
-            </div>
-            <div class="service-item" onclick="location.href='results.html'">
-                <div class="service-icon">📊</div>
-                <div class="service-title">Results</div>
-                <div class="service-subtitle">WAEC, NECO</div>
-            </div>
-            <div class="service-item" onclick="location.href='education.html'">
-                <div class="service-icon">🎓</div>
-                <div class="service-title">Education</div>
-                <div class="service-subtitle">School fees</div>
-            </div>
+            <a href="buy-data.html" class="service-card">
+                <div class="service-title">DATA</div>
+                <div class="service-desc">MTN, GLO, Airtel, 9mobile</div>
+            </a>
+            <a href="airtime.html" class="service-card">
+                <div class="service-title">AIRTIME</div>
+                <div class="service-desc">Recharge any network</div>
+            </a>
+            <a href="tv.html" class="service-card">
+                <div class="service-title">CABLE TV</div>
+                <div class="service-desc">DSTV, GOtv, Startimes</div>
+            </a>
+            <a href="electricity.html" class="service-card">
+                <div class="service-title">ELECTRICITY</div>
+                <div class="service-desc">Prepaid & Postpaid</div>
+            </a>
+            <a href="results.html" class="service-card">
+                <div class="service-title">RESULTS</div>
+                <div class="service-desc">WAEC, NECO, NABTEB</div>
+            </a>
+            <a href="education.html" class="service-card">
+                <div class="service-title">EDUCATION</div>
+                <div class="service-desc">School fees, PINs</div>
+            </a>
         </div>
     </div>
 </body>
