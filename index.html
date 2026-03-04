@@ -202,6 +202,17 @@
     </style>
 </head>
 <body>
+    <script>
+        // CHECK IF USER IS ALREADY LOGGED IN
+        (function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+        })();
+    </script>
+
     <div class="slider-container">
         <div class="logo-circle">
             <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/50/0066cc/ffffff?text=T'">
