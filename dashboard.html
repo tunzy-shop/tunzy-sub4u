@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - TUNZY SUB 4 YOU</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             margin: 0;
@@ -17,562 +16,272 @@
             background: #f5f5f5;
         }
 
-        .container {
+        .app-container {
             max-width: 500px;
             margin: 0 auto;
-            padding: 15px;
+            background: white;
+            min-height: 100vh;
         }
 
-        /* Top Bar */
-        .top-bar {
+        .header {
+            background: #0066cc;
+            padding: 20px;
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
         }
 
-        .back-btn {
-            font-size: 1.5rem;
-            text-decoration: none;
-            color: #0066cc;
-            font-weight: bold;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .logo {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #0066cc;
+        .header h1 {
+            font-size: 20px;
         }
 
         .logout-btn {
-            background: none;
-            border: 1px solid #0066cc;
-            color: #0066cc;
-            padding: 5px 15px;
-            border-radius: 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
 
         .logout-btn:hover {
-            background: #0066cc;
-            color: white;
+            background: #c82333;
         }
 
-        /* Welcome Card - NO BALANCE HERE */
+        .container {
+            padding: 20px;
+        }
+
         .welcome-card {
             background: linear-gradient(135deg, #0066cc, #004d99);
             color: white;
-            padding: 30px 25px;
-            border-radius: 20px;
-            margin: 15px 0;
-        }
-
-        .welcome-text {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 5px;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
 
         .welcome-name {
+            font-size: 24px;
             font-weight: bold;
-            font-size: 2rem;
             margin-bottom: 5px;
         }
 
-        /* Wallet Card - ONLY PLACE BALANCE SHOWS */
-        .wallet-card {
+        .balance-card {
             background: white;
             padding: 20px;
-            border-radius: 15px;
-            margin: 15px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .wallet-row {
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #e0e0e0;
         }
 
-        .wallet-label {
+        .balance-label {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
 
-        .wallet-amount {
-            font-size: 2rem;
+        .balance-amount {
+            font-size: 28px;
             font-weight: bold;
             color: #0066cc;
-        }
-
-        .wallet-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .fund-btn, .withdraw-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
         }
 
         .fund-btn {
             background: #0066cc;
             color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        .fund-btn:hover {
-            background: #004d99;
-        }
-
-        .withdraw-btn {
-            background: #28a745;
-            color: white;
-        }
-
-        .withdraw-btn:hover {
-            background: #218838;
-        }
-
-        /* 4 MAIN BUTTONS */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 15px;
             margin: 20px 0;
         }
 
-        .service-btn {
+        .service-item {
             background: white;
-            padding: 25px 10px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
             text-decoration: none;
             color: #333;
             border: 1px solid #e0e0e0;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
-        .service-btn:hover {
-            transform: translateY(-2px);
+        .service-item:hover {
             border-color: #0066cc;
+            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,102,204,0.1);
         }
 
         .service-icon {
-            font-size: 2rem;
+            font-size: 30px;
             margin-bottom: 10px;
+            color: #0066cc;
         }
 
-        .service-name {
+        .service-title {
             font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        /* Transactions */
+        .service-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+
         .section-title {
-            font-size: 1.2rem;
+            font-size: 18px;
             font-weight: 600;
             margin: 25px 0 15px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            background: white;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            opacity: 0.5;
+            color: #333;
         }
 
         .transaction-item {
             background: white;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #f0f0f0;
+            border: 1px solid #e0e0e0;
         }
 
-        .transaction-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .transaction-service {
+            font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        .transaction-icon {
-            width: 40px;
-            height: 40px;
-            background: #e6f0ff;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .transaction-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
             color: #0066cc;
         }
 
         .transaction-amount.credit {
             color: #28a745;
         }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            background: white;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #e0e0e0;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .nav-item {
-            text-align: center;
-            color: #999;
-            text-decoration: none;
-            font-size: 0.8rem;
-        }
-
-        .nav-item.active {
-            color: #0066cc;
-        }
-
-        .nav-icon {
-            font-size: 1.3rem;
-            margin-bottom: 3px;
-        }
-
-        body {
-            padding-bottom: 70px;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Top Bar with Back and Logout -->
-        <div class="top-bar">
-            <button onclick="goBack()" class="back-btn">←</button>
-            <div class="logo">TUNZY SUB 4 YOU</div>
-            <button onclick="logout()" class="logout-btn">Logout</button>
+    <script>
+        (function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+        })();
+    </script>
+
+    <div class="app-container">
+        <div class="header">
+            <h1>TUNZY SUB 4 YOU</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
-        <!-- Welcome Card - NO BALANCE HERE -->
-        <div class="welcome-card">
-            <div class="welcome-text">Hello</div>
-            <div class="welcome-name" id="userDisplayName">Loading...</div>
-            <div>Welcome to TUNZY SUB 4 YOU</div>
-        </div>
-
-        <!-- Wallet Card - ONLY PLACE BALANCE SHOWS -->
-        <div class="wallet-card">
-            <div class="wallet-row">
-                <span class="wallet-label">Wallet Balance</span>
-                <span class="wallet-amount" id="walletDisplay">₦0.00</span>
+        <div class="container">
+            <div class="welcome-card">
+                <div style="font-size: 14px; opacity: 0.9;">Welcome back,</div>
+                <div class="welcome-name" id="userName">Loading...</div>
             </div>
-            <div class="wallet-actions">
-                <button class="fund-btn" onclick="fundWallet()">➕ Fund Wallet</button>
-                <button class="withdraw-btn" onclick="withdrawMoney()">💸 Withdraw</button>
+
+            <div class="balance-card">
+                <div>
+                    <div class="balance-label">Wallet Balance</div>
+                    <div class="balance-amount" id="userBalance">₦0.00</div>
+                </div>
+                <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
+            </div>
+
+            <div class="services-grid">
+                <a href="buy-data.html" class="service-item">
+                    <div class="service-icon">📱</div>
+                    <div class="service-title">Buy Data</div>
+                    <div class="service-subtitle">All networks</div>
+                </a>
+                <a href="airtime.html" class="service-item">
+                    <div class="service-icon">📞</div>
+                    <div class="service-title">Airtime</div>
+                    <div class="service-subtitle">Recharge</div>
+                </a>
+                <a href="tv.html" class="service-item">
+                    <div class="service-icon">📺</div>
+                    <div class="service-title">Cable TV</div>
+                    <div class="service-subtitle">DSTV, GOtv</div>
+                </a>
+                <a href="electricity.html" class="service-item">
+                    <div class="service-icon">💡</div>
+                    <div class="service-title">Electricity</div>
+                    <div class="service-subtitle">Prepaid</div>
+                </a>
+            </div>
+
+            <div class="section-title">Recent Transactions</div>
+            <div id="transactionsList">
+                <div class="transaction-item">
+                    <div>
+                        <div class="transaction-service">No transactions yet</div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- 4 MAIN BUTTONS -->
-        <div class="services-grid">
-            <a href="buy-data.html" class="service-btn">
-                <div class="service-icon">📱</div>
-                <div class="service-name">Buy Data</div>
-            </a>
-            <a href="airtime.html" class="service-btn">
-                <div class="service-icon">📞</div>
-                <div class="service-name">Buy Airtime</div>
-            </a>
-            <a href="electricity.html" class="service-btn">
-                <div class="service-icon">💡</div>
-                <div class="service-name">Electricity</div>
-            </a>
-            <a href="services.html" class="service-btn">
-                <div class="service-icon">📋</div>
-                <div class="service-name">All Services</div>
-            </a>
-        </div>
-
-        <!-- Recent Transactions -->
-        <div class="section-title">Recent Transactions</div>
-        <div id="transactionsContainer"></div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">
-            <div class="nav-icon">🏠</div>
-            <div>Home</div>
-        </a>
-        <a href="services.html" class="nav-item">
-            <div class="nav-icon">📱</div>
-            <div>Services</div>
-        </a>
-        <a href="history.html" class="nav-item">
-            <div class="nav-icon">📊</div>
-            <div>History</div>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <div class="nav-icon">👤</div>
-            <div>Profile</div>
-        </a>
     </div>
 
     <script>
-        // ============================================
-        // PAYSTACK KEY - PUT YOUR REAL KEY HERE
-        // ============================================
-        const PAYSTACK_PUBLIC_KEY = 'pk_test_dca168dd5c169b6aa7e4e85a4b11867a0d52a9e5';
-
-        // User data
-        let currentUser = {
-            name: '',
-            email: '',
-            balance: 0
-        };
-
-        // Load everything when page starts
         document.addEventListener('DOMContentLoaded', function() {
-            loadUserData();
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const balance = localStorage.getItem('userBalance') || '0';
+            
+            document.getElementById('userName').textContent = user?.name || 'User';
+            document.getElementById('userBalance').textContent = `₦${parseFloat(balance).toLocaleString()}.00`;
+            
             loadTransactions();
         });
 
-        // Load user data
-        function loadUserData() {
-            const savedName = localStorage.getItem('userName');
-            const savedEmail = localStorage.getItem('userEmail');
-            const savedBalance = localStorage.getItem('userBalance');
-            
-            currentUser.name = savedName || 'User';
-            currentUser.email = savedEmail || 'user@example.com';
-            currentUser.balance = savedBalance ? parseFloat(savedBalance) : 0;
-            
-            document.getElementById('userDisplayName').textContent = currentUser.name;
-            updateWalletDisplay();
-        }
-
-        // Update wallet display
-        function updateWalletDisplay() {
-            document.getElementById('walletDisplay').textContent = `₦${currentUser.balance.toLocaleString()}.00`;
-            localStorage.setItem('userBalance', currentUser.balance);
-        }
-
-        // Go back
-        function goBack() {
-            window.history.back();
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Logout?')) {
-                window.location.href = 'login.html';
-            }
-        }
-
-        // ============================================
-        // FUND WALLET WITH PAYSTACK
-        // ============================================
-        async function fundWallet() {
-            const amount = prompt('Enter amount to fund (₦100 minimum):', '1000');
-            if (!amount) return;
-            
-            const numAmount = parseInt(amount);
-            if (isNaN(numAmount) || numAmount < 100) {
-                alert('Minimum amount is ₦100');
-                return;
-            }
-
-            showLoading('Processing...');
-
-            try {
-                if (!window.PaystackPop) {
-                    await loadScript('https://js.paystack.co/v1/inline.js');
-                }
-
-                const handler = PaystackPop.setup({
-                    key: PAYSTACK_PUBLIC_KEY,
-                    email: currentUser.email,
-                    amount: numAmount * 100,
-                    currency: 'NGN',
-                    ref: 'TUNZY_' + Date.now(),
-                    callback: function(response) {
-                        // Payment successful
-                        currentUser.balance += numAmount;
-                        updateWalletDisplay();
-                        
-                        // Add transaction
-                        addTransaction('Funding', `+₦${numAmount}`, 'credit', '💰');
-                        
-                        hideLoading();
-                        alert(`✅ ₦${numAmount} added to wallet!`);
-                    },
-                    onClose: function() {
-                        hideLoading();
-                    }
-                });
-                
-                hideLoading();
-                handler.openIframe();
-                
-            } catch (error) {
-                hideLoading();
-                alert('Payment failed');
-            }
-        }
-
-        // ============================================
-        // WITHDRAW MONEY
-        // ============================================
-        function withdrawMoney() {
-            if (currentUser.balance <= 0) {
-                alert('No funds to withdraw');
-                return;
-            }
-
-            const amount = prompt(`Enter amount to withdraw (Max: ₦${currentUser.balance}):`, '1000');
-            if (!amount) return;
-
-            const withdrawAmount = parseInt(amount);
-            if (isNaN(withdrawAmount) || withdrawAmount < 100) {
-                alert('Minimum withdrawal is ₦100');
-                return;
-            }
-            if (withdrawAmount > currentUser.balance) {
-                alert('Insufficient balance');
-                return;
-            }
-
-            if (confirm(`Withdraw ₦${withdrawAmount}?`)) {
-                showLoading('Processing...');
-                setTimeout(() => {
-                    currentUser.balance -= withdrawAmount;
-                    updateWalletDisplay();
-                    addTransaction('Withdrawal', `-₦${withdrawAmount}`, 'debit', '💸');
-                    hideLoading();
-                    alert('✅ Withdrawal successful!');
-                }, 2000);
-            }
-        }
-
-        // ============================================
-        // TRANSACTIONS
-        // ============================================
         function loadTransactions() {
-            const container = document.getElementById('transactionsContainer');
-            const saved = localStorage.getItem('transactions');
-            const transactions = saved ? JSON.parse(saved) : [];
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const list = document.getElementById('transactionsList');
             
             if (transactions.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📭</div>
-                        <div>No transactions yet</div>
-                    </div>
-                `;
                 return;
             }
             
             let html = '';
-            transactions.slice(0, 5).forEach(t => {
+            transactions.slice(0, 3).forEach(t => {
                 html += `
                     <div class="transaction-item">
-                        <div class="transaction-left">
-                            <div class="transaction-icon">${t.icon || '📱'}</div>
-                            <div>
-                                <div>${t.type}</div>
-                                <div style="font-size:0.8rem; color:#999;">${t.date || ''}</div>
-                            </div>
+                        <div>
+                            <div class="transaction-service">${t.type}</div>
+                            <div class="transaction-date">${t.date || 'Just now'}</div>
                         </div>
-                        <div class="${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount}</div>
+                        <div class="transaction-amount ${t.amount?.startsWith('+') ? 'credit' : ''}">${t.amount}</div>
                     </div>
                 `;
             });
-            
-            container.innerHTML = html;
+            list.innerHTML = html;
         }
 
-        function addTransaction(type, amount, className, icon) {
-            const transaction = {
-                type: type,
-                amount: amount,
-                date: new Date().toLocaleString(),
-                icon: icon || '📱'
-            };
-            
-            let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-            transactions.unshift(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-            loadTransactions();
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
         }
-
-        // Helper functions
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-
-        function showLoading(msg) {
-            const overlay = document.createElement('div');
-            overlay.id = 'loading';
-            overlay.style.cssText = `
-                position: fixed; top:0; left:0; right:0; bottom:0;
-                background: rgba(255,255,255,0.9); display:flex;
-                justify-content:center; align-items:center; z-index:9999;
-            `;
-            overlay.innerHTML = `
-                <div style="background:#0066cc; color:white; padding:20px; border-radius:10px;">
-                    <div style="width:30px; height:30px; border:3px solid white; 
-                                border-top-color:transparent; border-radius:50%; 
-                                animation:spin 1s infinite; margin:0 auto 10px;"></div>
-                    <p>${msg || 'Processing...'}</p>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
-
-        function hideLoading() {
-            const el = document.getElementById('loading');
-            if (el) el.remove();
-        }
-
-        // Save user from signup
-        window.saveUserData = function(name, email) {
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userBalance', '0');
-        };
     </script>
-
-    <style>
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
 </body>
 </html>
