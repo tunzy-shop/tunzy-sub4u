@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airtime to Cash - TUNZY SUB 4 YOU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #0066cc;
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .rate-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .rate-title {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .rate-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .rate-note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 18px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .convert-btn:hover {
+            background: #004d99;
+        }
+
+        .summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1>Airtime to Cash</h1>
+        </div>
+
+        <div class="container">
+            <div class="rate-card">
+                <div class="rate-title">Current Exchange Rate</div>
+                <div class="rate-value">95%</div>
+                <div class="rate-note">₦100 airtime = ₦95 cash</div>
+            </div>
+
+            <div class="form-group">
+                <label>Network</label>
+                <select id="network">
+                    <option value="mtn">MTN</option>
+                    <option value="glo">GLO</option>
+                    <option value="airtel">Airtel</option>
+                    <option value="9mobile">9mobile</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter phone number">
+            </div>
+
+            <div class="form-group">
+                <label>Airtime Amount (₦)</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="100">
+            </div>
+
+            <div class="summary" id="summary">
+                <h4 style="margin-bottom: 10px;">Summary</h4>
+                <div class="summary-row">
+                    <span>Airtime Value:</span>
+                    <span id="airtimeValue">₦0</span>
+                </div>
+                <div class="summary-row">
+                    <span>You'll Receive:</span>
+                    <span id="cashValue" style="color: #28a745; font-weight: bold;">₦0</span>
+                </div>
+            </div>
+
+            <button class="convert-btn" onclick="convertAirtime()">Convert to Cash</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('amount').addEventListener('input', calculateCash);
+        document.getElementById('network').addEventListener('change', calculateCash);
+
+        function calculateCash() {
+            const amount = document.getElementById('amount').value;
+            if (amount && amount >= 100) {
+                const cash = amount * 0.95; // 95% rate
+                document.getElementById('airtimeValue').textContent = `₦${parseInt(amount).toLocaleString()}`;
+                document.getElementById('cashValue').textContent = `₦${Math.floor(cash).toLocaleString()}`;
+                document.getElementById('summary').style.display = 'block';
+            } else {
+                document.getElementById('summary').style.display = 'none';
+            }
+        }
+
+        function convertAirtime() {
+            const network = document.getElementById('network').value;
+            const phone = document.getElementById('phone').value;
+            const amount = document.getElementById('amount').value;
+
+            if (!network || !phone || phone.length < 11 || !amount || amount < 100) {
+                alert('Please fill all fields correctly');
+                return;
+            }
+
+            alert('Conversion request submitted! You will receive cash within 5 minutes.');
+        }
+    </script>
+</body>
+</html>
