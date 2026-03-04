@@ -80,34 +80,6 @@
         .profile-email {
             color: #666;
             font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #e0e0e0;
-        }
-
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #0066cc;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #666;
         }
 
         .logout-btn {
@@ -120,7 +92,6 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin: 20px 0;
         }
 
         .logout-btn:hover {
@@ -142,17 +113,6 @@
                 <div class="profile-email" id="profileEmail">loading@email.com</div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="statBalance">₦0</div>
-                    <div class="stat-label">Balance</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statTransactions">0</div>
-                    <div class="stat-label">Transactions</div>
-                </div>
-            </div>
-
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
@@ -160,8 +120,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
-            const balance = localStorage.getItem('userBalance') || '0';
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
             
             if (!user) {
                 window.location.href = 'index.html';
@@ -170,8 +128,6 @@
             
             document.getElementById('profileName').textContent = user.name || 'User';
             document.getElementById('profileEmail').textContent = user.email || '';
-            document.getElementById('statBalance').textContent = `₦${parseFloat(balance).toLocaleString()}`;
-            document.getElementById('statTransactions').textContent = transactions.length;
         });
 
         function logout() {
