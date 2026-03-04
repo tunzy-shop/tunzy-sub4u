@@ -89,11 +89,6 @@
             color: #999;
             font-size: 14px;
         }
-
-        .empty-state p {
-            margin-top: 10px;
-            font-size: 13px;
-        }
     </style>
 </head>
 <body>
@@ -104,7 +99,7 @@
         </div>
 
         <div class="transactions-list" id="transactionsList">
-            <!-- Filled by JavaScript - ONLY REAL TRANSACTIONS -->
+            <!-- ONLY REAL TRANSACTIONS SHOW HERE -->
         </div>
     </div>
 
@@ -114,12 +109,7 @@
             const list = document.getElementById('transactionsList');
             
             if (transactions.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        No transactions yet
-                        <p>Your purchase history will appear here</p>
-                    </div>
-                `;
+                list.innerHTML = '<div class="empty-state">No transactions yet</div>';
                 return;
             }
             
