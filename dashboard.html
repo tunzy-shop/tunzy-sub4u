@@ -55,11 +55,28 @@
             flex: 1;
         }
 
+        /* Welcome Card */
+        .welcome-card {
+            padding: 20px 20px 10px;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .user-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0066cc;
+        }
+
         /* Balance Card */
         .balance-card {
             background: #0066cc;
             color: white;
-            margin: 20px;
+            margin: 10px 20px 20px;
             padding: 20px;
             border-radius: 15px;
             display: flex;
@@ -107,7 +124,22 @@
             background: rgba(255,255,255,0.3);
         }
 
-        /* Services Grid - 2 Rows of 4 Columns = 8 Buttons */
+        .fund-btn {
+            background: white;
+            color: #0066cc;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .fund-btn:hover {
+            background: #f0f0f0;
+        }
+
+        /* Services Grid - 2 Rows of 4 Columns */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -144,7 +176,7 @@
             color: #0066cc;
         }
 
-        /* Bottom Navigation - EXACTLY LIKE YOUR IMAGE */
+        /* Bottom Navigation - HOME, HISTORY, SUPPORT, PROFILE */
         .bottom-nav {
             background: white;
             border-top: 1px solid #e0e0e0;
@@ -178,26 +210,10 @@
         body {
             padding-bottom: 70px;
         }
-
-        /* Welcome text */
-        .welcome-text {
-            padding: 10px 20px 0;
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-        }
-        
-        .user-name {
-            padding: 0 20px 10px;
-            font-size: 20px;
-            font-weight: 600;
-            color: #0066cc;
-        }
     </style>
 </head>
 <body>
     <script>
-        // CHECK IF USER IS LOGGED IN
         (function() {
             const currentUser = localStorage.getItem('currentUser');
             if (!currentUser) {
@@ -217,10 +233,12 @@
         </div>
 
         <!-- Welcome -->
-        <div class="welcome-text">Welcome back,</div>
-        <div class="user-name" id="userName">Loading...</div>
+        <div class="welcome-card">
+            <div class="welcome-text">Welcome back,</div>
+            <div class="user-name" id="userName">Loading...</div>
+        </div>
 
-        <!-- Balance Card with Eye Button -->
+        <!-- Balance Card -->
         <div class="balance-card">
             <div class="balance-left">
                 <div>
@@ -229,11 +247,11 @@
                 </div>
                 <button class="eye-btn" onclick="toggleBalance()" id="eyeBtn">👁️</button>
             </div>
+            <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- Services Grid - 8 BUTTONS LIKE YOUR IMAGE -->
+        <!-- Services Grid - 8 Buttons -->
         <div class="services-grid">
-            <!-- Row 1 -->
             <a href="airtime.html" class="service-card">
                 <div class="service-icon">📞</div>
                 <div class="service-title">Airtime</div>
@@ -250,8 +268,6 @@
                 <div class="service-icon">💡</div>
                 <div class="service-title">Electricity</div>
             </a>
-            
-            <!-- Row 2 -->
             <a href="savings.html" class="service-card">
                 <div class="service-icon">💰</div>
                 <div class="service-title">Savings</div>
@@ -271,19 +287,11 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation - EXACTLY LIKE YOUR IMAGE -->
+    <!-- Bottom Navigation - HOME, HISTORY, SUPPORT, PROFILE -->
     <div class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
             <div class="nav-icon">🏠</div>
             <div>Home</div>
-        </a>
-        <a href="buy-data.html" class="nav-item">
-            <div class="nav-icon">📱</div>
-            <div>Data</div>
-        </a>
-        <a href="savings.html" class="nav-item">
-            <div class="nav-icon">💰</div>
-            <div>Savings</div>
         </a>
         <a href="history.html" class="nav-item">
             <div class="nav-icon">📊</div>
@@ -293,13 +301,16 @@
             <div class="nav-icon">❓</div>
             <div>Support</div>
         </a>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon">👤</div>
+            <div>Profile</div>
+        </a>
     </div>
 
     <script>
         let balanceVisible = true;
         let currentBalance = 0;
 
-        // Load REAL user data
         document.addEventListener('DOMContentLoaded', function() {
             const user = JSON.parse(localStorage.getItem('currentUser'));
             currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
