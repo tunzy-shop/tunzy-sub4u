@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buy Data - TUNZY SUB 4 YOU</title>
+    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             margin: 0;
@@ -65,26 +66,25 @@
             margin: 20px 0 15px;
         }
 
-        /* Network images in circles */
         .network-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin: 20px 0;
+            gap: 15px;
+            margin: 15px 0;
         }
 
         .network-btn {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .network-btn:hover {
@@ -98,8 +98,8 @@
         }
 
         .network-image {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid #0066cc;
@@ -114,7 +114,16 @@
 
         .network-name {
             font-weight: 600;
+            font-size: 14px;
+        }
+
+        .sme-badge {
+            background: #ffc107;
             color: #333;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
         .phone-input {
@@ -141,21 +150,45 @@
             outline: none;
         }
 
+        .gift-option {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gift-option label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .gift-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
         .plans-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
         .plan-card {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
 
         .plan-card:hover {
@@ -167,15 +200,58 @@
             background: #e6f0ff;
         }
 
-        .plan-size {
-            font-weight: bold;
-            font-size: 16px;
+        .plan-card.sme-plan {
+            border-left: 4px solid #ffc107;
+        }
+
+        .plan-name {
+            font-weight: 600;
+            font-size: 13px;
             margin-bottom: 5px;
+            color: #333;
         }
 
         .plan-price {
             color: #0066cc;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .plan-cost {
+            font-size: 11px;
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 5px;
+        }
+
+        .plan-validity {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: -8px;
+            right: 5px;
+            background: #ffc107;
+            color: #333;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .profit-badge {
+            position: absolute;
+            top: -8px;
+            left: 5px;
+            background: #28a745;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
         .purchase-btn {
@@ -199,9 +275,38 @@
             background: #ccc;
             cursor: not-allowed;
         }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .pending-message {
+            background: #fff3e0;
+            color: #ef6c00;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <script src="js/vtpass-config.js"></script>
+    
     <div class="app-container">
         <div class="header">
             <a href="dashboard.html" class="back-btn">←</a>
@@ -214,12 +319,16 @@
                 <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
             </div>
 
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            <div class="pending-message" id="pendingMessage"></div>
+
             <div class="section-title">Select Network</div>
-            <div class="network-grid">
+            <div class="network-grid" id="networkGrid">
                 <!-- MTN -->
                 <div class="network-btn" onclick="selectNetwork('mtn')" id="net-mtn">
                     <div class="network-image">
-                        <img src="assets/networks/mtn-logo.png" alt="MTN" onerror="this.src='https://via.placeholder.com/60/ffcc00/000000?text=MTN'">
+                        <img src="assets/networks/mtn-logo.png" alt="MTN">
                     </div>
                     <span class="network-name">MTN</span>
                 </div>
@@ -227,15 +336,16 @@
                 <!-- GLO -->
                 <div class="network-btn" onclick="selectNetwork('glo')" id="net-glo">
                     <div class="network-image">
-                        <img src="assets/networks/glo-logo.png" alt="GLO" onerror="this.src='https://via.placeholder.com/60/00a859/ffffff?text=GLO'">
+                        <img src="assets/networks/glo-logo.png" alt="GLO">
                     </div>
                     <span class="network-name">GLO</span>
+                    <span class="sme-badge">SME</span>
                 </div>
                 
                 <!-- Airtel -->
                 <div class="network-btn" onclick="selectNetwork('airtel')" id="net-airtel">
                     <div class="network-image">
-                        <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL" onerror="this.src='https://via.placeholder.com/60/e60000/ffffff?text=AIRTEL'">
+                        <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL">
                     </div>
                     <span class="network-name">AIRTEL</span>
                 </div>
@@ -243,7 +353,7 @@
                 <!-- 9mobile -->
                 <div class="network-btn" onclick="selectNetwork('9mobile')" id="net-9mobile">
                     <div class="network-image">
-                        <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE" onerror="this.src='https://via.placeholder.com/60/00aeef/ffffff?text=9MOBILE'">
+                        <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE">
                     </div>
                     <span class="network-name">9MOBILE</span>
                 </div>
@@ -254,7 +364,13 @@
                 <input type="tel" id="phoneNumber" placeholder="08012345678" value="08012345678">
             </div>
 
-            <div class="section-title">Select Plan</div>
+            <div class="gift-option">
+                <label>
+                    <input type="checkbox" id="isGift"> 🎁 Buy as gift (for someone else)
+                </label>
+            </div>
+
+            <div class="section-title" id="plansTitle">Select Plan</div>
             <div class="plans-grid" id="plansContainer">
                 <!-- Plans loaded by JavaScript -->
             </div>
@@ -264,47 +380,107 @@
     </div>
 
     <script>
-        // Data plans
+        // ============================================
+        // DATA PLANS FROM VTPASS WITH PROFIT MARGINS
+        // ============================================
+        
         const dataPlans = {
-            mtn: [
-                { size: '100MB', price: 100 },
-                { size: '350MB', price: 200 },
-                { size: '750MB', price: 300 },
-                { size: '1GB', price: 500 },
-                { size: '2GB', price: 1000 },
-                { size: '5GB', price: 2000 }
-            ],
-            glo: [
-                { size: '500MB', price: 300 },
-                { size: '1GB', price: 500 },
-                { size: '2GB', price: 800 },
-                { size: '3GB', price: 1200 }
-            ],
-            airtel: [
-                { size: '500MB', price: 300 },
-                { size: '1GB', price: 500 },
-                { size: '2GB', price: 900 },
-                { size: '3GB', price: 1300 }
-            ],
-            '9mobile': [
-                { size: '500MB', price: 250 },
-                { size: '1GB', price: 500 },
-                { size: '2GB', price: 700 },
-                { size: '3GB', price: 1000 }
-            ]
+            mtn: {
+                serviceId: VTPASS_CONFIG.services.MTN_DATA,
+                plans: [
+                    // Regular Plans - cost is VTPASS price, sellingPrice is your price
+                    { code: 'mtn-10mb-100', name: '110MB Daily', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
+                    { code: 'mtn-50mb-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '2 Days' },
+                    { code: 'mtn-100mb-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'mtn-500mb-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'mtn-20hrs-1500', name: '6GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '7 Days' },
+                    { code: 'mtn-3gb-2500', name: '6GB', cost: 2500, sellingPrice: calculateDataPrice(2500), validity: '30 Days' },
+                    { code: 'mtn-data-3000', name: '8GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
+                    { code: 'mtn-1gb-3500', name: '10GB', cost: 3500, sellingPrice: calculateDataPrice(3500), validity: '30 Days' },
+                    { code: 'mtn-100hr-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
+                    { code: 'mtn-3gb-6000', name: '20GB', cost: 6000, sellingPrice: calculateDataPrice(6000), validity: '30 Days' },
+                    { code: 'mtn-40gb-10000', name: '40GB', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days' },
+                    
+                    // SME Plans
+                    { code: 'mtn-25gb-sme-10000', name: '25GB SME', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days', sme: true },
+                    { code: 'mtn-165gb-sme-50000', name: '165GB SME', cost: 50000, sellingPrice: calculateDataPrice(50000), validity: '60 Days', sme: true },
+                    
+                    // Specials
+                    { code: 'mtn-2-5gb-600', name: '2.5GB', cost: 600, sellingPrice: calculateDataPrice(600), validity: '2 Days' },
+                    { code: 'mtn-7gb-2000', name: '7GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '7 Days' }
+                ]
+            },
+            
+            glo: {
+                serviceId: VTPASS_CONFIG.services.GLO_DATA,
+                plans: [
+                    { code: 'glo100', name: '105MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '2 Days' },
+                    { code: 'glo200', name: '350MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '4 Days' },
+                    { code: 'glo500', name: '1.05GB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '14 Days' },
+                    { code: 'glo1000', name: '2.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'glo2000', name: '5.8GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'glo3000', name: '10GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
+                    
+                    // SME Plans
+                    { code: 'glo-dg-70', name: '200MB SME', cost: 70, sellingPrice: calculateDataPrice(70), validity: '14 Days', sme: true },
+                    { code: 'glo-dg-320', name: '1GB SME', cost: 320, sellingPrice: calculateDataPrice(320), validity: '30 Days', sme: true },
+                    { code: 'glo-dg-640', name: '2GB SME', cost: 640, sellingPrice: calculateDataPrice(640), validity: '30 Days', sme: true },
+                    
+                    // Specials
+                    { code: 'glo-special-300', name: '1GB Special', cost: 300, sellingPrice: calculateDataPrice(300), validity: 'Special' }
+                ]
+            },
+            
+            airtel: {
+                serviceId: VTPASS_CONFIG.services.AIRTEL_DATA,
+                plans: [
+                    { code: 'airt-50', name: '25MB', cost: 50, sellingPrice: calculateDataPrice(50), validity: '1 Day' },
+                    { code: 'airt-100', name: '75MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
+                    { code: 'airt-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '3 Days' },
+                    { code: 'airt-300', name: '350MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '7 Days' },
+                    { code: 'airt-500', name: '750MB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '14 Days' },
+                    { code: 'airt-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'airt-1500', name: '3GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '30 Days' },
+                    { code: 'airt-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    
+                    // Specials
+                    { code: 'airt-400-1', name: '1.5GB', cost: 400, sellingPrice: calculateDataPrice(400), validity: '1 Day' }
+                ]
+            },
+            
+            '9mobile': {
+                serviceId: VTPASS_CONFIG.services.NINEMOBILE_DATA,
+                plans: [
+                    { code: 'eti-100', name: '100MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
+                    { code: 'eti-200', name: '650MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '1 Day' },
+                    { code: 'eti-500', name: '500MB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '30 Days' },
+                    { code: 'eti-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'eti-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'eti-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
+                    
+                    // Specials
+                    { code: 'eti-300', name: '1GB + 100MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '1 Day' }
+                ]
+            }
         };
 
+        // State
         let currentNetwork = 'mtn';
         let selectedPlan = null;
+        let selectedCode = '';
         let selectedPrice = 0;
+        let selectedCost = 0;
         let userBalance = 0;
+        let currentRequestId = null;
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
             selectNetwork('mtn');
         });
 
+        // Select network
         function selectNetwork(network) {
             currentNetwork = network;
             
@@ -318,25 +494,38 @@
             updatePurchaseButton();
         }
 
+        // Load plans for selected network
         function loadPlans(network) {
             const container = document.getElementById('plansContainer');
-            const plans = dataPlans[network];
+            const networkPlans = dataPlans[network].plans;
             
             let html = '';
-            plans.forEach(plan => {
+            networkPlans.forEach(plan => {
+                const isSME = plan.sme || false;
+                const profit = plan.sellingPrice - plan.cost;
                 html += `
-                    <div class="plan-card" onclick="selectPlan('${plan.size}', ${plan.price})">
-                        <div class="plan-size">${plan.size}</div>
-                        <div class="plan-price">₦${plan.price}</div>
+                    <div class="plan-card ${isSME ? 'sme-plan' : ''}" onclick="selectPlan('${plan.code}', '${plan.name}', ${plan.sellingPrice}, ${plan.cost})">
+                        ${isSME ? '<span class="plan-badge">SME</span>' : ''}
+                        <span class="profit-badge">+₦${profit}</span>
+                        <div class="plan-name">${plan.name}</div>
+                        <div>
+                            <span class="plan-cost">₦${plan.cost}</span>
+                            <span class="plan-price">₦${plan.sellingPrice}</span>
+                        </div>
+                        <div class="plan-validity">${plan.validity}</div>
                     </div>
                 `;
             });
+            
             container.innerHTML = html;
         }
 
-        function selectPlan(size, price) {
-            selectedPlan = size;
+        // Select plan
+        function selectPlan(code, name, price, cost) {
+            selectedCode = code;
+            selectedPlan = name;
             selectedPrice = price;
+            selectedCost = cost;
             
             document.querySelectorAll('.plan-card').forEach(card => {
                 card.classList.remove('selected');
@@ -346,57 +535,157 @@
             updatePurchaseButton();
         }
 
+        // Update purchase button
         function updatePurchaseButton() {
             const btn = document.getElementById('purchaseBtn');
             const phone = document.getElementById('phoneNumber').value;
             
             if (selectedPlan && phone.length >= 11) {
                 btn.disabled = false;
-                btn.textContent = `Buy ${selectedPlan} for ₦${selectedPrice}`;
+                btn.textContent = `Pay ₦${selectedPrice} for ${selectedPlan}`;
             } else {
                 btn.disabled = true;
                 btn.textContent = 'Select a plan';
             }
         }
 
-        function purchaseData() {
+        // Show messages
+        function showError(msg) {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorMessage').textContent = msg;
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(msg) {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successMessage').textContent = msg;
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        function showPending(msg) {
+            document.getElementById('pendingMessage').style.display = 'block';
+            document.getElementById('pendingMessage').textContent = msg;
+        }
+
+        function hidePending() {
+            document.getElementById('pendingMessage').style.display = 'none';
+        }
+
+        // Purchase data
+        async function purchaseData() {
             const phone = document.getElementById('phoneNumber').value;
+            const isGift = document.getElementById('isGift').checked;
+            const recipientPhone = isGift ? phone : phone;
             
             if (!selectedPlan) {
-                alert('Please select a plan');
+                showError('Please select a plan');
                 return;
             }
             
             if (phone.length < 11) {
-                alert('Please enter a valid phone number');
+                showError('Please enter a valid phone number');
                 return;
             }
             
+            // Check balance
             if (userBalance < selectedPrice) {
-                alert('Insufficient balance');
+                showError('Insufficient balance. Please fund your wallet');
                 return;
             }
-            
-            userBalance -= selectedPrice;
-            localStorage.setItem('userBalance', userBalance);
-            
-            const transaction = {
-                type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
-                amount: `-₦${selectedPrice}`,
-                date: new Date().toLocaleString()
-            };
-            
-            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            transactions.unshift(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-            
-            alert(`✅ Success! ${selectedPlan} data sent to ${phone}`);
-            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            
-            selectedPlan = null;
-            updatePurchaseButton();
+
+            showPending('Processing transaction...');
+
+            try {
+                // IMPORTANT: Send the ORIGINAL cost to VTPASS, not your selling price!
+                const payload = {
+                    serviceID: dataPlans[currentNetwork].serviceId,
+                    billersCode: recipientPhone,
+                    variation_code: selectedCode,
+                    amount: selectedCost, // Send cost to VTPASS
+                    phone: recipientPhone
+                };
+                
+                const result = await vtpassApiCall('/pay', payload);
+                const response = handleResponseCode(result.code, result.response_description);
+                
+                hidePending();
+                
+                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
+                    // Success - deduct YOUR selling price from user's balance
+                    userBalance -= selectedPrice;
+                    localStorage.setItem('userBalance', userBalance);
+                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+                    
+                    // Record profit!
+                    const profit = selectedPrice - selectedCost;
+                    recordProfit(
+                        `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
+                        selectedCost,
+                        selectedPrice,
+                        `Phone: ${recipientPhone}`
+                    );
+                    
+                    // Record transaction for user
+                    const transaction = {
+                        type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
+                        amount: `-₦${selectedPrice}`,
+                        date: new Date().toLocaleString()
+                    };
+                    
+                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                    transactions.unshift(transaction);
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    
+                    showSuccess(`✅ Success! ${selectedPlan} data sent to ${recipientPhone}`);
+                    
+                    // Reset selection
+                    selectedPlan = null;
+                    updatePurchaseButton();
+                    
+                } else if (response.isPending) {
+                    showPending('Transaction processing. Please wait...');
+                    currentRequestId = result.requestId;
+                    setTimeout(() => requeryTransaction(currentRequestId), 10000);
+                    
+                } else {
+                    showError(response.message);
+                }
+                
+            } catch (error) {
+                hidePending();
+                showError('Network error. Please try again');
+                console.error(error);
+            }
         }
 
+        // Requery transaction
+        async function requeryTransaction(requestId) {
+            if (!requestId) return;
+            
+            try {
+                const result = await requeryTransaction(requestId);
+                
+                if (result.content?.transactions?.status === 'delivered') {
+                    hidePending();
+                    showSuccess('✅ Transaction completed successfully!');
+                    
+                } else if (result.content?.transactions?.status === 'pending') {
+                    setTimeout(() => requeryTransaction(requestId), 15000);
+                } else {
+                    hidePending();
+                    showError('Transaction failed. Contact support');
+                }
+                
+            } catch (error) {
+                console.error('Requery failed:', error);
+            }
+        }
+
+        // Phone input listener
         document.getElementById('phoneNumber').addEventListener('input', updatePurchaseButton);
     </script>
 </body>
