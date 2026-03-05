@@ -55,7 +55,7 @@
             font-size: 18px;
         }
 
-        /* Button Styles */
+        /* WhatsApp Button */
         .whatsapp-btn {
             width: 100%;
             background: #25D366;
@@ -69,54 +69,11 @@
             gap: 20px;
             cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid transparent;
         }
 
         .whatsapp-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
-        }
-
-        .channel-btn {
-            width: 100%;
-            background: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .channel-btn:hover {
-            background: #004d99;
-            transform: translateY(-2px);
-        }
-
-        .group-btn {
-            width: 100%;
-            background: #128C7E;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .group-btn:hover {
-            background: #0e6b5f;
-            transform: translateY(-2px);
         }
 
         .btn-icon {
@@ -145,6 +102,72 @@
             opacity: 0.9;
         }
 
+        /* Link Cards with Copy Button */
+        .link-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .link-card:hover {
+            border-color: #0066cc;
+        }
+
+        .link-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .link-icon {
+            font-size: 30px;
+        }
+
+        .link-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .link-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .link-url {
+            flex: 1;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 13px;
+            color: #666;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #004d99;
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
+        }
+
         .faq-section {
             margin-top: 30px;
             background: #f8f9fa;
@@ -165,6 +188,7 @@
             border-radius: 10px;
             margin-bottom: 10px;
             border: 1px solid #e0e0e0;
+            cursor: pointer;
         }
 
         .faq-question {
@@ -172,7 +196,6 @@
             color: #333;
             display: flex;
             justify-content: space-between;
-            cursor: pointer;
         }
 
         .faq-answer {
@@ -210,23 +233,29 @@
                 </div>
             </button>
 
-            <!-- Channel Button -->
-            <button class="channel-btn" onclick="window.open('https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s', '_blank')">
-                <div class="btn-icon">📢</div>
-                <div class="btn-text">
-                    <h3>Join Our Channel</h3>
-                    <p>Get latest updates & offers</p>
+            <!-- Channel Link with Copy -->
+            <div class="link-card">
+                <div class="link-header">
+                    <span class="link-icon">📢</span>
+                    <span class="link-title">WhatsApp Channel</span>
                 </div>
-            </button>
+                <div class="link-container">
+                    <span class="link-url" id="channelLink">https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s</span>
+                    <button class="copy-btn" onclick="copyLink('channelLink', this)">Copy</button>
+                </div>
+            </div>
 
-            <!-- Group Button -->
-            <button class="group-btn" onclick="window.open('https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH', '_blank')">
-                <div class="btn-icon">👥</div>
-                <div class="btn-text">
-                    <h3>Join Community Group</h3>
-                    <p>Connect with other users</p>
+            <!-- Group Link with Copy -->
+            <div class="link-card">
+                <div class="link-header">
+                    <span class="link-icon">👥</span>
+                    <span class="link-title">WhatsApp Group</span>
                 </div>
-            </button>
+                <div class="link-container">
+                    <span class="link-url" id="groupLink">https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH</span>
+                    <button class="copy-btn" onclick="copyLink('groupLink', this)">Copy</button>
+                </div>
+            </div>
 
             <!-- FAQ Section -->
             <div class="faq-section">
@@ -250,10 +279,10 @@
 
                 <div class="faq-item" onclick="toggleFAQ(this)">
                     <div class="faq-question">
-                        Is my money safe?
+                        How do I set transaction PIN?
                         <span>▼</span>
                     </div>
-                    <div class="faq-answer">Yes! All transactions are secure and encrypted.</div>
+                    <div class="faq-answer">Go to Profile → Security Settings → Toggle Transaction PIN, then set your 4-digit PIN.</div>
                 </div>
             </div>
         </div>
@@ -262,6 +291,19 @@
     <script>
         function toggleFAQ(element) {
             element.classList.toggle('active');
+        }
+
+        function copyLink(elementId, btn) {
+            const linkText = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(linkText).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
         }
     </script>
 </body>
