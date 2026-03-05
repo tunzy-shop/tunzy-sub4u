@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buy Data - TUNZY SUB 4 YOU</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             margin: 0;
@@ -218,13 +217,6 @@
             margin-bottom: 3px;
         }
 
-        .plan-cost {
-            font-size: 11px;
-            color: #999;
-            text-decoration: line-through;
-            margin-right: 5px;
-        }
-
         .plan-validity {
             font-size: 10px;
             color: #666;
@@ -236,18 +228,6 @@
             right: 5px;
             background: #ffc107;
             color: #333;
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .profit-badge {
-            position: absolute;
-            top: -8px;
-            left: 5px;
-            background: #28a745;
-            color: white;
             font-size: 9px;
             padding: 2px 6px;
             border-radius: 10px;
@@ -388,7 +368,6 @@
             mtn: {
                 serviceId: VTPASS_CONFIG.services.MTN_DATA,
                 plans: [
-                    // Regular Plans - cost is VTPASS price, sellingPrice is your price
                     { code: 'mtn-10mb-100', name: '110MB Daily', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
                     { code: 'mtn-50mb-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '2 Days' },
                     { code: 'mtn-100mb-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
@@ -400,12 +379,7 @@
                     { code: 'mtn-100hr-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
                     { code: 'mtn-3gb-6000', name: '20GB', cost: 6000, sellingPrice: calculateDataPrice(6000), validity: '30 Days' },
                     { code: 'mtn-40gb-10000', name: '40GB', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days' },
-                    
-                    // SME Plans
                     { code: 'mtn-25gb-sme-10000', name: '25GB SME', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days', sme: true },
-                    { code: 'mtn-165gb-sme-50000', name: '165GB SME', cost: 50000, sellingPrice: calculateDataPrice(50000), validity: '60 Days', sme: true },
-                    
-                    // Specials
                     { code: 'mtn-2-5gb-600', name: '2.5GB', cost: 600, sellingPrice: calculateDataPrice(600), validity: '2 Days' },
                     { code: 'mtn-7gb-2000', name: '7GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '7 Days' }
                 ]
@@ -420,13 +394,9 @@
                     { code: 'glo1000', name: '2.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
                     { code: 'glo2000', name: '5.8GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
                     { code: 'glo3000', name: '10GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
-                    
-                    // SME Plans
                     { code: 'glo-dg-70', name: '200MB SME', cost: 70, sellingPrice: calculateDataPrice(70), validity: '14 Days', sme: true },
                     { code: 'glo-dg-320', name: '1GB SME', cost: 320, sellingPrice: calculateDataPrice(320), validity: '30 Days', sme: true },
                     { code: 'glo-dg-640', name: '2GB SME', cost: 640, sellingPrice: calculateDataPrice(640), validity: '30 Days', sme: true },
-                    
-                    // Specials
                     { code: 'glo-special-300', name: '1GB Special', cost: 300, sellingPrice: calculateDataPrice(300), validity: 'Special' }
                 ]
             },
@@ -442,8 +412,6 @@
                     { code: 'airt-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
                     { code: 'airt-1500', name: '3GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '30 Days' },
                     { code: 'airt-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
-                    
-                    // Specials
                     { code: 'airt-400-1', name: '1.5GB', cost: 400, sellingPrice: calculateDataPrice(400), validity: '1 Day' }
                 ]
             },
@@ -457,8 +425,6 @@
                     { code: 'eti-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
                     { code: 'eti-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
                     { code: 'eti-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
-                    
-                    // Specials
                     { code: 'eti-300', name: '1GB + 100MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '1 Day' }
                 ]
             }
@@ -502,16 +468,11 @@
             let html = '';
             networkPlans.forEach(plan => {
                 const isSME = plan.sme || false;
-                const profit = plan.sellingPrice - plan.cost;
                 html += `
                     <div class="plan-card ${isSME ? 'sme-plan' : ''}" onclick="selectPlan('${plan.code}', '${plan.name}', ${plan.sellingPrice}, ${plan.cost})">
                         ${isSME ? '<span class="plan-badge">SME</span>' : ''}
-                        <span class="profit-badge">+₦${profit}</span>
                         <div class="plan-name">${plan.name}</div>
-                        <div>
-                            <span class="plan-cost">₦${plan.cost}</span>
-                            <span class="plan-price">₦${plan.sellingPrice}</span>
-                        </div>
+                        <div class="plan-price">₦${plan.sellingPrice}</div>
                         <div class="plan-validity">${plan.validity}</div>
                     </div>
                 `;
@@ -591,7 +552,6 @@
                 return;
             }
             
-            // Check balance
             if (userBalance < selectedPrice) {
                 showError('Insufficient balance. Please fund your wallet');
                 return;
@@ -600,28 +560,24 @@
             showPending('Processing transaction...');
 
             try {
-                // IMPORTANT: Send the ORIGINAL cost to VTPASS, not your selling price!
                 const payload = {
                     serviceID: dataPlans[currentNetwork].serviceId,
                     billersCode: recipientPhone,
                     variation_code: selectedCode,
-                    amount: selectedCost, // Send cost to VTPASS
+                    amount: selectedCost,
                     phone: recipientPhone
                 };
                 
                 const result = await vtpassApiCall('/pay', payload);
-                const response = handleResponseCode(result.code, result.response_description);
+                const response = result.handled;
                 
                 hidePending();
                 
                 if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
-                    // Success - deduct YOUR selling price from user's balance
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    // Record profit!
-                    const profit = selectedPrice - selectedCost;
                     recordProfit(
                         `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
                         selectedCost,
@@ -629,7 +585,6 @@
                         `Phone: ${recipientPhone}`
                     );
                     
-                    // Record transaction for user
                     const transaction = {
                         type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
                         amount: `-₦${selectedPrice}`,
@@ -642,7 +597,6 @@
                     
                     showSuccess(`✅ Success! ${selectedPlan} data sent to ${recipientPhone}`);
                     
-                    // Reset selection
                     selectedPlan = null;
                     updatePurchaseButton();
                     
@@ -672,7 +626,6 @@
                 if (result.content?.transactions?.status === 'delivered') {
                     hidePending();
                     showSuccess('✅ Transaction completed successfully!');
-                    
                 } else if (result.content?.transactions?.status === 'pending') {
                     setTimeout(() => requeryTransaction(requestId), 15000);
                 } else {
@@ -685,59 +638,7 @@
             }
         }
 
-        // Phone input listener
         document.getElementById('phoneNumber').addEventListener('input', updatePurchaseButton);
     </script>
 </body>
 </html>
-async function purchaseData() {
-    // ... validation code ...
-    
-    showPending('Processing transaction...');
-
-    try {
-        const payload = {
-            serviceID: dataPlans[currentNetwork].serviceId,
-            billersCode: recipientPhone,
-            variation_code: selectedCode,
-            amount: selectedCost,
-            phone: recipientPhone
-        };
-        
-        const result = await vtpassApiCall('/pay', payload);
-        
-        // Use the handled response!
-        const response = result.handled;
-        
-        hidePending();
-        
-        if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
-            // Success!
-            userBalance -= selectedPrice;
-            localStorage.setItem('userBalance', userBalance);
-            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            
-            recordProfit(
-                `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
-                selectedCost,
-                selectedPrice,
-                `Phone: ${recipientPhone}`
-            );
-            
-            showSuccess(`✅ Success! ${selectedPlan} data sent to ${recipientPhone}`);
-            
-        } else if (response.isPending) {
-            showPending('Transaction processing. Please wait...');
-            currentRequestId = result.requestId;
-            setTimeout(() => requeryTransaction(currentRequestId), 10000);
-            
-        } else {
-            // Show user-friendly error message
-            showError(response.message);
-        }
-        
-    } catch (error) {
-        hidePending();
-        showError('Network error. Please try again');
-    }
-}
