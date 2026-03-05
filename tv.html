@@ -150,7 +150,6 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
-            position: relative;
         }
 
         .package-card:hover {
@@ -171,26 +170,6 @@
             color: #0066cc;
             font-weight: 700;
             font-size: 18px;
-            margin-bottom: 3px;
-        }
-
-        .package-cost {
-            font-size: 12px;
-            color: #999;
-            text-decoration: line-through;
-            margin-right: 5px;
-        }
-
-        .profit-badge {
-            position: absolute;
-            top: -8px;
-            right: 5px;
-            background: #28a745;
-            color: white;
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
         }
 
         .purchase-btn {
@@ -204,10 +183,6 @@
             font-weight: bold;
             cursor: pointer;
             margin: 20px 0;
-        }
-
-        .purchase-btn:hover {
-            background: #004d99;
         }
 
         .purchase-btn:disabled {
@@ -232,6 +207,15 @@
             margin: 10px 0;
             display: none;
         }
+
+        .pending-message {
+            background: #fff3e0;
+            color: #ef6c00;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -251,6 +235,7 @@
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
+            <div class="pending-message" id="pendingMessage"></div>
 
             <div class="section-title">Select Provider</div>
             <div class="provider-grid">
@@ -279,7 +264,6 @@
     </div>
 
     <script>
-        // Provider to service ID mapping
         const providerServiceMap = {
             'dstv': VTPASS_CONFIG.services.DSTV,
             'gotv': VTPASS_CONFIG.services.GOTV,
@@ -287,14 +271,12 @@
             'showmax': VTPASS_CONFIG.services.SHOWMAX
         };
 
-        // TV Packages with costs and selling prices (cost + profit)
         const packages = {
             dstv: [
                 { code: 'dstv-premier', name: 'Premium', cost: 24000, sellingPrice: calculateTVPrice(24000) },
                 { code: 'dstv-compact-plus', name: 'Compact+', cost: 15000, sellingPrice: calculateTVPrice(15000) },
                 { code: 'dstv-compact', name: 'Compact', cost: 10000, sellingPrice: calculateTVPrice(10000) },
-                { code: 'dstv-confam', name: 'Confam', cost: 6000, sellingPrice: calculateTVPrice(6000) },
-                { code: 'dstv-yanga', name: 'Yanga', cost: 3600, sellingPrice: calculateTVPrice(3600) }
+                { code: 'dstv-confam', name: 'Confam', cost: 6000, sellingPrice: calculateTVPrice(6000) }
             ],
             gotv: [
                 { code: 'gotv-max', name: 'Max', cost: 5000, sellingPrice: calculateTVPrice(5000) },
@@ -315,7 +297,6 @@
             ]
         };
 
-        // State
         let currentProvider = 'dstv';
         let selectedPackage = null;
         let selectedCode = '';
@@ -324,14 +305,12 @@
         let userBalance = 0;
         let verifiedName = '';
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
             loadPackages('dstv');
         });
 
-        // Select provider
         function selectProvider(provider) {
             currentProvider = provider;
             document.querySelectorAll('.provider-btn').forEach(btn => {
@@ -344,29 +323,22 @@
             updatePurchaseButton();
         }
 
-        // Load packages
         function loadPackages(provider) {
             const container = document.getElementById('packagesContainer');
             const providerPackages = packages[provider];
             
             let html = '';
             providerPackages.forEach(pkg => {
-                const profit = pkg.sellingPrice - pkg.cost;
                 html += `
                     <div class="package-card" onclick="selectPackage('${pkg.code}', '${pkg.name}', ${pkg.cost}, ${pkg.sellingPrice})">
-                        <span class="profit-badge">+₦${profit}</span>
                         <div class="package-name">${pkg.name}</div>
-                        <div>
-                            <span class="package-cost">₦${pkg.cost}</span>
-                            <span class="package-price">₦${pkg.sellingPrice}</span>
-                        </div>
+                        <div class="package-price">₦${pkg.sellingPrice}</div>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        // Select package
         function selectPackage(code, name, cost, price) {
             selectedCode = code;
             selectedPackage = name;
@@ -381,7 +353,6 @@
             updatePurchaseButton();
         }
 
-        // Update purchase button
         function updatePurchaseButton() {
             const btn = document.getElementById('purchaseBtn');
             const cardNumber = document.getElementById('cardNumber').value;
@@ -395,7 +366,6 @@
             }
         }
 
-        // Verify card
         async function verifyCard() {
             const cardNumber = document.getElementById('cardNumber').value;
             
@@ -410,8 +380,8 @@
                     'verify'
                 );
 
-                if (result.code === '000') {
-                    verifiedName = result.content.Customer_Name || 'Verified Customer';
+                if (result.success) {
+                    verifiedName = result.data.Customer_Name || 'Verified Customer';
                     document.getElementById('customerName').textContent = verifiedName;
                     document.getElementById('customerInfo').style.display = 'block';
                     updatePurchaseButton();
@@ -423,7 +393,6 @@
             }
         }
 
-        // Show messages
         function showError(msg) {
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('errorMessage').textContent = msg;
@@ -440,7 +409,15 @@
             }, 5000);
         }
 
-        // Subscribe
+        function showPending(msg) {
+            document.getElementById('pendingMessage').style.display = 'block';
+            document.getElementById('pendingMessage').textContent = msg;
+        }
+
+        function hidePending() {
+            document.getElementById('pendingMessage').style.display = 'none';
+        }
+
         async function subscribeTV() {
             const cardNumber = document.getElementById('cardNumber').value;
             
@@ -459,26 +436,27 @@
                 return;
             }
 
+            showPending('Processing subscription...');
+
             try {
-                // Send cost to VTPASS, charge user sellingPrice
                 const payload = {
                     serviceID: providerServiceMap[currentProvider],
                     billersCode: cardNumber,
                     variation_code: selectedCode,
-                    amount: selectedCost, // Send cost to VTPASS
+                    amount: selectedCost,
                     phone: localStorage.getItem('userPhone') || '08012345678'
                 };
                 
                 const result = await vtpassApiCall('/pay', payload);
+                const response = result.handled;
                 
-                if (result.code === '000' && result.content?.transactions?.status === 'delivered') {
-                    // Success - deduct selling price from user
+                hidePending();
+                
+                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    // Record profit!
-                    const profit = selectedPrice - selectedCost;
                     recordProfit(
                         `${currentProvider.toUpperCase()} - ${selectedPackage}`,
                         selectedCost,
@@ -486,7 +464,6 @@
                         `Card: ${cardNumber}`
                     );
                     
-                    // Record transaction for user
                     const transaction = {
                         type: `${currentProvider.toUpperCase()} - ${selectedPackage}`,
                         amount: `-₦${selectedPrice}`,
@@ -500,21 +477,22 @@
                     
                     showSuccess(`✅ Success! ${selectedPackage} subscribed on ${cardNumber}`);
                     
-                    // Reset
                     selectedPackage = null;
                     updatePurchaseButton();
                     
+                } else if (response.isPending) {
+                    showPending('Subscription processing. Please wait...');
                 } else {
-                    showError(result.response_description || 'Subscription failed');
+                    showError(response.message);
                 }
                 
             } catch (error) {
+                hidePending();
                 showError('Network error. Please try again');
                 console.error(error);
             }
         }
 
-        // Card number input listener
         document.getElementById('cardNumber').addEventListener('input', updatePurchaseButton);
     </script>
 </body>
