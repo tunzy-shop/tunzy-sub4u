@@ -139,7 +139,7 @@
             background: #f0f0f0;
         }
 
-        /* Services Grid - 4 BIG BUTTONS */
+        /* Services Grid - 4 BIG BUTTONS - ONLY NAMES */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -150,7 +150,7 @@
 
         .service-card {
             background: #f8f9fa;
-            padding: 30px 15px;
+            padding: 40px 15px;
             border-radius: 20px;
             text-align: center;
             text-decoration: none;
@@ -160,7 +160,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .service-card:hover {
@@ -169,11 +169,10 @@
             box-shadow: 0 10px 25px rgba(0,102,204,0.15);
         }
 
-        /* Image container - NO CIRCLE, just image */
+        /* Image container - no circle */
         .service-image {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 5px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -186,23 +185,9 @@
         }
 
         .service-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: #0066cc;
-            margin-bottom: 5px;
-        }
-
-        .service-subtitle {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .service-networks {
-            font-size: 13px;
-            font-weight: 500;
-            color: #0066cc;
-            margin-top: 3px;
         }
 
         /* Bottom Navigation */
@@ -279,46 +264,38 @@
             <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- 4 BIG BUTTONS - CLEAN LIKE YOUR IMAGE -->
+        <!-- 4 BIG BUTTONS - ONLY NAMES! -->
         <div class="services-grid">
             <!-- Buy Data -->
             <a href="buy-data.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/buydata.png" alt="Buy Data" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=Data'">
+                    <img src="assets/buydata.png" alt="Buy Data" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Data'">
                 </div>
                 <div class="service-title">Buy Data</div>
-                <div class="service-subtitle">All Networks</div>
-                <div class="service-networks">MTN · GLO · Airtel · 9mobile</div>
             </a>
 
             <!-- Airtime -->
             <a href="airtime.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/airtime.png" alt="Airtime" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=Airtime'">
+                    <img src="assets/airtime.png" alt="Airtime" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Airtime'">
                 </div>
                 <div class="service-title">Airtime</div>
-                <div class="service-subtitle">Recharge</div>
-                <div class="service-networks">All Networks</div>
             </a>
 
             <!-- Cable TV -->
             <a href="tv.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/cabletv.png" alt="Cable TV" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=TV'">
+                    <img src="assets/cabletv.png" alt="Cable TV" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=TV'">
                 </div>
                 <div class="service-title">Cable TV</div>
-                <div class="service-subtitle">DSTV · GOTV</div>
-                <div class="service-networks">Startimes</div>
             </a>
 
             <!-- Electricity -->
             <a href="electricity.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/electricity.jpg" alt="Electricity" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=Power'">
+                    <img src="assets/electricity.jpg" alt="Electricity" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Power'">
                 </div>
                 <div class="service-title">Electricity</div>
-                <div class="service-subtitle">Prepaid</div>
-                <div class="service-networks">IKEDC · EKEDC · IBEDC · AEDC</div>
             </a>
         </div>
     </div>
