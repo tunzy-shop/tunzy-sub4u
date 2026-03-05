@@ -163,33 +163,6 @@
             color: #0066cc;
         }
 
-        .amount-breakdown {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 1px solid #e0e0e0;
-        }
-
-        .cost-amount {
-            color: #999;
-            text-decoration: line-through;
-        }
-
-        .selling-amount {
-            color: #0066cc;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .profit-amount {
-            color: #28a745;
-            font-weight: bold;
-        }
-
         .purchase-btn {
             width: 100%;
             padding: 18px;
@@ -201,10 +174,6 @@
             font-weight: bold;
             cursor: pointer;
             margin: 20px 0;
-        }
-
-        .purchase-btn:hover {
-            background: #004d99;
         }
 
         .purchase-btn:disabled {
@@ -224,6 +193,15 @@
         .success-message {
             background: #e8f5e9;
             color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .pending-message {
+            background: #fff3e0;
+            color: #ef6c00;
             padding: 12px;
             border-radius: 8px;
             margin: 10px 0;
@@ -266,6 +244,7 @@
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
+            <div class="pending-message" id="pendingMessage"></div>
             <div class="token-display" id="tokenDisplay">
                 <div>Your Token</div>
                 <div class="token-number" id="tokenNumber"></div>
@@ -302,20 +281,11 @@
                 <p><span class="label">Customer Name:</span> <span id="customerName"></span></p>
                 <p><span class="label">Address:</span> <span id="customerAddress"></span></p>
                 <p><span class="label">Meter Type:</span> <span id="customerMeterType"></span></p>
-                <p><span class="label">Tariff:</span> <span id="customerTariff"></span></p>
             </div>
 
             <div class="input-field">
                 <label>Amount (₦)</label>
-                <input type="number" id="amount" placeholder="Enter amount" min="500" oninput="calculateElectricityPrice()">
-            </div>
-
-            <div class="amount-breakdown" id="amountBreakdown" style="display: none;">
-                <div>
-                    <div>Cost: <span class="cost-amount" id="costAmount">₦0</span></div>
-                    <div>You Pay: <span class="selling-amount" id="sellingAmount">₦0</span></div>
-                </div>
-                <div class="profit-amount" id="profitAmount">+₦0</div>
+                <input type="number" id="amount" placeholder="Enter amount" min="500" oninput="calculatePrice()">
             </div>
 
             <button class="purchase-btn" id="purchaseBtn" onclick="payElectricity()" disabled>Pay Bill</button>
@@ -323,7 +293,6 @@
     </div>
 
     <script>
-        // Disco to service ID mapping
         const discoServiceMap = {
             'ikedc': VTPASS_CONFIG.services.IKEDC,
             'ekedc': VTPASS_CONFIG.services.EKEDC,
@@ -339,10 +308,8 @@
             'jedc': VTPASS_CONFIG.services.JEDC
         };
 
-        // Constants
         const PROFIT_PER_ELECTRICITY = VTPASS_CONFIG.PROFIT.ELECTRICITY;
 
-        // State
         let currentDisco = 'ikedc';
         let meterType = 'prepaid';
         let verifiedData = null;
@@ -350,13 +317,11 @@
         let selectedCost = 0;
         let selectedPrice = 0;
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
         });
 
-        // Select disco
         function selectDisco(disco) {
             currentDisco = disco;
             document.querySelectorAll('.disco-btn').forEach(btn => {
@@ -368,7 +333,6 @@
             updatePurchaseButton();
         }
 
-        // Select meter type
         function selectMeterType(type) {
             meterType = type;
             document.querySelectorAll('.meter-option').forEach(btn => {
@@ -379,24 +343,15 @@
             verifiedData = null;
         }
 
-        // Calculate electricity price
-        function calculateElectricityPrice() {
+        function calculatePrice() {
             const amount = parseInt(document.getElementById('amount').value);
             if (amount && amount >= 500) {
                 selectedCost = amount;
                 selectedPrice = amount + PROFIT_PER_ELECTRICITY;
-                
-                document.getElementById('costAmount').textContent = `₦${selectedCost}`;
-                document.getElementById('sellingAmount').textContent = `₦${selectedPrice}`;
-                document.getElementById('profitAmount').textContent = `+₦${PROFIT_PER_ELECTRICITY}`;
-                document.getElementById('amountBreakdown').style.display = 'flex';
-            } else {
-                document.getElementById('amountBreakdown').style.display = 'none';
             }
             updatePurchaseButton();
         }
 
-        // Verify meter
         async function verifyMeter() {
             const meterNumber = document.getElementById('meterNumber').value;
             
@@ -411,12 +366,11 @@
                     meterType
                 );
 
-                if (result.code === '000') {
-                    verifiedData = result.content;
-                    document.getElementById('customerName').textContent = result.content.Customer_Name || 'N/A';
-                    document.getElementById('customerAddress').textContent = result.content.Address || 'N/A';
+                if (result.success) {
+                    verifiedData = result.data;
+                    document.getElementById('customerName').textContent = result.data.Customer_Name || 'N/A';
+                    document.getElementById('customerAddress').textContent = result.data.Address || 'N/A';
                     document.getElementById('customerMeterType').textContent = meterType.toUpperCase();
-                    document.getElementById('customerTariff').textContent = result.content.Tariff || 'N/A';
                     document.getElementById('customerInfo').style.display = 'block';
                 } else {
                     document.getElementById('customerInfo').style.display = 'none';
@@ -428,7 +382,6 @@
             updatePurchaseButton();
         }
 
-        // Update purchase button
         function updatePurchaseButton() {
             const btn = document.getElementById('purchaseBtn');
             const meterNumber = document.getElementById('meterNumber').value;
@@ -443,7 +396,6 @@
             }
         }
 
-        // Show messages
         function showError(msg) {
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('errorMessage').textContent = msg;
@@ -460,7 +412,15 @@
             }, 5000);
         }
 
-        // Pay electricity
+        function showPending(msg) {
+            document.getElementById('pendingMessage').style.display = 'block';
+            document.getElementById('pendingMessage').textContent = msg;
+        }
+
+        function hidePending() {
+            document.getElementById('pendingMessage').style.display = 'none';
+        }
+
         async function payElectricity() {
             const meterNumber = document.getElementById('meterNumber').value;
             
@@ -479,32 +439,32 @@
                 return;
             }
 
+            showPending('Processing payment...');
+
             try {
-                // Send cost to VTPASS, charge user sellingPrice
                 const payload = {
                     serviceID: discoServiceMap[currentDisco],
                     billersCode: meterNumber,
                     variation_code: meterType,
-                    amount: selectedCost, // Send cost to VTPASS
+                    amount: selectedCost,
                     phone: localStorage.getItem('userPhone') || '08012345678'
                 };
                 
                 const result = await vtpassApiCall('/pay', payload);
+                const response = result.handled;
                 
-                if (result.code === '000' && result.content?.transactions?.status === 'delivered') {
-                    // Success - deduct selling price from user
+                hidePending();
+                
+                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    // Show token if prepaid
                     if (meterType === 'prepaid' && result.token) {
                         document.getElementById('tokenNumber').textContent = result.token;
                         document.getElementById('tokenDisplay').style.display = 'block';
                     }
                     
-                    // Record profit!
-                    const profit = selectedPrice - selectedCost;
                     recordProfit(
                         `${currentDisco.toUpperCase()} Electricity - ${meterType}`,
                         selectedCost,
@@ -512,7 +472,6 @@
                         `Meter: ${meterNumber}`
                     );
                     
-                    // Record transaction for user
                     const transaction = {
                         type: `${currentDisco.toUpperCase()} Electricity - ${meterType}`,
                         amount: `-₦${selectedPrice}`,
@@ -526,11 +485,14 @@
                     
                     showSuccess(`✅ Payment successful!`);
                     
+                } else if (response.isPending) {
+                    showPending('Payment processing. Please wait...');
                 } else {
-                    showError(result.response_description || 'Payment failed');
+                    showError(response.message);
                 }
                 
             } catch (error) {
+                hidePending();
                 showError('Network error. Please try again');
                 console.error(error);
             }
