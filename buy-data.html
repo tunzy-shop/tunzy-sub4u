@@ -690,3 +690,54 @@
     </script>
 </body>
 </html>
+async function purchaseData() {
+    // ... validation code ...
+    
+    showPending('Processing transaction...');
+
+    try {
+        const payload = {
+            serviceID: dataPlans[currentNetwork].serviceId,
+            billersCode: recipientPhone,
+            variation_code: selectedCode,
+            amount: selectedCost,
+            phone: recipientPhone
+        };
+        
+        const result = await vtpassApiCall('/pay', payload);
+        
+        // Use the handled response!
+        const response = result.handled;
+        
+        hidePending();
+        
+        if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
+            // Success!
+            userBalance -= selectedPrice;
+            localStorage.setItem('userBalance', userBalance);
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+            
+            recordProfit(
+                `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
+                selectedCost,
+                selectedPrice,
+                `Phone: ${recipientPhone}`
+            );
+            
+            showSuccess(`✅ Success! ${selectedPlan} data sent to ${recipientPhone}`);
+            
+        } else if (response.isPending) {
+            showPending('Transaction processing. Please wait...');
+            currentRequestId = result.requestId;
+            setTimeout(() => requeryTransaction(currentRequestId), 10000);
+            
+        } else {
+            // Show user-friendly error message
+            showError(response.message);
+        }
+        
+    } catch (error) {
+        hidePending();
+        showError('Network error. Please try again');
+    }
+}
