@@ -139,41 +139,53 @@
             background: #f0f0f0;
         }
 
-        /* Services Grid - 2 Rows of 4 Columns */
+        /* Services Grid - 4 BIG BUTTONS */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
             padding: 20px;
+            margin-top: 20px;
         }
 
         .service-card {
             background: #f8f9fa;
-            padding: 15px 5px;
-            border-radius: 12px;
+            padding: 40px 15px;
+            border-radius: 20px;
             text-align: center;
             text-decoration: none;
             color: #333;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #e0e0e0;
             transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .service-card:hover {
             border-color: #0066cc;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,102,204,0.1);
-        }
-
-        .service-icon {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: #0066cc;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,102,204,0.15);
         }
 
         .service-title {
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 24px;
+            font-weight: 700;
             color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .service-subtitle {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .service-subtitle span {
+            display: block;
+            margin-top: 5px;
+            font-weight: 500;
         }
 
         /* Bottom Navigation - HOME, HISTORY, SUPPORT, PROFILE */
@@ -250,44 +262,47 @@
             <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- Services Grid - 8 Buttons -->
+        <!-- 4 BIG BUTTONS - EXACTLY LIKE YOUR IMAGE -->
         <div class="services-grid">
-            <a href="airtime.html" class="service-card">
-                <div class="service-icon">📞</div>
-                <div class="service-title">Airtime</div>
-            </a>
+            <!-- Buy Data -->
             <a href="buy-data.html" class="service-card">
-                <div class="service-icon">📱</div>
-                <div class="service-title">Data</div>
+                <div class="service-title">Buy Data</div>
+                <div class="service-subtitle">
+                    All Networks
+                    <span>MTN · GLO · Airtel · 9mobile</span>
+                </div>
             </a>
+
+            <!-- Airtime -->
+            <a href="airtime.html" class="service-card">
+                <div class="service-title">Airtime</div>
+                <div class="service-subtitle">
+                    Recharge
+                    <span>All Networks</span>
+                </div>
+            </a>
+
+            <!-- Cable TV -->
             <a href="tv.html" class="service-card">
-                <div class="service-icon">📺</div>
                 <div class="service-title">Cable TV</div>
+                <div class="service-subtitle">
+                    DSTV · GOTv
+                    <span>Startimes</span>
+                </div>
             </a>
+
+            <!-- Electricity -->
             <a href="electricity.html" class="service-card">
-                <div class="service-icon">💡</div>
                 <div class="service-title">Electricity</div>
-            </a>
-            <a href="savings.html" class="service-card">
-                <div class="service-icon">💰</div>
-                <div class="service-title">Savings</div>
-            </a>
-            <a href="exam.html" class="service-card">
-                <div class="service-icon">📊</div>
-                <div class="service-title">Exam</div>
-            </a>
-            <a href="airtime-to-cash.html" class="service-card">
-                <div class="service-icon">💱</div>
-                <div class="service-title">Airtime to Cash</div>
-            </a>
-            <a href="transfer.html" class="service-card">
-                <div class="service-icon">🏦</div>
-                <div class="service-title">Transfer</div>
+                <div class="service-subtitle">
+                    Prepaid
+                    <span>IKEDC · EKEDC · Others</span>
+                </div>
             </a>
         </div>
     </div>
 
-    <!-- Bottom Navigation - HOME, HISTORY, SUPPORT, PROFILE -->
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
             <div class="nav-icon">🏠</div>
