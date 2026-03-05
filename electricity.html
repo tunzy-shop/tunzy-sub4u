@@ -58,22 +58,30 @@
             border: 1px solid #e0e0e0;
         }
 
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0066cc;
+            margin: 20px 0 15px;
+        }
+
         .disco-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
         }
 
         .disco-btn {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 12px 5px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
+            font-size: 13px;
         }
 
         .disco-btn:hover {
@@ -100,6 +108,7 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
         }
 
         .meter-option:hover {
@@ -119,6 +128,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: #333;
         }
 
         .input-field input {
@@ -132,6 +142,52 @@
         .input-field input:focus {
             border-color: #0066cc;
             outline: none;
+        }
+
+        .customer-info {
+            background: #e6f0ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #0066cc;
+            display: none;
+        }
+
+        .customer-info p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .customer-info .label {
+            font-weight: 600;
+            color: #0066cc;
+        }
+
+        .amount-breakdown {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .cost-amount {
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .selling-amount {
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .profit-amount {
+            color: #28a745;
+            font-weight: bold;
         }
 
         .purchase-btn {
@@ -150,9 +206,52 @@
         .purchase-btn:hover {
             background: #004d99;
         }
+
+        .purchase-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .token-display {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .token-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
+    <script src="js/vtpass-config.js"></script>
+    
     <div class="app-container">
         <div class="header">
             <a href="dashboard.html" class="back-btn">←</a>
@@ -165,103 +264,276 @@
                 <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
             </div>
 
-            <div class="disco-grid">
-                <div class="disco-btn selected" onclick="selectDisco('ikedc')">IKEDC</div>
-                <div class="disco-btn" onclick="selectDisco('ekedc')">EKEDC</div>
-                <div class="disco-btn" onclick="selectDisco('ibedc')">IBEDC</div>
-                <div class="disco-btn" onclick="selectDisco('aedc')">AEDC</div>
-                <div class="disco-btn" onclick="selectDisco('phed')">PHED</div>
-                <div class="disco-btn" onclick="selectDisco('kedco')">KEDCO</div>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            <div class="token-display" id="tokenDisplay">
+                <div>Your Token</div>
+                <div class="token-number" id="tokenNumber"></div>
+                <div style="font-size: 12px; color: #666;">Please keep this token safe</div>
+            </div>
+
+            <div class="section-title">Select Distribution Company</div>
+            <div class="disco-grid" id="discoGrid">
+                <div class="disco-btn selected" onclick="selectDisco('ikedc')" id="disco-ikedc">IKEDC</div>
+                <div class="disco-btn" onclick="selectDisco('ekedc')" id="disco-ekedc">EKEDC</div>
+                <div class="disco-btn" onclick="selectDisco('ibedc')" id="disco-ibedc">IBEDC</div>
+                <div class="disco-btn" onclick="selectDisco('aedc')" id="disco-aedc">AEDC</div>
+                <div class="disco-btn" onclick="selectDisco('phed')" id="disco-phed">PHED</div>
+                <div class="disco-btn" onclick="selectDisco('kedco')" id="disco-kedco">KEDCO</div>
+                <div class="disco-btn" onclick="selectDisco('kaedco')" id="disco-kaedco">KAEDCO</div>
+                <div class="disco-btn" onclick="selectDisco('eedc')" id="disco-eedc">EEDC</div>
+                <div class="disco-btn" onclick="selectDisco('bedc')" id="disco-bedc">BEDC</div>
+                <div class="disco-btn" onclick="selectDisco('aba')" id="disco-aba">ABA</div>
+                <div class="disco-btn" onclick="selectDisco('yedc')" id="disco-yedc">YEDC</div>
+                <div class="disco-btn" onclick="selectDisco('jedc')" id="disco-jedc">JEDC</div>
             </div>
 
             <div class="meter-type">
-                <div class="meter-option selected" onclick="selectMeterType('prepaid')">Prepaid</div>
-                <div class="meter-option" onclick="selectMeterType('postpaid')">Postpaid</div>
+                <div class="meter-option selected" onclick="selectMeterType('prepaid')" id="meter-prepaid">Prepaid</div>
+                <div class="meter-option" onclick="selectMeterType('postpaid')" id="meter-postpaid">Postpaid</div>
             </div>
 
             <div class="input-field">
                 <label>Meter Number</label>
-                <input type="text" id="meterNumber" placeholder="Enter meter number">
+                <input type="text" id="meterNumber" placeholder="Enter meter number" onblur="verifyMeter()">
+            </div>
+
+            <div class="customer-info" id="customerInfo">
+                <p><span class="label">Customer Name:</span> <span id="customerName"></span></p>
+                <p><span class="label">Address:</span> <span id="customerAddress"></span></p>
+                <p><span class="label">Meter Type:</span> <span id="customerMeterType"></span></p>
+                <p><span class="label">Tariff:</span> <span id="customerTariff"></span></p>
             </div>
 
             <div class="input-field">
                 <label>Amount (₦)</label>
-                <input type="number" id="amount" placeholder="Enter amount" min="500">
+                <input type="number" id="amount" placeholder="Enter amount" min="500" oninput="calculateElectricityPrice()">
             </div>
 
-            <button class="purchase-btn" onclick="payElectricity()">Pay Bill</button>
+            <div class="amount-breakdown" id="amountBreakdown" style="display: none;">
+                <div>
+                    <div>Cost: <span class="cost-amount" id="costAmount">₦0</span></div>
+                    <div>You Pay: <span class="selling-amount" id="sellingAmount">₦0</span></div>
+                </div>
+                <div class="profit-amount" id="profitAmount">+₦0</div>
+            </div>
+
+            <button class="purchase-btn" id="purchaseBtn" onclick="payElectricity()" disabled>Pay Bill</button>
         </div>
     </div>
 
     <script>
+        // Disco to service ID mapping
+        const discoServiceMap = {
+            'ikedc': VTPASS_CONFIG.services.IKEDC,
+            'ekedc': VTPASS_CONFIG.services.EKEDC,
+            'ibedc': VTPASS_CONFIG.services.IBEDC,
+            'aedc': VTPASS_CONFIG.services.AEDC,
+            'phed': VTPASS_CONFIG.services.PHED,
+            'kedco': VTPASS_CONFIG.services.KEDCO,
+            'kaedco': VTPASS_CONFIG.services.KAEDCO,
+            'eedc': VTPASS_CONFIG.services.EEDC,
+            'bedc': VTPASS_CONFIG.services.BEDC,
+            'aba': VTPASS_CONFIG.services.ABA,
+            'yedc': VTPASS_CONFIG.services.YEDC,
+            'jedc': VTPASS_CONFIG.services.JEDC
+        };
+
+        // Constants
+        const PROFIT_PER_ELECTRICITY = VTPASS_CONFIG.PROFIT.ELECTRICITY;
+
+        // State
         let currentDisco = 'ikedc';
         let meterType = 'prepaid';
+        let verifiedData = null;
         let userBalance = 0;
+        let selectedCost = 0;
+        let selectedPrice = 0;
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
         });
 
+        // Select disco
         function selectDisco(disco) {
             currentDisco = disco;
             document.querySelectorAll('.disco-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
+            document.getElementById(`disco-${disco}`).classList.add('selected');
+            document.getElementById('customerInfo').style.display = 'none';
+            verifiedData = null;
+            updatePurchaseButton();
         }
 
+        // Select meter type
         function selectMeterType(type) {
             meterType = type;
             document.querySelectorAll('.meter-option').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
+            document.getElementById(`meter-${type}`).classList.add('selected');
+            document.getElementById('customerInfo').style.display = 'none';
+            verifiedData = null;
         }
 
-        function payElectricity() {
+        // Calculate electricity price
+        function calculateElectricityPrice() {
+            const amount = parseInt(document.getElementById('amount').value);
+            if (amount && amount >= 500) {
+                selectedCost = amount;
+                selectedPrice = amount + PROFIT_PER_ELECTRICITY;
+                
+                document.getElementById('costAmount').textContent = `₦${selectedCost}`;
+                document.getElementById('sellingAmount').textContent = `₦${selectedPrice}`;
+                document.getElementById('profitAmount').textContent = `+₦${PROFIT_PER_ELECTRICITY}`;
+                document.getElementById('amountBreakdown').style.display = 'flex';
+            } else {
+                document.getElementById('amountBreakdown').style.display = 'none';
+            }
+            updatePurchaseButton();
+        }
+
+        // Verify meter
+        async function verifyMeter() {
+            const meterNumber = document.getElementById('meterNumber').value;
+            
+            if (!meterNumber || meterNumber.length < 6) {
+                return;
+            }
+
+            try {
+                const result = await verifyMeter(
+                    discoServiceMap[currentDisco],
+                    meterNumber,
+                    meterType
+                );
+
+                if (result.code === '000') {
+                    verifiedData = result.content;
+                    document.getElementById('customerName').textContent = result.content.Customer_Name || 'N/A';
+                    document.getElementById('customerAddress').textContent = result.content.Address || 'N/A';
+                    document.getElementById('customerMeterType').textContent = meterType.toUpperCase();
+                    document.getElementById('customerTariff').textContent = result.content.Tariff || 'N/A';
+                    document.getElementById('customerInfo').style.display = 'block';
+                } else {
+                    document.getElementById('customerInfo').style.display = 'none';
+                    showError('Meter verification failed');
+                }
+            } catch (error) {
+                console.error('Verification failed:', error);
+            }
+            updatePurchaseButton();
+        }
+
+        // Update purchase button
+        function updatePurchaseButton() {
+            const btn = document.getElementById('purchaseBtn');
             const meterNumber = document.getElementById('meterNumber').value;
             const amount = parseInt(document.getElementById('amount').value);
             
+            if (meterNumber && meterNumber.length >= 6 && amount && amount >= 500 && verifiedData) {
+                btn.disabled = false;
+                btn.textContent = `Pay ₦${selectedPrice}`;
+            } else {
+                btn.disabled = true;
+                btn.textContent = 'Enter all details';
+            }
+        }
+
+        // Show messages
+        function showError(msg) {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('errorMessage').textContent = msg;
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(msg) {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successMessage').textContent = msg;
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        }
+
+        // Pay electricity
+        async function payElectricity() {
+            const meterNumber = document.getElementById('meterNumber').value;
+            
             if (!meterNumber) {
-                alert('Please enter meter number');
+                showError('Please enter meter number');
                 return;
             }
             
-            if (!amount || amount < 500) {
-                alert('Minimum amount is ₦500');
+            if (!selectedCost || selectedCost < 500) {
+                showError('Minimum amount is ₦500');
                 return;
             }
             
-            if (userBalance < amount) {
-                alert('Insufficient balance');
+            if (userBalance < selectedPrice) {
+                showError('Insufficient balance');
                 return;
             }
-            
-            userBalance -= amount;
-            localStorage.setItem('userBalance', userBalance);
-            
-            const discoNames = {
-                'ikedc': 'IKEDC',
-                'ekedc': 'EKEDC',
-                'ibedc': 'IBEDC',
-                'aedc': 'AEDC',
-                'phed': 'PHED',
-                'kedco': 'KEDCO'
-            };
-            
-            const transaction = {
-                type: `${discoNames[currentDisco]} - ${meterType}`,
-                amount: `-₦${amount}`,
-                date: new Date().toLocaleString()
-            };
-            
-            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            transactions.unshift(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-            
-            alert(`✅ Success! ₦${amount} paid for meter ${meterNumber}`);
-            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+
+            try {
+                // Send cost to VTPASS, charge user sellingPrice
+                const payload = {
+                    serviceID: discoServiceMap[currentDisco],
+                    billersCode: meterNumber,
+                    variation_code: meterType,
+                    amount: selectedCost, // Send cost to VTPASS
+                    phone: localStorage.getItem('userPhone') || '08012345678'
+                };
+                
+                const result = await vtpassApiCall('/pay', payload);
+                
+                if (result.code === '000' && result.content?.transactions?.status === 'delivered') {
+                    // Success - deduct selling price from user
+                    userBalance -= selectedPrice;
+                    localStorage.setItem('userBalance', userBalance);
+                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+                    
+                    // Show token if prepaid
+                    if (meterType === 'prepaid' && result.token) {
+                        document.getElementById('tokenNumber').textContent = result.token;
+                        document.getElementById('tokenDisplay').style.display = 'block';
+                    }
+                    
+                    // Record profit!
+                    const profit = selectedPrice - selectedCost;
+                    recordProfit(
+                        `${currentDisco.toUpperCase()} Electricity - ${meterType}`,
+                        selectedCost,
+                        selectedPrice,
+                        `Meter: ${meterNumber}`
+                    );
+                    
+                    // Record transaction for user
+                    const transaction = {
+                        type: `${currentDisco.toUpperCase()} Electricity - ${meterType}`,
+                        amount: `-₦${selectedPrice}`,
+                        date: new Date().toLocaleString(),
+                        meter: meterNumber
+                    };
+                    
+                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                    transactions.unshift(transaction);
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    
+                    showSuccess(`✅ Payment successful!`);
+                    
+                } else {
+                    showError(result.response_description || 'Payment failed');
+                }
+                
+            } catch (error) {
+                showError('Network error. Please try again');
+                console.error(error);
+            }
         }
     </script>
 </body>
