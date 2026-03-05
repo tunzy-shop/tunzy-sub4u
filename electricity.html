@@ -72,6 +72,12 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .disco-btn:hover {
+            border-color: #0066cc;
         }
 
         .disco-btn.selected {
@@ -93,6 +99,11 @@
             padding: 15px;
             text-align: center;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .meter-option:hover {
+            border-color: #0066cc;
         }
 
         .meter-option.selected {
@@ -104,11 +115,23 @@
             margin: 20px 0;
         }
 
+        .input-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
         .input-field input {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .input-field input:focus {
+            border-color: #0066cc;
+            outline: none;
         }
 
         .purchase-btn {
@@ -121,6 +144,11 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .purchase-btn:hover {
+            background: #004d99;
         }
     </style>
 </head>
@@ -137,30 +165,104 @@
                 <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
             </div>
 
-            <h3>Select Distribution Company</h3>
             <div class="disco-grid">
-                <div class="disco-btn selected">IKEDC</div>
-                <div class="disco-btn">EKEDC</div>
-                <div class="disco-btn">AEDC</div>
-                <div class="disco-btn">PHED</div>
+                <div class="disco-btn selected" onclick="selectDisco('ikedc')">IKEDC</div>
+                <div class="disco-btn" onclick="selectDisco('ekedc')">EKEDC</div>
+                <div class="disco-btn" onclick="selectDisco('ibedc')">IBEDC</div>
+                <div class="disco-btn" onclick="selectDisco('aedc')">AEDC</div>
+                <div class="disco-btn" onclick="selectDisco('phed')">PHED</div>
+                <div class="disco-btn" onclick="selectDisco('kedco')">KEDCO</div>
             </div>
 
-            <h3>Meter Type</h3>
             <div class="meter-type">
-                <div class="meter-option selected">Prepaid</div>
-                <div class="meter-option">Postpaid</div>
+                <div class="meter-option selected" onclick="selectMeterType('prepaid')">Prepaid</div>
+                <div class="meter-option" onclick="selectMeterType('postpaid')">Postpaid</div>
             </div>
 
             <div class="input-field">
-                <input type="text" placeholder="Meter Number">
+                <label>Meter Number</label>
+                <input type="text" id="meterNumber" placeholder="Enter meter number">
             </div>
 
             <div class="input-field">
-                <input type="number" placeholder="Amount (₦)">
+                <label>Amount (₦)</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="500">
             </div>
 
-            <button class="purchase-btn">Pay Bill</button>
+            <button class="purchase-btn" onclick="payElectricity()">Pay Bill</button>
         </div>
     </div>
+
+    <script>
+        let currentDisco = 'ikedc';
+        let meterType = 'prepaid';
+        let userBalance = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+        });
+
+        function selectDisco(disco) {
+            currentDisco = disco;
+            document.querySelectorAll('.disco-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function selectMeterType(type) {
+            meterType = type;
+            document.querySelectorAll('.meter-option').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function payElectricity() {
+            const meterNumber = document.getElementById('meterNumber').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            
+            if (!meterNumber) {
+                alert('Please enter meter number');
+                return;
+            }
+            
+            if (!amount || amount < 500) {
+                alert('Minimum amount is ₦500');
+                return;
+            }
+            
+            if (userBalance < amount) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            userBalance -= amount;
+            localStorage.setItem('userBalance', userBalance);
+            
+            const discoNames = {
+                'ikedc': 'IKEDC',
+                'ekedc': 'EKEDC',
+                'ibedc': 'IBEDC',
+                'aedc': 'AEDC',
+                'phed': 'PHED',
+                'kedco': 'KEDCO'
+            };
+            
+            const transaction = {
+                type: `${discoNames[currentDisco]} - ${meterType}`,
+                amount: `-₦${amount}`,
+                date: new Date().toLocaleString()
+            };
+            
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            transactions.unshift(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+            
+            alert(`✅ Success! ₦${amount} paid for meter ${meterNumber}`);
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+        }
+    </script>
 </body>
 </html>
