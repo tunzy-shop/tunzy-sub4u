@@ -136,6 +136,7 @@
             color: #333;
         }
 
+        /* ✅ NO DEFAULT NUMBER - EMPTY PLACEHOLDER ONLY */
         .phone-input input {
             width: 100%;
             padding: 15px;
@@ -341,7 +342,8 @@
 
             <div class="phone-input">
                 <label>Phone Number</label>
-                <input type="tel" id="phoneNumber" placeholder="08012345678" value="08012345678">
+                <!-- ✅ NO DEFAULT NUMBER - EMPTY -->
+                <input type="tel" id="phoneNumber" placeholder="Enter phone number" value="">
             </div>
 
             <div class="gift-option">
@@ -547,7 +549,7 @@
                 return;
             }
             
-            if (phone.length < 11) {
+            if (!phone || phone.length < 11) {
                 showError('Please enter a valid phone number');
                 return;
             }
