@@ -9,8 +9,8 @@ const CONFIG = {
     // API Provider (VTpass or similar)
     API: {
         BASE_URL: 'https://api.vtpass.com/api',
-        PUBLIC_KEY: 'YOUR_VTPASS_PUBLIC_KEY',  // 🔴 REPLACE THIS
-        SECRET_KEY: 'YOUR_VTPASS_SECRET_KEY',  // 🔴 REPLACE THIS
+        PUBLIC_KEY: 'PK_36244626c1178a2d0fe312c4a3f2bb13dd45fd94f6c',  // 🔴 REPLACE THIS
+        SECRET_KEY: 'SK_592dec3ca053050dc1b889e81f8ba1cf46ecb8a3970',  // 🔴 REPLACE THIS
     },
     
     // Payment Gateway (Paystack)
