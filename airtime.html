@@ -58,20 +58,37 @@
             border: 1px solid #e0e0e0;
         }
 
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0066cc;
+            margin: 20px 0 15px;
+        }
+
         .network-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 20px;
             margin: 20px 0;
         }
 
         .network-btn {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .network-btn:hover {
+            border-color: #0066cc;
+            transform: translateY(-2px);
         }
 
         .network-btn.selected {
@@ -79,8 +96,35 @@
             background: #e6f0ff;
         }
 
+        .network-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #0066cc;
+            background: white;
+        }
+
+        .network-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .network-name {
+            font-weight: 600;
+            color: #333;
+        }
+
         .phone-input {
             margin: 20px 0;
+        }
+
+        .phone-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
         }
 
         .phone-input input {
@@ -88,6 +132,12 @@
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .phone-input input:focus {
+            border-color: #0066cc;
+            outline: none;
         }
 
         .amount-presets {
@@ -104,6 +154,28 @@
             padding: 15px;
             text-align: center;
             cursor: pointer;
+            font-weight: 600;
+        }
+
+        .amount-btn:hover {
+            border-color: #0066cc;
+        }
+
+        .amount-btn.selected {
+            border-color: #0066cc;
+            background: #e6f0ff;
+        }
+
+        .custom-amount {
+            margin: 20px 0;
+        }
+
+        .custom-amount input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
         }
 
         .purchase-btn {
@@ -116,6 +188,11 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .purchase-btn:hover {
+            background: #004d99;
         }
     </style>
 </head>
@@ -132,30 +209,121 @@
                 <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
             </div>
 
-            <h3>Select Network</h3>
+            <div class="section-title">Select Network</div>
             <div class="network-grid">
-                <div class="network-btn selected">MTN</div>
-                <div class="network-btn">GLO</div>
-                <div class="network-btn">Airtel</div>
-                <div class="network-btn">9mobile</div>
+                <div class="network-btn selected" onclick="selectNetwork('mtn')" id="net-mtn">
+                    <div class="network-image">
+                        <img src="assets/networks/mtn-logo.png" alt="MTN" onerror="this.src='https://via.placeholder.com/60/ffcc00/000000?text=MTN'">
+                    </div>
+                    <span class="network-name">MTN</span>
+                </div>
+                <div class="network-btn" onclick="selectNetwork('glo')" id="net-glo">
+                    <div class="network-image">
+                        <img src="assets/networks/glo-logo.png" alt="GLO" onerror="this.src='https://via.placeholder.com/60/00a859/ffffff?text=GLO'">
+                    </div>
+                    <span class="network-name">GLO</span>
+                </div>
+                <div class="network-btn" onclick="selectNetwork('airtel')" id="net-airtel">
+                    <div class="network-image">
+                        <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL" onerror="this.src='https://via.placeholder.com/60/e60000/ffffff?text=AIRTEL'">
+                    </div>
+                    <span class="network-name">AIRTEL</span>
+                </div>
+                <div class="network-btn" onclick="selectNetwork('9mobile')" id="net-9mobile">
+                    <div class="network-image">
+                        <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE" onerror="this.src='https://via.placeholder.com/60/00aeef/ffffff?text=9MOBILE'">
+                    </div>
+                    <span class="network-name">9MOBILE</span>
+                </div>
             </div>
 
             <div class="phone-input">
-                <input type="tel" placeholder="Phone Number" value="08012345678">
+                <label>Phone Number</label>
+                <input type="tel" id="phoneNumber" placeholder="08012345678" value="08012345678">
             </div>
 
-            <h3>Select Amount</h3>
+            <div class="section-title">Select Amount</div>
             <div class="amount-presets">
-                <div class="amount-btn">₦100</div>
-                <div class="amount-btn">₦200</div>
-                <div class="amount-btn">₦500</div>
-                <div class="amount-btn">₦1000</div>
-                <div class="amount-btn">₦2000</div>
-                <div class="amount-btn">₦5000</div>
+                <div class="amount-btn" onclick="selectAmount(100)">₦100</div>
+                <div class="amount-btn" onclick="selectAmount(200)">₦200</div>
+                <div class="amount-btn" onclick="selectAmount(500)">₦500</div>
+                <div class="amount-btn" onclick="selectAmount(1000)">₦1,000</div>
+                <div class="amount-btn" onclick="selectAmount(2000)">₦2,000</div>
+                <div class="amount-btn" onclick="selectAmount(5000)">₦5,000</div>
             </div>
 
-            <button class="purchase-btn">Buy Airtime</button>
+            <div class="custom-amount">
+                <input type="number" id="customAmount" placeholder="Or enter custom amount">
+            </div>
+
+            <button class="purchase-btn" onclick="purchaseAirtime()">Buy Airtime</button>
         </div>
     </div>
+
+    <script>
+        let currentNetwork = 'mtn';
+        let selectedAmount = 0;
+        let userBalance = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+        });
+
+        function selectNetwork(network) {
+            currentNetwork = network;
+            document.querySelectorAll('.network-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById(`net-${network}`).classList.add('selected');
+        }
+
+        function selectAmount(amount) {
+            selectedAmount = amount;
+            document.getElementById('customAmount').value = amount;
+            
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function purchaseAirtime() {
+            const phone = document.getElementById('phoneNumber').value;
+            const customAmount = document.getElementById('customAmount').value;
+            const amount = parseInt(customAmount) || selectedAmount;
+            
+            if (!amount || amount < 50) {
+                alert('Please enter a valid amount (minimum ₦50)');
+                return;
+            }
+            
+            if (phone.length < 11) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+            
+            if (userBalance < amount) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            userBalance -= amount;
+            localStorage.setItem('userBalance', userBalance);
+            
+            const transaction = {
+                type: `${currentNetwork.toUpperCase()} Airtime`,
+                amount: `-₦${amount}`,
+                date: new Date().toLocaleString()
+            };
+            
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            transactions.unshift(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+            
+            alert(`✅ Success! ₦${amount} airtime sent to ${phone}`);
+            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+        }
+    </script>
 </body>
 </html>
