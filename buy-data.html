@@ -58,16 +58,6 @@
             border: 1px solid #e0e0e0;
         }
 
-        .balance-label {
-            color: #666;
-        }
-
-        .balance-amount {
-            font-weight: bold;
-            color: #0066cc;
-            font-size: 18px;
-        }
-
         .section-title {
             font-size: 16px;
             font-weight: 600;
@@ -75,69 +65,64 @@
             margin: 20px 0 15px;
         }
 
-        .network-tabs {
-            display: flex;
-            gap: 10px;
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin: 15px 0;
-            flex-wrap: wrap;
         }
 
-        .network-tab {
-            flex: 1;
-            min-width: 100px;
-            padding: 12px;
+        .network-btn {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border-radius: 12px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s;
-        }
-
-        .network-tab:hover {
-            border-color: #0066cc;
-        }
-
-        .network-tab.active {
-            background: #0066cc;
-            color: white;
-            border-color: #0066cc;
-        }
-
-        .category-tabs {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 8px;
-            margin: 15px 0;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            scrollbar-width: none;
         }
 
-        .category-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .category-tab {
-            padding: 8px 16px;
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 20px;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .category-tab:hover {
+        .network-btn:hover {
             border-color: #0066cc;
+            transform: translateY(-2px);
         }
 
-        .category-tab.active {
-            background: #0066cc;
-            color: white;
+        .network-btn.selected {
             border-color: #0066cc;
+            background: #e6f0ff;
+        }
+
+        .network-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #0066cc;
+            background: white;
+        }
+
+        .network-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .network-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .sme-badge {
+            background: #ffc107;
+            color: #333;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
         }
 
         .phone-input {
@@ -151,6 +136,7 @@
             color: #333;
         }
 
+        /* ✅ NO DEFAULT NUMBER - EMPTY PLACEHOLDER ONLY */
         .phone-input input {
             width: 100%;
             padding: 15px;
@@ -207,7 +193,6 @@
 
         .plan-card:hover {
             border-color: #0066cc;
-            transform: translateY(-2px);
         }
 
         .plan-card.selected {
@@ -215,12 +200,15 @@
             background: #e6f0ff;
         }
 
+        .plan-card.sme-plan {
+            border-left: 4px solid #ffc107;
+        }
+
         .plan-name {
             font-weight: 600;
             font-size: 13px;
             margin-bottom: 5px;
             color: #333;
-            line-height: 1.3;
         }
 
         .plan-price {
@@ -235,36 +223,16 @@
             color: #666;
         }
 
-        .category-badge {
+        .plan-badge {
             position: absolute;
             top: -8px;
-            left: 5px;
-            background: #28a745;
-            color: white;
+            right: 5px;
+            background: #ffc107;
+            color: #333;
             font-size: 9px;
             padding: 2px 6px;
             border-radius: 10px;
             font-weight: bold;
-        }
-
-        .sme-badge {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .gift-badge {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .social-badge {
-            background: #dc3545;
-            color: white;
-        }
-
-        .corporate-badge {
-            background: #6f42c1;
-            color: white;
         }
 
         .purchase-btn {
@@ -328,27 +296,53 @@
 
         <div class="container">
             <div class="balance-info">
-                <span class="balance-label">Your Balance</span>
-                <span class="balance-amount" id="balanceDisplay">₦0.00</span>
+                <span>Your Balance</span>
+                <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
             </div>
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
             <div class="pending-message" id="pendingMessage"></div>
 
-            <!-- Network Selection Tabs -->
-            <div class="network-tabs">
-                <div class="network-tab active" onclick="switchNetwork('mtn')" id="tab-mtn">MTN</div>
-                <div class="network-tab" onclick="switchNetwork('airtel')" id="tab-airtel">AIRTEL</div>
-                <div class="network-tab" onclick="switchNetwork('glo')" id="tab-glo">GLO</div>
-                <div class="network-tab" onclick="switchNetwork('9mobile')" id="tab-9mobile">9MOBILE</div>
+            <div class="section-title">Select Network</div>
+            <div class="network-grid" id="networkGrid">
+                <!-- MTN -->
+                <div class="network-btn" onclick="selectNetwork('mtn')" id="net-mtn">
+                    <div class="network-image">
+                        <img src="assets/networks/mtn-logo.png" alt="MTN">
+                    </div>
+                    <span class="network-name">MTN</span>
+                </div>
+                
+                <!-- GLO -->
+                <div class="network-btn" onclick="selectNetwork('glo')" id="net-glo">
+                    <div class="network-image">
+                        <img src="assets/networks/glo-logo.png" alt="GLO">
+                    </div>
+                    <span class="network-name">GLO</span>
+                    <span class="sme-badge">SME</span>
+                </div>
+                
+                <!-- Airtel -->
+                <div class="network-btn" onclick="selectNetwork('airtel')" id="net-airtel">
+                    <div class="network-image">
+                        <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL">
+                    </div>
+                    <span class="network-name">AIRTEL</span>
+                </div>
+                
+                <!-- 9mobile -->
+                <div class="network-btn" onclick="selectNetwork('9mobile')" id="net-9mobile">
+                    <div class="network-image">
+                        <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE">
+                    </div>
+                    <span class="network-name">9MOBILE</span>
+                </div>
             </div>
-
-            <!-- Category Tabs -->
-            <div class="category-tabs" id="categoryTabs"></div>
 
             <div class="phone-input">
                 <label>Phone Number</label>
+                <!-- ✅ NO DEFAULT NUMBER - EMPTY -->
                 <input type="tel" id="phoneNumber" placeholder="Enter phone number" value="">
             </div>
 
@@ -358,6 +352,7 @@
                 </label>
             </div>
 
+            <div class="section-title" id="plansTitle">Select Plan</div>
             <div class="plans-grid" id="plansContainer">
                 <!-- Plans loaded by JavaScript -->
             </div>
@@ -368,134 +363,77 @@
 
     <script>
         // ============================================
-        // DATA PLANS FROM YOUR API WITH PROFIT MARGINS
+        // DATA PLANS FROM VTPASS WITH PROFIT MARGINS
         // ============================================
-        
-        // Your profit margin (₦ per plan)
-        const YOUR_PROFIT = 50; // You can change this value
         
         const dataPlans = {
             mtn: {
                 serviceId: VTPASS_CONFIG.services.MTN_DATA,
-                categories: ['All', 'SME', 'Gifting', 'Corporate Gifting', 'Social Bundle'],
                 plans: [
-                    // SME Plans
-                    { code: 'mtn-25gb-sme-10000', name: '25GB SME Data', cost: 10000, sellingPrice: 10000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'mtn-165gb-sme-50000', name: '165GB SME Data', cost: 50000, sellingPrice: 50000 + YOUR_PROFIT, validity: '60 Days', category: 'SME' },
-                    { code: 'mtn-360gb-sme-100000', name: '360GB SME Data', cost: 100000, sellingPrice: 100000 + YOUR_PROFIT, validity: '90 Days', category: 'SME' },
-                    
-                    // Gifting Plans
-                    { code: 'mtn-10mb-100', name: '110MB Daily Plan', cost: 100, sellingPrice: 100 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'mtn-230mb-200', name: '230MB Daily Plan', cost: 200, sellingPrice: 200 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'mtn-1500mb-1000', name: '1.5GB Weekly Plan', cost: 1000, sellingPrice: 1000 + YOUR_PROFIT, validity: '7 Days', category: 'Gifting' },
-                    { code: 'mtn-3.5gb-1500', name: '3.5GB Weekly Plan', cost: 1500, sellingPrice: 1500 + YOUR_PROFIT, validity: '7 Days', category: 'Gifting' },
-                    { code: 'mtn-2-5gb-900', name: '2.5GB', cost: 900, sellingPrice: 900 + YOUR_PROFIT, validity: '2 Days', category: 'Gifting' },
-                    { code: 'mtn-7gb-1800', name: '7GB', cost: 1800, sellingPrice: 1800 + YOUR_PROFIT, validity: '2 Days', category: 'Gifting' },
-                    
-                    // Corporate Gifting
-                    { code: 'mtn-120gb-24000', name: '120GB Corporate', cost: 24000, sellingPrice: 24000 + YOUR_PROFIT, validity: '30 Days', category: 'Corporate Gifting' },
-                    { code: 'mtn-150gb-40000', name: '150GB Corporate', cost: 40000, sellingPrice: 40000 + YOUR_PROFIT, validity: '60 Days', category: 'Corporate Gifting' },
-                    { code: 'mtn-480gb-90000', name: '480GB Corporate', cost: 90000, sellingPrice: 90000 + YOUR_PROFIT, validity: '90 Days', category: 'Corporate Gifting' },
-                    
-                    // Social Bundles
-                    { code: 'mtn-500mb-500', name: '500MB + 1GB YouTube', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '7 Days', category: 'Social Bundle' },
-                    { code: 'mtn-xtrabundle-500', name: '600MB Xtra Bundle', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '7 Days', category: 'Social Bundle' },
-                    { code: 'mtn-2.7gb-2000', name: '2.7GB + 2GB Night + YouTube', cost: 2000, sellingPrice: 2000 + YOUR_PROFIT, validity: '30 Days', category: 'Social Bundle' },
-                    { code: 'mtn-25gb-9000', name: '25GB + YouTube', cost: 9000, sellingPrice: 9000 + YOUR_PROFIT, validity: '30 Days', category: 'Social Bundle' },
-                    
-                    // Regular Plans (uncategorized)
-                    { code: 'mtn-5.5gb-3500', name: '7GB Monthly', cost: 3500, sellingPrice: 3500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'mtn-data-6500', name: '16.5GB Monthly', cost: 6500, sellingPrice: 6500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'mtn-20gb-7500', name: '20GB Monthly', cost: 7500, sellingPrice: 7500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'mtn-32gb-11000', name: '36GB Monthly', cost: 11000, sellingPrice: 11000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'mtn-75gb-20000', name: '75GB Monthly', cost: 18000, sellingPrice: 18000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'mtn-1gb-350', name: '1GB + 1.5mins', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '1 Day', category: 'All' },
-                    { code: 'mtn-1gb-600', name: '1GB+5mins Weekly', cost: 800, sellingPrice: 800 + YOUR_PROFIT, validity: '7 Days', category: 'All' },
-                    { code: 'mtn-11gb-5000', name: '12.5GB Monthly', cost: 5500, sellingPrice: 5500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'mtn-11gb-3500', name: '11GB', cost: 3500, sellingPrice: 3500 + YOUR_PROFIT, validity: '7 Days', category: 'All' }
-                ]
-            },
-            
-            airtel: {
-                serviceId: VTPASS_CONFIG.services.AIRTEL_DATA,
-                categories: ['All', 'SME', 'Gifting', 'Social Bundle'],
-                plans: [
-                    // SME Plans (MiFi/Router plans)
-                    { code: 'airt-mifi-5000-30', name: '13GB MIFI 5 - Router Only', cost: 5000, sellingPrice: 5000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'airt-mifi-10000-30', name: '35GB MIFI 10 - Router Only', cost: 10000, sellingPrice: 10000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'airt-mifi-15000-30', name: '60GB MIFI 15 - Router Only', cost: 15000, sellingPrice: 15000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'airt-mifi-20000-30', name: '100GB Unlimited - Router', cost: 20000, sellingPrice: 20000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'airt-mifi-30000-30', name: 'Unlimited 20MBPS - Router', cost: 30000, sellingPrice: 30000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'airt-mifi-50000-30', name: 'Unlimited 60MBPS - Router', cost: 50000, sellingPrice: 50000 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    
-                    // Gifting Plans
-                    { code: 'airt-50', name: '250MB Night Plan', cost: 50, sellingPrice: 50 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'airt-100', name: '200MB Social Plan', cost: 100, sellingPrice: 100 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'airt-200', name: '230MB Daily Plan', cost: 200, sellingPrice: 200 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'airt-daily-100', name: '110MB Daily', cost: 100, sellingPrice: 100 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'airt-500', name: '500MB Weekly', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '7 Days', category: 'Gifting' },
-                    { code: 'airt-75-1', name: '75MB Daily', cost: 75, sellingPrice: 75 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'airt-300-1', name: '300MB Daily', cost: 300, sellingPrice: 300 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'airt-350-500', name: '500MB Daily', cost: 350, sellingPrice: 350 + YOUR_PROFIT, validity: '2 Days', category: 'Gifting' },
-                    
-                    // Social Bundles
-                    { code: 'airt-1000-7', name: '1.5GB + YouTube & Social', cost: 1000, sellingPrice: 1000 + YOUR_PROFIT, validity: '7 Days', category: 'Social Bundle' },
-                    { code: 'airt-1500-7', name: '3.5GB + YouTube & Social', cost: 1500, sellingPrice: 1500 + YOUR_PROFIT, validity: '7 Days', category: 'Social Bundle' },
-                    { code: 'airt-2000', name: '3GB + YouTube & Social', cost: 2000, sellingPrice: 2000 + YOUR_PROFIT, validity: '30 Days', category: 'Social Bundle' },
-                    { code: 'airt-3000', name: '8GB + YouTube & Social', cost: 3000, sellingPrice: 3000 + YOUR_PROFIT, validity: '30 Days', category: 'Social Bundle' },
-                    { code: 'airt-4000', name: '10GB + YouTube & Social', cost: 4000, sellingPrice: 4000 + YOUR_PROFIT, validity: '30 Days', category: 'Social Bundle' },
-                    { code: 'airt-5000', name: '13GB + YouTube & Social', cost: 5000, sellingPrice: 5000 + YOUR_PROFIT, validity: '30 Days', category: 'Social Bundle' },
-                    { code: 'airt-1500-2', name: '5GB Binge + Social', cost: 1500, sellingPrice: 1500 + YOUR_PROFIT, validity: '2 Days', category: 'Social Bundle' },
-                    { code: 'airt-600', name: '1.5GB Binge + Social', cost: 600, sellingPrice: 600 + YOUR_PROFIT, validity: '2 Days', category: 'Social Bundle' },
-                    { code: 'airt-1000-2', name: '3.2GB Binge + Social', cost: 1000, sellingPrice: 1000 + YOUR_PROFIT, validity: '2 Days', category: 'Social Bundle' },
-                    { code: 'airt-750-2', name: '2GB Binge + Social', cost: 750, sellingPrice: 750 + YOUR_PROFIT, validity: '2 Days', category: 'Social Bundle' },
-                    { code: 'airt-social-300-3', name: '1GB Social Plan', cost: 300, sellingPrice: 300 + YOUR_PROFIT, validity: '3 Days', category: 'Social Bundle' },
-                    { code: 'airt-social-500-7', name: '1.5GB Social Plan', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '7 Days', category: 'Social Bundle' },
-                    
-                    // Regular Plans
-                    { code: 'airt-800-7', name: '1GB Weekly', cost: 800, sellingPrice: 800 + YOUR_PROFIT, validity: '7 Days', category: 'All' },
-                    { code: 'airt-10000', name: '35GB Monthly', cost: 10000, sellingPrice: 10000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-15000', name: '60GB Monthly', cost: 15000, sellingPrice: 15000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-20000', name: '100GB Monthly', cost: 20000, sellingPrice: 20000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-2500', name: '4GB Monthly', cost: 2500, sellingPrice: 2500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-3000-7', name: '10GB Weekly', cost: 3000, sellingPrice: 3000 + YOUR_PROFIT, validity: '7 Days', category: 'All' },
-                    { code: 'airt-5000-7', name: '18GB Weekly', cost: 5000, sellingPrice: 5000 + YOUR_PROFIT, validity: '7 Days', category: 'All' },
-                    { code: 'airt-6000-30', name: '18GB Monthly', cost: 6000, sellingPrice: 6000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-8000', name: '25GB Monthly', cost: 8000, sellingPrice: 8000 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-1500-30', name: '2GB Monthly', cost: 1500, sellingPrice: 1500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'airt-2500-7', name: '6GB Weekly', cost: 2500, sellingPrice: 2500 + YOUR_PROFIT, validity: '7 Days', category: 'All' }
+                    { code: 'mtn-10mb-100', name: '110MB Daily', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
+                    { code: 'mtn-50mb-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '2 Days' },
+                    { code: 'mtn-100mb-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'mtn-500mb-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'mtn-20hrs-1500', name: '6GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '7 Days' },
+                    { code: 'mtn-3gb-2500', name: '6GB', cost: 2500, sellingPrice: calculateDataPrice(2500), validity: '30 Days' },
+                    { code: 'mtn-data-3000', name: '8GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
+                    { code: 'mtn-1gb-3500', name: '10GB', cost: 3500, sellingPrice: calculateDataPrice(3500), validity: '30 Days' },
+                    { code: 'mtn-100hr-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
+                    { code: 'mtn-3gb-6000', name: '20GB', cost: 6000, sellingPrice: calculateDataPrice(6000), validity: '30 Days' },
+                    { code: 'mtn-40gb-10000', name: '40GB', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days' },
+                    { code: 'mtn-25gb-sme-10000', name: '25GB SME', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days', sme: true },
+                    { code: 'mtn-2-5gb-600', name: '2.5GB', cost: 600, sellingPrice: calculateDataPrice(600), validity: '2 Days' },
+                    { code: 'mtn-7gb-2000', name: '7GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '7 Days' }
                 ]
             },
             
             glo: {
                 serviceId: VTPASS_CONFIG.services.GLO_DATA,
-                categories: ['All', 'SME', 'Gifting', 'Social Bundle'],
                 plans: [
-                    { code: 'glo-dg-70', name: '200MB SME', cost: 70, sellingPrice: 70 + YOUR_PROFIT, validity: '14 Days', category: 'SME' },
-                    { code: 'glo-dg-320', name: '1GB SME', cost: 320, sellingPrice: 320 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'glo-dg-640', name: '2GB SME', cost: 640, sellingPrice: 640 + YOUR_PROFIT, validity: '30 Days', category: 'SME' },
-                    { code: 'glo100', name: '105MB', cost: 100, sellingPrice: 100 + YOUR_PROFIT, validity: '2 Days', category: 'Gifting' },
-                    { code: 'glo200', name: '350MB', cost: 200, sellingPrice: 200 + YOUR_PROFIT, validity: '4 Days', category: 'Gifting' },
-                    { code: 'glo500', name: '1.05GB', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '14 Days', category: 'Gifting' }
+                    { code: 'glo100', name: '105MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '2 Days' },
+                    { code: 'glo200', name: '350MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '4 Days' },
+                    { code: 'glo500', name: '1.05GB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '14 Days' },
+                    { code: 'glo1000', name: '2.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'glo2000', name: '5.8GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'glo3000', name: '10GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
+                    { code: 'glo-dg-70', name: '200MB SME', cost: 70, sellingPrice: calculateDataPrice(70), validity: '14 Days', sme: true },
+                    { code: 'glo-dg-320', name: '1GB SME', cost: 320, sellingPrice: calculateDataPrice(320), validity: '30 Days', sme: true },
+                    { code: 'glo-dg-640', name: '2GB SME', cost: 640, sellingPrice: calculateDataPrice(640), validity: '30 Days', sme: true },
+                    { code: 'glo-special-300', name: '1GB Special', cost: 300, sellingPrice: calculateDataPrice(300), validity: 'Special' }
+                ]
+            },
+            
+            airtel: {
+                serviceId: VTPASS_CONFIG.services.AIRTEL_DATA,
+                plans: [
+                    { code: 'airt-50', name: '25MB', cost: 50, sellingPrice: calculateDataPrice(50), validity: '1 Day' },
+                    { code: 'airt-100', name: '75MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
+                    { code: 'airt-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '3 Days' },
+                    { code: 'airt-300', name: '350MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '7 Days' },
+                    { code: 'airt-500', name: '750MB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '14 Days' },
+                    { code: 'airt-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'airt-1500', name: '3GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '30 Days' },
+                    { code: 'airt-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'airt-400-1', name: '1.5GB', cost: 400, sellingPrice: calculateDataPrice(400), validity: '1 Day' }
                 ]
             },
             
             '9mobile': {
                 serviceId: VTPASS_CONFIG.services.NINEMOBILE_DATA,
-                categories: ['All', 'Gifting', 'Social Bundle'],
                 plans: [
-                    { code: 'eti-100', name: '100MB', cost: 100, sellingPrice: 100 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'eti-200', name: '650MB', cost: 200, sellingPrice: 200 + YOUR_PROFIT, validity: '1 Day', category: 'Gifting' },
-                    { code: 'eti-300', name: '1GB + 100MB', cost: 300, sellingPrice: 300 + YOUR_PROFIT, validity: '1 Day', category: 'Social Bundle' },
-                    { code: 'eti-500', name: '500MB', cost: 500, sellingPrice: 500 + YOUR_PROFIT, validity: '30 Days', category: 'All' },
-                    { code: 'eti-1000', name: '1.5GB', cost: 1000, sellingPrice: 1000 + YOUR_PROFIT, validity: '30 Days', category: 'All' }
+                    { code: 'eti-100', name: '100MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
+                    { code: 'eti-200', name: '650MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '1 Day' },
+                    { code: 'eti-500', name: '500MB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '30 Days' },
+                    { code: 'eti-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
+                    { code: 'eti-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
+                    { code: 'eti-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
+                    { code: 'eti-300', name: '1GB + 100MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '1 Day' }
                 ]
             }
         };
 
         // State
         let currentNetwork = 'mtn';
-        let currentCategory = 'All';
         let selectedPlan = null;
         let selectedCode = '';
         let selectedPrice = 0;
@@ -507,93 +445,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            updateCategoryTabs('mtn');
-            loadPlans('mtn', 'All');
+            selectNetwork('mtn');
         });
 
-        // Switch network
-        function switchNetwork(network) {
+        // Select network
+        function selectNetwork(network) {
             currentNetwork = network;
-            currentCategory = 'All';
             
-            document.querySelectorAll('.network-tab').forEach(tab => {
-                tab.classList.remove('active');
+            document.querySelectorAll('.network-btn').forEach(btn => {
+                btn.classList.remove('selected');
             });
-            document.getElementById(`tab-${network}`).classList.add('active');
+            document.getElementById(`net-${network}`).classList.add('selected');
             
-            updateCategoryTabs(network);
-            loadPlans(network, 'All');
+            loadPlans(network);
             selectedPlan = null;
             updatePurchaseButton();
         }
 
-        // Update category tabs based on network
-        function updateCategoryTabs(network) {
-            const container = document.getElementById('categoryTabs');
-            const categories = dataPlans[network].categories;
-            
-            let html = '';
-            categories.forEach(cat => {
-                html += `<span class="category-tab ${cat === 'All' ? 'active' : ''}" onclick="switchCategory('${cat}')">${cat}</span>`;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // Switch category
-        function switchCategory(category) {
-            currentCategory = category;
-            
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.textContent === category) {
-                    tab.classList.add('active');
-                }
-            });
-            
-            loadPlans(currentNetwork, category);
-            selectedPlan = null;
-            updatePurchaseButton();
-        }
-
-        // Load plans for selected network and category
-        function loadPlans(network, category) {
+        // Load plans for selected network
+        function loadPlans(network) {
             const container = document.getElementById('plansContainer');
-            const allPlans = dataPlans[network].plans;
-            
-            const filteredPlans = category === 'All' 
-                ? allPlans 
-                : allPlans.filter(p => p.category === category);
-            
-            if (filteredPlans.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No plans in this category</div>';
-                return;
-            }
+            const networkPlans = dataPlans[network].plans;
             
             let html = '';
-            filteredPlans.forEach(plan => {
-                let badgeClass = '';
-                let badgeText = '';
-                
-                if (plan.category === 'SME') {
-                    badgeClass = 'sme-badge';
-                    badgeText = 'SME';
-                } else if (plan.category === 'Gifting') {
-                    badgeClass = 'gift-badge';
-                    badgeText = '🎁 GIFT';
-                } else if (plan.category === 'Social Bundle') {
-                    badgeClass = 'social-badge';
-                    badgeText = 'SOCIAL';
-                } else if (plan.category === 'Corporate Gifting') {
-                    badgeClass = 'corporate-badge';
-                    badgeText = 'CORP';
-                }
-                
-                const profit = plan.sellingPrice - plan.cost;
-                
+            networkPlans.forEach(plan => {
+                const isSME = plan.sme || false;
                 html += `
-                    <div class="plan-card" onclick="selectPlan('${plan.code}', '${plan.name}', ${plan.sellingPrice}, ${plan.cost})">
-                        ${badgeText ? `<span class="category-badge ${badgeClass}">${badgeText}</span>` : ''}
+                    <div class="plan-card ${isSME ? 'sme-plan' : ''}" onclick="selectPlan('${plan.code}', '${plan.name}', ${plan.sellingPrice}, ${plan.cost})">
+                        ${isSME ? '<span class="plan-badge">SME</span>' : ''}
                         <div class="plan-name">${plan.name}</div>
                         <div class="plan-price">₦${plan.sellingPrice}</div>
                         <div class="plan-validity">${plan.validity}</div>
@@ -718,7 +597,7 @@
                     transactions.unshift(transaction);
                     localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
                     
-                    showSuccess(`✅ Success! ${selectedPlan} sent to ${recipientPhone}`);
+                    showSuccess(`✅ Success! ${selectedPlan} data sent to ${recipientPhone}`);
                     
                     selectedPlan = null;
                     updatePurchaseButton();
@@ -761,7 +640,6 @@
             }
         }
 
-        // Phone input listener
         document.getElementById('phoneNumber').addEventListener('input', updatePurchaseButton);
     </script>
 </body>
