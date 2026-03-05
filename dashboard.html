@@ -139,7 +139,7 @@
             background: #f0f0f0;
         }
 
-        /* Services Grid - 4 BIG BUTTONS */
+        /* Services Grid - 4 BIG BUTTONS WITH IMAGES */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -150,7 +150,7 @@
 
         .service-card {
             background: #f8f9fa;
-            padding: 40px 15px;
+            padding: 30px 15px;
             border-radius: 20px;
             text-align: center;
             text-decoration: none;
@@ -160,7 +160,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .service-card:hover {
@@ -169,15 +169,34 @@
             box-shadow: 0 10px 25px rgba(0,102,204,0.15);
         }
 
+        /* Circular image container */
+        .service-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #0066cc;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .service-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: #0066cc;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .service-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
             line-height: 1.5;
         }
@@ -186,9 +205,10 @@
             display: block;
             margin-top: 5px;
             font-weight: 500;
+            color: #0066cc;
         }
 
-        /* Bottom Navigation - HOME, HISTORY, SUPPORT, PROFILE */
+        /* Bottom Navigation */
         .bottom-nav {
             background: white;
             border-top: 1px solid #e0e0e0;
@@ -262,10 +282,13 @@
             <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- 4 BIG BUTTONS - EXACTLY LIKE YOUR IMAGE -->
+        <!-- 4 BIG BUTTONS WITH IMAGES -->
         <div class="services-grid">
             <!-- Buy Data -->
             <a href="buy-data.html" class="service-card">
+                <div class="service-image">
+                    <img src="assets/buydata.jpg" alt="Buy Data" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Data'">
+                </div>
                 <div class="service-title">Buy Data</div>
                 <div class="service-subtitle">
                     All Networks
@@ -275,6 +298,9 @@
 
             <!-- Airtime -->
             <a href="airtime.html" class="service-card">
+                <div class="service-image">
+                    <img src="assets/airtime.jpg" alt="Airtime" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Airtime'">
+                </div>
                 <div class="service-title">Airtime</div>
                 <div class="service-subtitle">
                     Recharge
@@ -284,6 +310,9 @@
 
             <!-- Cable TV -->
             <a href="tv.html" class="service-card">
+                <div class="service-image">
+                    <img src="assets/cabletv.jpg" alt="Cable TV" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=TV'">
+                </div>
                 <div class="service-title">Cable TV</div>
                 <div class="service-subtitle">
                     DSTV · GOTv
@@ -293,10 +322,13 @@
 
             <!-- Electricity -->
             <a href="electricity.html" class="service-card">
+                <div class="service-image">
+                    <img src="assets/electricity.jpg" alt="Electricity" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Power'">
+                </div>
                 <div class="service-title">Electricity</div>
                 <div class="service-subtitle">
                     Prepaid
-                    <span>IKEDC · EKEDC · Others</span>
+                    <span>IKEDC · EKEDC · IBEDC · AEDC</span>
                 </div>
             </a>
         </div>
