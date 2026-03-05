@@ -4,8 +4,8 @@
 
 const VTPASS_CONFIG = {
     // API Keys - PASTE YOUR KEYS HERE
-    PUBLIC_KEY: 'YOUR_VTPASS_PUBLIC_KEY',
-    SECRET_KEY: 'YOUR_VTPASS_SECRET_KEY',
+    PUBLIC_KEY: 'PK_522abf0934c2db8c570a259f9353f00a03d258c052f',
+    SECRET_KEY: 'SK_69964c67f4b1f461cb229f6d3c27c443ae25dc657c2',
     
     // Base URLs
     BASE_URL: 'https://vtpass.com/api',
