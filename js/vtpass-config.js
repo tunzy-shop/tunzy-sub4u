@@ -1,16 +1,16 @@
 // ============================================
-// VTPASS MASTER CONFIGURATION - ALL SERVICES
+// VTPASS MASTER CONFIGURATION - ADD YOUR KEYS HERE!
 // ============================================
 
 const VTPASS_CONFIG = {
-    // API Keys - PASTE YOUR KEYS HERE
-    PUBLIC_KEY: 'PK_36244626c1178a2d0fe312c4a3f2bb13dd45fd94f6c',
-    SECRET_KEY: 'SK_592dec3ca053050dc1b889e81f8ba1cf46ecb8a3970',
+    // 🔴🔴🔴 PASTE YOUR ACTUAL VTPASS KEYS HERE 🔴🔴🔴
+    PUBLIC_KEY: 'PK_36244626c1178a2d0fe312c4a3f2bb13dd45fd94f6c',  // ← Replace with your real key
+    SECRET_KEY: 'SK_592dec3ca053050dc1b889e81f8ba1cf46ecb8a3970',  // ← Replace with your real key
     
-    // Base URLs
+    // Base URL - DO NOT CHANGE
     BASE_URL: 'https://api.vtpass.com',
     
-    // Profit Configuration
+    // Profit Configuration - You can adjust these
     PROFIT: {
         DATA_SMALL: 50,
         DATA_MEDIUM: 100,
@@ -20,28 +20,21 @@ const VTPASS_CONFIG = {
         ELECTRICITY: 100,
     },
     
-    // Service IDs
+    // Service IDs - DO NOT CHANGE
     services: {
-        // Data Services
         MTN_DATA: 'mtn-data',
         GLO_DATA: 'glo-data',
         GLO_SME_DATA: 'glo-sme-data',
         AIRTEL_DATA: 'airtel-data',
         NINEMOBILE_DATA: 'etisalat-data',
-        
-        // Airtime Services
         MTN_AIRTIME: 'mtn',
         GLO_AIRTIME: 'glo',
         AIRTEL_AIRTIME: 'airtel',
         NINEMOBILE_AIRTIME: 'etisalat',
-        
-        // Cable TV Services
         DSTV: 'dstv',
         GOTV: 'gotv',
         STARTIMES: 'startimes',
         SHOWMAX: 'showmax',
-        
-        // Electricity Services (All Discos)
         IKEDC: 'ikeja-electric',
         EKEDC: 'eko-electric',
         IBEDC: 'ibadan-electric',
@@ -61,7 +54,6 @@ const VTPASS_CONFIG = {
 // PROFIT CALCULATION FUNCTIONS
 // ============================================
 
-// Calculate selling price based on cost
 function calculateDataPrice(cost) {
     if (cost < 1000) return cost + VTPASS_CONFIG.PROFIT.DATA_SMALL;
     if (cost < 5000) return cost + VTPASS_CONFIG.PROFIT.DATA_MEDIUM;
@@ -84,7 +76,6 @@ function calculateElectricityPrice(amount) {
 // PROFIT TRACKING
 // ============================================
 
-// Record profit after successful transaction
 function recordProfit(service, cost, sellingPrice, details = '') {
     const profit = sellingPrice - cost;
     const profitRecord = {
@@ -98,43 +89,28 @@ function recordProfit(service, cost, sellingPrice, details = '') {
         details: details
     };
 
-    // Save to localStorage
     let profits = JSON.parse(localStorage.getItem('profitHistory')) || [];
     profits.unshift(profitRecord);
     localStorage.setItem('profitHistory', JSON.stringify(profits.slice(0, 100)));
 
-    // Update daily profit
-    updateDailyProfit(profit);
+    const today = new Date().toDateString();
+    let dailyProfits = JSON.parse(localStorage.getItem('dailyProfits')) || {};
+    dailyProfits[today] = (dailyProfits[today] || 0) + profit;
+    localStorage.setItem('dailyProfits', JSON.stringify(dailyProfits));
 
     return profitRecord;
 }
 
-// Update daily profit total
-function updateDailyProfit(profit) {
-    const today = new Date().toDateString();
-    let dailyProfits = JSON.parse(localStorage.getItem('dailyProfits')) || {};
-
-    if (!dailyProfits[today]) {
-        dailyProfits[today] = 0;
-    }
-    dailyProfits[today] += profit;
-
-    localStorage.setItem('dailyProfits', JSON.stringify(dailyProfits));
-}
-
-// Get today's total profit
 function getTodayProfit() {
     const today = new Date().toDateString();
     const dailyProfits = JSON.parse(localStorage.getItem('dailyProfits')) || {};
     return dailyProfits[today] || 0;
 }
 
-// Get this month's total profit
 function getMonthProfit() {
     const profits = JSON.parse(localStorage.getItem('profitHistory')) || [];
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
-
     return profits.reduce((total, p) => {
         const profitDate = new Date(p.date);
         if (profitDate.getMonth() === currentMonth && profitDate.getFullYear() === currentYear) {
@@ -144,7 +120,6 @@ function getMonthProfit() {
     }, 0);
 }
 
-// Get all profit history
 function getProfitHistory() {
     return JSON.parse(localStorage.getItem('profitHistory')) || [];
 }
@@ -153,7 +128,6 @@ function getProfitHistory() {
 // API HELPER FUNCTIONS
 // ============================================
 
-// Generate unique request ID (format: YYYYMMDDHHMMSS_random)
 function generateRequestId() {
     const now = new Date();
     const dateStr = now.getFullYear().toString() +
@@ -167,19 +141,13 @@ function generateRequestId() {
 }
 
 // ============================================
-// HANDLE API RESPONSE CODES - COMPLETE FUNCTION
+// HANDLE API RESPONSE CODES
 // ============================================
 
 function handleResponseCode(code, response_desc, customMessages = {}) {
-    // Complete list of VTpass response codes with user-friendly messages
     const messages = {
-        // Success Codes
         '000': 'Transaction successful',
         '001': 'Transaction query successful',
-        '020': 'Biller confirmed successfully',
-        '044': 'Transaction resolved',
-        
-        // Error Codes - Data/Airtime
         '010': 'Invalid plan selected. Please choose another plan',
         '011': 'Invalid request. Please check your input',
         '012': 'Service not available at the moment',
@@ -190,52 +158,28 @@ function handleResponseCode(code, response_desc, customMessages = {}) {
         '017': 'Amount exceeds maximum allowed',
         '018': 'Insufficient wallet balance. Please fund your wallet',
         '019': 'Duplicate transaction. Please wait a moment',
-        
-        // Error Codes - Account Related
         '021': 'Account temporarily locked',
         '022': 'Account suspended. Contact support',
         '023': 'API access not enabled for this account',
-        '024': 'Account inactive',
         '027': 'IP address not whitelisted',
         '028': 'Service not activated for your account',
-        
-        // Error Codes - Service Related
         '030': 'Service temporarily unavailable. Try again later',
-        '031': 'Below minimum quantity allowed',
-        '032': 'Above maximum quantity allowed',
         '034': 'Service suspended',
-        '035': 'Service inactive',
-        
-        // System Errors
-        '040': 'Transaction reversal initiated',
         '083': 'System error. Please try again',
-        '085': 'Invalid request format',
-        '087': 'Invalid API credentials',
         '089': 'Processing your request. Please wait',
         '091': 'Transaction could not be processed',
         '099': 'Transaction is processing. Please check later',
-        
-        // Custom messages that can be overridden
         ...customMessages
     };
 
-    // Determine transaction state based on code
-    const isSuccess = code === '000' || code === '001' || code === '020' || code === '044';
+    const isSuccess = code === '000' || code === '001';
     const isPending = code === '089' || code === '099';
     const isFailure = !isSuccess && !isPending;
     
-    // Get appropriate message
     let message = messages[code] || response_desc || 'Unknown error occurred';
     
-    // Add specific guidance for common errors
     if (code === '018') {
         message = '⚠️ ' + message + ' Click Fund button to add money';
-    } else if (code === '010') {
-        message = '⚠️ ' + message + ' Please select a different plan';
-    } else if (code === '030') {
-        message = '⏳ ' + message + ' We\'ll notify you when service is back';
-    } else if (code === '016') {
-        message = '❌ ' + message + ' No money was deducted from your wallet';
     }
 
     return {
@@ -243,20 +187,16 @@ function handleResponseCode(code, response_desc, customMessages = {}) {
         message: message,
         isSuccess: isSuccess,
         isPending: isPending,
-        isFailure: isFailure,
-        originalMessage: response_desc
+        isFailure: isFailure
     };
 }
 
 // ============================================
-// MAKE API CALL WITH RESPONSE HANDLING
+// MAKE API CALL
 // ============================================
 
 async function vtpassApiCall(endpoint, payload) {
     try {
-        console.log('Making API call to:', `${VTPASS_CONFIG.BASE_URL}${endpoint}`);
-        console.log('With payload:', payload);
-        
         const response = await fetch(`${VTPASS_CONFIG.BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: {
@@ -271,15 +211,9 @@ async function vtpassApiCall(endpoint, payload) {
         });
 
         const data = await response.json();
-        console.log('API Response:', data);
-        
-        // Handle the response using our handler
         const handled = handleResponseCode(data.code, data.response_description);
         
-        return {
-            ...data,
-            handled: handled
-        };
+        return { ...data, handled };
         
     } catch (error) {
         console.error('VTPASS API Error:', error);
@@ -292,7 +226,7 @@ async function vtpassApiCall(endpoint, payload) {
 }
 
 // ============================================
-// VERIFY METER/SMARTCARD NUMBER
+// VERIFY METER/SMARTCARD
 // ============================================
 
 async function verifyMeter(serviceID, billersCode, type) {
@@ -304,59 +238,26 @@ async function verifyMeter(serviceID, billersCode, type) {
                 'api-key': VTPASS_CONFIG.PUBLIC_KEY,
                 'secret-key': VTPASS_CONFIG.SECRET_KEY
             },
-            body: JSON.stringify({
-                serviceID,
-                billersCode,
-                type
-            })
+            body: JSON.stringify({ serviceID, billersCode, type })
         });
 
         const data = await response.json();
         
         if (data.code === '000') {
-            return {
-                success: true,
-                data: data.content,
-                message: 'Verification successful'
-            };
+            return { success: true, data: data.content };
         } else {
-            return {
-                success: false,
-                message: data.response_description || 'Verification failed',
-                code: data.code
-            };
+            return { success: false, message: data.response_description };
         }
         
     } catch (error) {
-        return {
-            success: false,
-            message: 'Network error. Please try again.'
-        };
+        return { success: false, message: 'Network error' };
     }
 }
 
 // ============================================
-// QUERY TRANSACTION STATUS
+// EXPORT FUNCTIONS
 // ============================================
 
-async function requeryTransaction(requestId) {
-    try {
-        const result = await vtpassApiCall('/requery', { request_id: requestId });
-        return result;
-    } catch (error) {
-        return {
-            code: '083',
-            response_description: 'Requery failed',
-            handled: handleResponseCode('083', 'Requery failed')
-        };
-    }
-}
-
-// ============================================
-// EXPORT FUNCTIONS FOR USE IN OTHER FILES
-// ============================================
-
-// Make all functions available globally
 window.VTPASS_CONFIG = VTPASS_CONFIG;
 window.calculateDataPrice = calculateDataPrice;
 window.calculateAirtimePrice = calculateAirtimePrice;
@@ -368,6 +269,4 @@ window.getMonthProfit = getMonthProfit;
 window.getProfitHistory = getProfitHistory;
 window.vtpassApiCall = vtpassApiCall;
 window.verifyMeter = verifyMeter;
-window.requeryTransaction = requeryTransaction;
 window.handleResponseCode = handleResponseCode;
-window.generateRequestId = generateRequestId;
