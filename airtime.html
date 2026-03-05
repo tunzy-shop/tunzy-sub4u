@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airtime - TUNZY SUB 4 YOU</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Same styles as before */
         * {
             margin: 0;
             padding: 0;
@@ -137,6 +135,11 @@
             font-size: 16px;
         }
 
+        .phone-input input:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+
         .amount-presets {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -162,32 +165,6 @@
         .amount-btn.selected {
             border-color: #0066cc;
             background: #e6f0ff;
-        }
-
-        .amount-breakdown {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-
-        .cost-amount {
-            color: #999;
-            text-decoration: line-through;
-        }
-
-        .selling-amount {
-            color: #0066cc;
-            font-weight: bold;
-        }
-
-        .profit-amount {
-            color: #28a745;
-            font-weight: bold;
         }
 
         .custom-amount {
@@ -222,6 +199,10 @@
             margin: 20px 0;
         }
 
+        .purchase-btn:hover {
+            background: #004d99;
+        }
+
         .error-message {
             background: #ffebee;
             color: #c62828;
@@ -234,6 +215,15 @@
         .success-message {
             background: #e8f5e9;
             color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .pending-message {
+            background: #fff3e0;
+            color: #ef6c00;
             padding: 12px;
             border-radius: 8px;
             margin: 10px 0;
@@ -258,6 +248,7 @@
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
+            <div class="pending-message" id="pendingMessage"></div>
 
             <div class="section-title">Select Network</div>
             <div class="network-grid">
@@ -308,14 +299,8 @@
                 <div class="amount-btn" onclick="selectAmount(5000)">₦5,000</div>
             </div>
 
-            <div id="amountBreakdown" class="amount-breakdown" style="display: none;">
-                <span>Cost: <span class="cost-amount" id="costAmount">₦0</span></span>
-                <span>You Pay: <span class="selling-amount" id="sellingAmount">₦0</span></span>
-                <span>Our Fee: <span class="profit-amount" id="profitAmount">₦0</span></span>
-            </div>
-
             <div class="custom-amount">
-                <input type="number" id="customAmount" placeholder="Or enter custom amount" min="50" max="50000" oninput="calculateAirtimePrice()">
+                <input type="number" id="customAmount" placeholder="Or enter custom amount" min="50" max="50000" oninput="calculatePrice()">
             </div>
 
             <button class="purchase-btn" onclick="purchaseAirtime()">Buy Airtime</button>
@@ -334,6 +319,7 @@
 
         let currentNetwork = 'mtn';
         let selectedAmount = 0;
+        let sellingAmount = 0;
         let userBalance = 0;
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -352,7 +338,7 @@
         function selectAmount(amount) {
             selectedAmount = amount;
             document.getElementById('customAmount').value = amount;
-            calculateAirtimePrice();
+            calculatePrice();
             
             document.querySelectorAll('.amount-btn').forEach(btn => {
                 btn.classList.remove('selected');
@@ -360,16 +346,10 @@
             event.currentTarget.classList.add('selected');
         }
 
-        function calculateAirtimePrice() {
+        function calculatePrice() {
             const amount = parseInt(document.getElementById('customAmount').value) || selectedAmount;
             if (amount >= 50) {
-                const sellingPrice = amount + PROFIT_PER_AIRTIME;
-                document.getElementById('costAmount').textContent = `₦${amount}`;
-                document.getElementById('sellingAmount').textContent = `₦${sellingPrice}`;
-                document.getElementById('profitAmount').textContent = `+₦${PROFIT_PER_AIRTIME}`;
-                document.getElementById('amountBreakdown').style.display = 'flex';
-            } else {
-                document.getElementById('amountBreakdown').style.display = 'none';
+                sellingAmount = amount + PROFIT_PER_AIRTIME;
             }
         }
 
@@ -389,6 +369,15 @@
             }, 5000);
         }
 
+        function showPending(msg) {
+            document.getElementById('pendingMessage').style.display = 'block';
+            document.getElementById('pendingMessage').textContent = msg;
+        }
+
+        function hidePending() {
+            document.getElementById('pendingMessage').style.display = 'none';
+        }
+
         async function purchaseAirtime() {
             const phone = document.getElementById('phoneNumber').value;
             const customAmount = document.getElementById('customAmount').value;
@@ -396,7 +385,7 @@
             const recipientPhone = isGift ? phone : phone;
             
             const costAmount = parseInt(customAmount) || selectedAmount;
-            const sellingAmount = costAmount + PROFIT_PER_AIRTIME;
+            sellingAmount = costAmount + PROFIT_PER_AIRTIME;
             
             if (!costAmount || costAmount < 50) {
                 showError('Please enter a valid amount (minimum ₦50)');
@@ -418,8 +407,9 @@
                 return;
             }
 
+            showPending('Processing transaction...');
+
             try {
-                // Send cost amount to VTPASS
                 const payload = {
                     serviceID: networkServiceMap[currentNetwork],
                     amount: costAmount,
@@ -427,15 +417,15 @@
                 };
                 
                 const result = await vtpassApiCall('/pay', payload);
-                const response = handleResponseCode(result.code, result.response_description);
+                const response = result.handled;
+                
+                hidePending();
                 
                 if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
-                    // Success - deduct selling amount from user
                     userBalance -= sellingAmount;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    // Record profit!
                     recordProfit(
                         `${currentNetwork.toUpperCase()} Airtime`,
                         costAmount,
@@ -443,7 +433,6 @@
                         `Phone: ${recipientPhone}`
                     );
                     
-                    // Record transaction for user
                     const transaction = {
                         type: `${currentNetwork.toUpperCase()} Airtime`,
                         amount: `-₦${sellingAmount}`,
@@ -456,11 +445,14 @@
                     
                     showSuccess(`✅ Success! ₦${costAmount} airtime sent to ${recipientPhone}`);
                     
+                } else if (response.isPending) {
+                    showPending('Transaction processing. Please wait...');
                 } else {
                     showError(response.message);
                 }
                 
             } catch (error) {
+                hidePending();
                 showError('Network error. Please try again');
                 console.error(error);
             }
