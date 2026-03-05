@@ -139,7 +139,7 @@
             background: #f0f0f0;
         }
 
-        /* Services Grid - 4 BIG BUTTONS WITH IMAGES */
+        /* Services Grid - 4 BIG BUTTONS */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -160,7 +160,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .service-card:hover {
@@ -169,14 +169,11 @@
             box-shadow: 0 10px 25px rgba(0,102,204,0.15);
         }
 
-        /* Circular image container */
+        /* Image container - NO CIRCLE, just image */
         .service-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid #0066cc;
-            background: white;
+            width: 70px;
+            height: 70px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -185,7 +182,7 @@
         .service-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .service-title {
@@ -201,11 +198,11 @@
             line-height: 1.5;
         }
 
-        .service-subtitle span {
-            display: block;
-            margin-top: 5px;
+        .service-networks {
+            font-size: 13px;
             font-weight: 500;
             color: #0066cc;
+            margin-top: 3px;
         }
 
         /* Bottom Navigation */
@@ -282,54 +279,46 @@
             <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
 
-        <!-- 4 BIG BUTTONS WITH YOUR IMAGE NAMES -->
+        <!-- 4 BIG BUTTONS - CLEAN LIKE YOUR IMAGE -->
         <div class="services-grid">
-            <!-- Buy Data - buydata.png -->
+            <!-- Buy Data -->
             <a href="buy-data.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/buydata.png" alt="Buy Data" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Data'">
+                    <img src="assets/buydata.png" alt="Buy Data" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=Data'">
                 </div>
                 <div class="service-title">Buy Data</div>
-                <div class="service-subtitle">
-                    All Networks
-                    <span>MTN · GLO · Airtel · 9mobile</span>
-                </div>
+                <div class="service-subtitle">All Networks</div>
+                <div class="service-networks">MTN · GLO · Airtel · 9mobile</div>
             </a>
 
-            <!-- Airtime - airtime.png -->
+            <!-- Airtime -->
             <a href="airtime.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/airtime.png" alt="Airtime" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Airtime'">
+                    <img src="assets/airtime.png" alt="Airtime" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=Airtime'">
                 </div>
                 <div class="service-title">Airtime</div>
-                <div class="service-subtitle">
-                    Recharge
-                    <span>All Networks</span>
-                </div>
+                <div class="service-subtitle">Recharge</div>
+                <div class="service-networks">All Networks</div>
             </a>
 
-            <!-- Cable TV - cabletv.png -->
+            <!-- Cable TV -->
             <a href="tv.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/cabletv.png" alt="Cable TV" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=TV'">
+                    <img src="assets/cabletv.png" alt="Cable TV" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=TV'">
                 </div>
                 <div class="service-title">Cable TV</div>
-                <div class="service-subtitle">
-                    DSTV · GOTv
-                    <span>Startimes</span>
-                </div>
+                <div class="service-subtitle">DSTV · GOTV</div>
+                <div class="service-networks">Startimes</div>
             </a>
 
-            <!-- Electricity - electricity.jpg -->
+            <!-- Electricity -->
             <a href="electricity.html" class="service-card">
                 <div class="service-image">
-                    <img src="assets/electricity.jpg" alt="Electricity" onerror="this.src='https://via.placeholder.com/80/0066cc/ffffff?text=Power'">
+                    <img src="assets/electricity.jpg" alt="Electricity" onerror="this.src='https://via.placeholder.com/70/0066cc/ffffff?text=Power'">
                 </div>
                 <div class="service-title">Electricity</div>
-                <div class="service-subtitle">
-                    Prepaid
-                    <span>IKEDC · EKEDC · IBEDC · AEDC</span>
-                </div>
+                <div class="service-subtitle">Prepaid</div>
+                <div class="service-networks">IKEDC · EKEDC · IBEDC · AEDC</div>
             </a>
         </div>
     </div>
