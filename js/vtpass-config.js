@@ -4,8 +4,8 @@
 
 const VTPASS_CONFIG = {
     // 🔴🔴🔴 PASTE YOUR ACTUAL VTPASS KEYS HERE 🔴🔴🔴
-    PUBLIC_KEY: 'PK_36244626c1178a2d0fe312c4a3f2bb13dd45fd94f6c',  // ← Replace with your real key
-    SECRET_KEY: 'SK_592dec3ca053050dc1b889e81f8ba1cf46ecb8a3970',  // ← Replace with your real key
+    PUBLIC_KEY: 'VTP_PK_287611376cdde2fc038ffa0612a4b1bf279b2ea8eac40e9ac1dcdb066b39d7d2',  // ← Replace with your real key
+    SECRET_KEY: 'VTP_SK_e8aef632e660bbe5c0d7b9d8e5f9f83f5212c49e1a532fd51566176c00b9bdac',  // ← Replace with your real key
     
     // Base URL - DO NOT CHANGE
     BASE_URL: 'https://api.vtpass.com',
