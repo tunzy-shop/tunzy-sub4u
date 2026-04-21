@@ -69,7 +69,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         .disco-btn {
@@ -228,7 +228,7 @@
     </style>
 </head>
 <body>
-    <script src="js/vtpass-config.js"></script>
+    <script src="js/bigisub-config.js"></script>
     
     <div class="app-container">
         <div class="header">
@@ -285,7 +285,7 @@
 
             <div class="input-field">
                 <label>Amount (₦)</label>
-                <input type="number" id="amount" placeholder="Enter amount" min="500" oninput="calculatePrice()">
+                <input type="number" id="amount" placeholder="Enter amount" min="500">
             </div>
 
             <button class="purchase-btn" id="purchaseBtn" onclick="payElectricity()" disabled>Pay Bill</button>
@@ -293,23 +293,25 @@
     </div>
 
     <script>
-        const discoServiceMap = {
-            'ikedc': VTPASS_CONFIG.services.IKEDC,
-            'ekedc': VTPASS_CONFIG.services.EKEDC,
-            'ibedc': VTPASS_CONFIG.services.IBEDC,
-            'aedc': VTPASS_CONFIG.services.AEDC,
-            'phed': VTPASS_CONFIG.services.PHED,
-            'kedco': VTPASS_CONFIG.services.KEDCO,
-            'kaedco': VTPASS_CONFIG.services.KAEDCO,
-            'eedc': VTPASS_CONFIG.services.EEDC,
-            'bedc': VTPASS_CONFIG.services.BEDC,
-            'aba': VTPASS_CONFIG.services.ABA,
-            'yedc': VTPASS_CONFIG.services.YEDC,
-            'jedc': VTPASS_CONFIG.services.JEDC
+        // Electricity profit margin
+        const ELECTRICITY_PROFIT = 50;
+        
+        // Disco to service ID mapping
+        const discoMap = {
+            ikedc: 'ikeja-electric',
+            ekedc: 'eko-electric',
+            ibedc: 'ibadan-electric',
+            aedc: 'abuja-electric',
+            phed: 'phed',
+            kedco: 'kano-electric',
+            kaedco: 'kaduna-electric',
+            eedc: 'enugu-electric',
+            bedc: 'benin-electric',
+            aba: 'aba-electric',
+            yedc: 'yola-electric',
+            jedc: 'jos-electric'
         };
-
-        const PROFIT_PER_ELECTRICITY = VTPASS_CONFIG.PROFIT.ELECTRICITY;
-
+        
         let currentDisco = 'ikedc';
         let meterType = 'prepaid';
         let verifiedData = null;
@@ -317,9 +319,23 @@
         let selectedCost = 0;
         let selectedPrice = 0;
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+            
+            document.getElementById('amount').addEventListener('input', function() {
+                const amount = parseInt(this.value);
+                if (amount >= 500) {
+                    selectedCost = amount;
+                    selectedPrice = amount + ELECTRICITY_PROFIT;
+                    updatePurchaseButton();
+                } else {
+                    selectedCost = 0;
+                    selectedPrice = 0;
+                    updatePurchaseButton();
+                }
+            });
         });
 
         function selectDisco(disco) {
@@ -343,15 +359,6 @@
             verifiedData = null;
         }
 
-        function calculatePrice() {
-            const amount = parseInt(document.getElementById('amount').value);
-            if (amount && amount >= 500) {
-                selectedCost = amount;
-                selectedPrice = amount + PROFIT_PER_ELECTRICITY;
-            }
-            updatePurchaseButton();
-        }
-
         async function verifyMeter() {
             const meterNumber = document.getElementById('meterNumber').value;
             
@@ -360,16 +367,19 @@
             }
 
             try {
-                const result = await verifyMeter(
-                    discoServiceMap[currentDisco],
-                    meterNumber,
-                    meterType
-                );
-
-                if (result.success) {
+                // BIGISUB API CALL for meter verification
+                const payload = {
+                    service: discoMap[currentDisco],
+                    meter_number: meterNumber,
+                    meter_type: meterType
+                };
+                
+                const result = await bigisubRequest('electricity/verify/', 'POST', payload);
+                
+                if (result.success && result.data) {
                     verifiedData = result.data;
-                    document.getElementById('customerName').textContent = result.data.Customer_Name || 'N/A';
-                    document.getElementById('customerAddress').textContent = result.data.Address || 'N/A';
+                    document.getElementById('customerName').textContent = result.data.customer_name || 'N/A';
+                    document.getElementById('customerAddress').textContent = result.data.address || 'N/A';
                     document.getElementById('customerMeterType').textContent = meterType.toUpperCase();
                     document.getElementById('customerInfo').style.display = 'block';
                 } else {
@@ -396,31 +406,36 @@
             }
         }
 
+        // Show messages
         function showError(msg) {
-            document.getElementById('errorMessage').style.display = 'block';
-            document.getElementById('errorMessage').textContent = msg;
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('errorMessage').style.display = 'none';
+                errorDiv.style.display = 'none';
             }, 5000);
         }
 
         function showSuccess(msg) {
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('successMessage').textContent = msg;
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
+                successDiv.style.display = 'none';
             }, 5000);
         }
 
         function showPending(msg) {
-            document.getElementById('pendingMessage').style.display = 'block';
-            document.getElementById('pendingMessage').textContent = msg;
+            const pendingDiv = document.getElementById('pendingMessage');
+            pendingDiv.style.display = 'block';
+            pendingDiv.textContent = msg;
         }
 
         function hidePending() {
             document.getElementById('pendingMessage').style.display = 'none';
         }
 
+        // Pay electricity - BIGISUB API CALL
         async function payElectricity() {
             const meterNumber = document.getElementById('meterNumber').value;
             
@@ -435,43 +450,39 @@
             }
             
             if (userBalance < selectedPrice) {
-                showError('Insufficient balance');
+                showError('Insufficient balance. Please fund your wallet');
                 return;
             }
 
             showPending('Processing payment...');
 
             try {
+                // BIGISUB API CALL for electricity payment
                 const payload = {
-                    serviceID: discoServiceMap[currentDisco],
-                    billersCode: meterNumber,
-                    variation_code: meterType,
+                    service: discoMap[currentDisco],
+                    meter_number: meterNumber,
+                    meter_type: meterType,
                     amount: selectedCost,
-                    phone: localStorage.getItem('userPhone') || '08012345678'
+                    pin_code: BIGISUB_CONFIG.PIN_CODE
                 };
                 
-                const result = await vtpassApiCall('/pay', payload);
-                const response = result.handled;
+                const result = await bigisubRequest('electricity/pay/', 'POST', payload);
                 
                 hidePending();
                 
-                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
+                if (result.success || result.status === 'success') {
+                    // Success - deduct from user balance
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    if (meterType === 'prepaid' && result.token) {
+                    // Show token if available
+                    if (result.token) {
                         document.getElementById('tokenNumber').textContent = result.token;
                         document.getElementById('tokenDisplay').style.display = 'block';
                     }
                     
-                    recordProfit(
-                        `${currentDisco.toUpperCase()} Electricity - ${meterType}`,
-                        selectedCost,
-                        selectedPrice,
-                        `Meter: ${meterNumber}`
-                    );
-                    
+                    // Record transaction
                     const transaction = {
                         type: `${currentDisco.toUpperCase()} Electricity - ${meterType}`,
                         amount: `-₦${selectedPrice}`,
@@ -485,10 +496,8 @@
                     
                     showSuccess(`✅ Payment successful!`);
                     
-                } else if (response.isPending) {
-                    showPending('Payment processing. Please wait...');
                 } else {
-                    showError(response.message);
+                    showError(result.message || result.error || 'Payment failed');
                 }
                 
             } catch (error) {
