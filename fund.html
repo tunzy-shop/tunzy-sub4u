@@ -69,6 +69,47 @@
             color: #0066cc;
         }
 
+        /* Fee Summary Card */
+        .fee-summary {
+            background: #e6f0ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #0066cc;
+        }
+
+        .fee-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .fee-row.total {
+            border-top: 2px solid #0066cc;
+            margin-top: 8px;
+            padding-top: 12px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .amount-label {
+            color: #666;
+        }
+
+        .amount-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .fee-value {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .total-value {
+            color: #0066cc;
+        }
+
         .amount-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -118,11 +159,6 @@
             font-size: 16px;
         }
 
-        .custom-amount input:focus {
-            border-color: #0066cc;
-            outline: none;
-        }
-
         .fund-btn {
             width: 100%;
             padding: 18px;
@@ -151,7 +187,7 @@
 <body>
     <div class="app-container">
         <div class="header">
-            <a href="index.html" class="back-btn">←</a>
+            <a href="dashboard.html" class="back-btn">←</a>
             <h1>Fund Wallet</h1>
         </div>
 
@@ -161,7 +197,30 @@
                 <div class="balance-amount" id="balanceDisplay">₦0.00</div>
             </div>
 
+            <!-- Fee Information -->
+            <div class="fee-summary" id="feeSummary" style="display: none;">
+                <div class="fee-row">
+                    <span class="amount-label">Amount you want:</span>
+                    <span class="amount-value" id="displayAmount">₦0</span>
+                </div>
+                <div class="fee-row">
+                    <span class="amount-label">Service Fee (fixed ₦10):</span>
+                    <span class="fee-value" id="displayFee">₦10</span>
+                </div>
+                <div class="fee-row total">
+                    <span>Total to pay:</span>
+                    <span class="total-value" id="displayTotal">₦10</span>
+                </div>
+                <div class="fee-row" style="margin-top: 10px; color: #28a745;">
+                    <span>You will receive in wallet:</span>
+                    <span id="displayReceive">₦0</span>
+                </div>
+            </div>
+
             <div class="amount-grid">
+                <button class="amount-btn" onclick="selectAmount(100)">₦100</button>
+                <button class="amount-btn" onclick="selectAmount(200)">₦200</button>
+                <button class="amount-btn" onclick="selectAmount(500)">₦500</button>
                 <button class="amount-btn" onclick="selectAmount(1000)">₦1,000</button>
                 <button class="amount-btn" onclick="selectAmount(2000)">₦2,000</button>
                 <button class="amount-btn" onclick="selectAmount(5000)">₦5,000</button>
@@ -172,18 +231,22 @@
 
             <div class="custom-amount">
                 <label>Or enter custom amount</label>
-                <input type="number" id="customAmount" placeholder="Enter amount" min="100">
+                <input type="number" id="customAmount" placeholder="Enter amount" min="100" oninput="updateAmount()">
             </div>
 
-            <button class="fund-btn" onclick="processFunding()">Proceed to Payment</button>
+            <button class="fund-btn" id="fundBtn" onclick="processPayment()" disabled>Select amount</button>
+
             <div class="note">🔒 Secured by Paystack</div>
         </div>
     </div>
 
     <script>
-        // 🔴 YOUR PAYSTACK PUBLIC KEY - PASTE HERE!
-        const PAYSTACK_PUBLIC_KEY = 'pk_live_ad349049b1c39f9376a000aaf8c0ad81a914c984'; // <-- PASTE YOUR KEY HERE
-
+        // Paystack Public Key (REPLACE WITH YOUR ACTUAL KEY)
+        const PAYSTACK_PUBLIC_KEY = 'pk_live_YOUR_PAYSTACK_KEY_HERE';
+        
+        // Fixed fee
+        const SERVICE_FEE = 10;
+        
         let selectedAmount = 0;
         let userEmail = '';
         let userBalance = 0;
@@ -191,70 +254,96 @@
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             userEmail = localStorage.getItem('userEmail') || '';
-            
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
         });
 
         function selectAmount(amount) {
             selectedAmount = amount;
             document.getElementById('customAmount').value = amount;
+            updateUI();
             
             document.querySelectorAll('.amount-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
+            event.target.classList.add('selected');
         }
 
-        async function processFunding() {
+        function updateAmount() {
             const customAmount = document.getElementById('customAmount').value;
-            const amount = parseInt(customAmount) || selectedAmount;
-            
-            if (!amount || amount < 100) {
-                alert('Please enter a valid amount (minimum ₦100)');
+            if (customAmount && customAmount >= 100) {
+                selectedAmount = parseInt(customAmount);
+                updateUI();
+                
+                document.querySelectorAll('.amount-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+            } else if (customAmount === '') {
+                document.getElementById('feeSummary').style.display = 'none';
+                document.getElementById('fundBtn').disabled = true;
+                document.getElementById('fundBtn').textContent = 'Select amount';
+                selectedAmount = 0;
+            }
+        }
+
+        function updateUI() {
+            if (selectedAmount >= 100) {
+                const total = selectedAmount + SERVICE_FEE;
+                const receive = selectedAmount;
+                
+                document.getElementById('displayAmount').textContent = `₦${selectedAmount.toLocaleString()}`;
+                document.getElementById('displayFee').textContent = `₦${SERVICE_FEE}`;
+                document.getElementById('displayTotal').textContent = `₦${total.toLocaleString()}`;
+                document.getElementById('displayReceive').textContent = `₦${receive.toLocaleString()}`;
+                document.getElementById('feeSummary').style.display = 'block';
+                document.getElementById('fundBtn').disabled = false;
+                document.getElementById('fundBtn').textContent = `Pay ₦${total.toLocaleString()}`;
+            }
+        }
+
+        async function processPayment() {
+            if (!selectedAmount || selectedAmount < 100) {
+                alert('Please select or enter a valid amount (minimum ₦100)');
                 return;
             }
-
-            try {
-                if (!window.PaystackPop) {
-                    await loadScript('https://js.paystack.co/v1/inline.js');
-                }
-
-                const handler = PaystackPop.setup({
-                    key: PAYSTACK_PUBLIC_KEY,
-                    email: userEmail,
-                    amount: amount * 100,
-                    currency: 'NGN',
-                    ref: 'TUNZY_' + Date.now(),
-                    callback: function(response) {
-                        // Payment successful
-                        userBalance += amount;
-                        localStorage.setItem('userBalance', userBalance);
-                        
-                        // Record transaction
-                        const transaction = {
-                            type: 'Wallet Funding',
-                            amount: `+₦${amount}`,
-                            date: new Date().toLocaleString()
-                        };
-                        
-                        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-                        transactions.unshift(transaction);
-                        localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-                        
-                        alert(`✅ Wallet funded with ₦${amount}`);
-                        window.location.href = 'index.html';
-                    },
-                    onClose: function() {
-                        alert('Payment cancelled');
-                    }
-                });
-                
-                handler.openIframe();
-                
-            } catch (error) {
-                alert('Payment failed. Please try again.');
-                console.error(error);
+            
+            const totalAmount = selectedAmount + SERVICE_FEE;
+            
+            if (!window.PaystackPop) {
+                await loadScript('https://js.paystack.co/v1/inline.js');
             }
+
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: userEmail,
+                amount: totalAmount * 100,
+                currency: 'NGN',
+                ref: 'TUNZY_' + Date.now(),
+                callback: function(response) {
+                    // Payment successful - add ONLY the selected amount to wallet (not the fee)
+                    userBalance += selectedAmount;
+                    localStorage.setItem('userBalance', userBalance);
+                    
+                    const transaction = {
+                        type: 'Wallet Funding',
+                        amount: `+₦${selectedAmount.toLocaleString()}`,
+                        fee: `-₦${SERVICE_FEE}`,
+                        total_paid: `₦${totalAmount.toLocaleString()}`,
+                        date: new Date().toLocaleString()
+                    };
+                    
+                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                    transactions.unshift(transaction);
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    
+                    alert(`✅ Wallet funded with ₦${selectedAmount.toLocaleString()}!\n\nFee: ₦${SERVICE_FEE}\nTotal paid: ₦${totalAmount.toLocaleString()}`);
+                    window.location.href = 'dashboard.html';
+                },
+                onClose: function() {
+                    alert('Payment cancelled');
+                }
+            });
+            
+            handler.openIframe();
         }
 
         function loadScript(src) {
