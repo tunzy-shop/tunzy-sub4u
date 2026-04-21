@@ -65,7 +65,7 @@
             margin: 20px 0 15px;
         }
 
-        /* Network Tabs with CIRCLE LOGOS */
+        /* Network Tabs with SQUARE LOGOS - NO OUTLINE UNTIL CLICKED */
         .network-tabs {
             display: flex;
             gap: 20px;
@@ -81,7 +81,7 @@
             gap: 8px;
             cursor: pointer;
             transition: all 0.3s;
-            opacity: 0.6;
+            opacity: 0.7;
         }
 
         .network-tab:hover {
@@ -93,20 +93,27 @@
             opacity: 1;
         }
 
-        .network-logo-circle {
+        /* SQUARE LOGO - NO OUTLINE BY DEFAULT */
+        .network-logo-box {
             width: 70px;
             height: 70px;
-            border-radius: 50%;
-            background: white;
-            border: 3px solid #0066cc;
+            background: #f8f9fa;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s;
         }
 
-        .network-logo-circle img {
+        /* Only show outline when ACTIVE (clicked) */
+        .network-tab.active .network-logo-box {
+            border-color: #0066cc;
+            background: #e6f0ff;
+        }
+
+        .network-logo-box img {
             width: 80%;
             height: 80%;
             object-fit: contain;
@@ -177,7 +184,7 @@
             outline: none;
         }
 
-        /* BIGGER PLAN BOXES */
+        /* BIGGER PLAN BOXES - NO BADGES */
         .plans-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -228,23 +235,6 @@
             font-size: 12px;
             color: #999;
         }
-
-        .category-badge {
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            background: #28a745;
-            color: white;
-            font-size: 10px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-
-        .badge-sme { background: #ffc107; color: #333; }
-        .badge-gift { background: #17a2b8; color: white; }
-        .badge-social { background: #dc3545; color: white; }
-        .badge-corp { background: #6f42c1; color: white; }
 
         .purchase-btn {
             width: 100%;
@@ -315,7 +305,7 @@
             <div class="success-message" id="successMessage"></div>
             <div class="pending-message" id="pendingMessage"></div>
 
-            <!-- Network Tabs with CIRCLE LOGOS -->
+            <!-- Network Tabs with SQUARE LOGOS -->
             <div class="section-title">Select Network</div>
             <div class="network-tabs" id="networkTabs"></div>
             
@@ -340,7 +330,7 @@
         // BIGISUB DATA PLANS - FROM YOUR API RESPONSE
         // ============================================
         
-        // Your profit margin (₦ per plan)
+        // Your profit margin (₦ per plan) - NOT DISPLAYED TO USER
         const YOUR_PROFIT = 50;
         
         // Network mapping with image paths
@@ -371,45 +361,45 @@
             }
         };
         
-        // Plans from your API response images
+        // Plans from your API response images - NO BADGES DISPLAYED
         const dataPlans = {
             mtn: [
                 { id: 199, name: '3.5GB', cost: 995, validity: 'Daily', type: 'GIFTING' },
                 { id: 210, name: '3.2GB', cost: 998, validity: '2 days', type: 'GIFTING' },
-                { id: 3, name: '2GB SME', cost: 1160, validity: '30 Days', type: 'SME' },
+                { id: 3, name: '2GB', cost: 1160, validity: '30 Days', type: 'SME' },
                 { id: 94, name: '2GB', cost: 1180, validity: '300 Days', type: 'DataTransfer' },
                 { id: 142, name: '2GB', cost: 1495, validity: '30 days', type: 'GIFTING' },
                 { id: 211, name: '3.5GB', cost: 1499, validity: '7 days', type: 'GIFTING' },
                 { id: 162, name: '1.5GB', cost: 640, validity: '2 days', type: 'GIFTING' },
-                { id: 2, name: '1GB SME', cost: 640, validity: '30 Days', type: 'SME' },
+                { id: 2, name: '1GB', cost: 640, validity: '30 Days', type: 'SME' },
                 { id: 208, name: '2.5GB', cost: 645, validity: 'Daily', type: 'SME' },
                 { id: 93, name: '1GB', cost: 650, validity: '30 Days', type: 'DataTransfer' },
                 { id: 97, name: '500MB', cost: 355, validity: '7 days', type: 'DataTransfer' },
                 { id: 206, name: '1GB', cost: 425, validity: '7 days', type: 'DataTransfer' },
-                { id: 207, name: '1GB SME', cost: 435, validity: '7 days', type: 'SME' },
+                { id: 207, name: '1GB', cost: 435, validity: '7 days', type: 'SME' },
                 { id: 140, name: '500MB', cost: 489, validity: '7 days', type: 'GIFTING' },
                 { id: 141, name: '1.2GB', cost: 820, validity: '7 days', type: 'GIFTING' },
                 { id: 144, name: '3.5GB', cost: 2487, validity: '30 Days', type: 'GIFTING' },
                 { id: 145, name: '7GB', cost: 3485, validity: '30 Days', type: 'GIFTING' }
             ],
             airtel: [
-                { id: 105, name: '10GB SME', cost: 3450, validity: '30 days', type: 'SME' },
+                { id: 105, name: '10GB', cost: 3450, validity: '30 days', type: 'SME' },
                 { id: 178, name: '10GB', cost: 3980, validity: '30 Days', type: 'GIFTING' },
                 { id: 92, name: '1.5GB', cost: 500, validity: '1 day', type: 'GIFTING' },
                 { id: 173, name: '2GB', cost: 600, validity: '2 days', type: 'GIFTING' },
                 { id: 172, name: '1GB', cost: 786, validity: '7 days', type: 'GIFTING' },
                 { id: 90, name: '75MB', cost: 74, validity: '1 day', type: 'GIFTING' },
                 { id: 91, name: '200MB', cost: 99, validity: '2 days', type: 'GIFTING' },
-                { id: 166, name: '300MB SME', cost: 125, validity: '1 day', type: 'SME' },
-                { id: 100, name: '600MB SME', cost: 230, validity: '2 days', type: 'SME' },
-                { id: 101, name: '1.5GB SME', cost: 475, validity: '1 day', type: 'SME' }
+                { id: 166, name: '300MB', cost: 125, validity: '1 day', type: 'SME' },
+                { id: 100, name: '600MB', cost: 230, validity: '2 days', type: 'SME' },
+                { id: 101, name: '1.5GB', cost: 475, validity: '1 day', type: 'SME' }
             ],
             glo: [
                 { id: 79, name: '150MB', cost: 94, validity: '1 day', type: 'GIFTING' },
                 { id: 98, name: '200MB', cost: 95, validity: '14 days', type: 'GIFTING' },
                 { id: 71, name: '500MB', cost: 223, validity: '30', type: 'GIFTING' },
                 { id: 12, name: '3GB', cost: 473, validity: '1 month', type: 'GIFTING' },
-                { id: 109, name: '2.5GB SME', cost: 600, validity: '2 Days', type: 'SME' },
+                { id: 109, name: '2.5GB', cost: 600, validity: '2 Days', type: 'SME' },
                 { id: 30, name: '2GB', cost: 890, validity: '30 Days', type: 'GIFTING' },
                 { id: 13, name: '3GB', cost: 969, validity: '30 Days', type: 'GIFTING' },
                 { id: 16, name: '10.8GB', cost: 2800, validity: '30days', type: 'GIFTING' }
@@ -441,14 +431,14 @@
             loadPlans();
         });
 
-        // Load network tabs with CIRCLE LOGOS
+        // Load network tabs with SQUARE LOGOS
         function loadNetworks() {
             const container = document.getElementById('networkTabs');
             let html = '';
             for (const [key, net] of Object.entries(networkMap)) {
                 html += `
                     <div class="network-tab ${key === 'mtn' ? 'active' : ''}" onclick="switchNetwork('${key}')">
-                        <div class="network-logo-circle">
+                        <div class="network-logo-box">
                             <img src="${net.image}" alt="${net.name}" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=${net.name.charAt(0)}'">
                         </div>
                         <span class="network-name">${net.name}</span>
@@ -487,7 +477,7 @@
             loadPlans();
         }
 
-        // Load plans based on network and category
+        // Load plans - NO BADGES DISPLAYED
         function loadPlans() {
             const container = document.getElementById('plansContainer');
             const allPlans = dataPlans[currentNetwork];
@@ -510,25 +500,13 @@
             let html = '';
             filtered.forEach(plan => {
                 const sellingPrice = plan.cost + YOUR_PROFIT;
-                let badgeClass = '';
-                let badgeText = '';
-                
-                if (plan.type === 'SME') {
-                    badgeClass = 'badge-sme';
-                    badgeText = 'SME';
-                } else if (plan.type === 'GIFTING') {
-                    badgeClass = 'badge-gift';
-                    badgeText = 'GIFT';
-                } else if (plan.type === 'DataTransfer') {
-                    badgeClass = 'badge-corp';
-                    badgeText = 'DATA';
-                }
+                // Format price with commas (e.g., 1,000 instead of 1000)
+                const formattedPrice = sellingPrice.toLocaleString();
                 
                 html += `
                     <div class="plan-card" onclick="selectPlan(${plan.id}, '${plan.name}', ${sellingPrice})">
-                        ${badgeText ? `<span class="category-badge ${badgeClass}">${badgeText}</span>` : ''}
                         <div class="plan-name">${plan.name}</div>
-                        <div class="plan-price">₦${sellingPrice}</div>
+                        <div class="plan-price">₦${formattedPrice}</div>
                         <div class="plan-validity">${plan.validity}</div>
                     </div>
                 `;
@@ -550,7 +528,7 @@
             
             const btn = document.getElementById('purchaseBtn');
             btn.disabled = false;
-            btn.textContent = `Pay ₦${price} for ${name}`;
+            btn.textContent = `Pay ₦${price.toLocaleString()} for ${name}`;
         }
 
         // Show messages
@@ -621,7 +599,7 @@
                     
                     const transaction = {
                         type: `${networkMap[currentNetwork].name} Data - ${selectedPlan}`,
-                        amount: `-₦${selectedPrice}`,
+                        amount: `-₦${selectedPrice.toLocaleString()}`,
                         date: new Date().toLocaleString()
                     };
                     
