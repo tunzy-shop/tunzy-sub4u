@@ -65,52 +65,80 @@
             margin: 20px 0 15px;
         }
 
+        /* Network Tabs with CIRCLE LOGOS */
         .network-tabs {
             display: flex;
-            gap: 10px;
+            gap: 20px;
             margin: 20px 0;
+            justify-content: space-around;
             flex-wrap: wrap;
         }
 
         .network-tab {
-            flex: 1;
-            min-width: 100px;
-            padding: 15px;
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s;
+            opacity: 0.6;
         }
 
         .network-tab:hover {
-            border-color: #0066cc;
+            opacity: 1;
+            transform: translateY(-3px);
         }
 
         .network-tab.active {
-            background: #0066cc;
-            color: white;
-            border-color: #0066cc;
+            opacity: 1;
         }
 
+        .network-logo-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #0066cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .network-logo-circle img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .network-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .network-tab.active .network-name {
+            color: #0066cc;
+        }
+
+        /* Data Type Tabs */
         .category-tabs {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             margin: 15px 0;
             overflow-x: auto;
             padding-bottom: 5px;
         }
 
         .category-tab {
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 20px;
+            border-radius: 30px;
             white-space: nowrap;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             transition: all 0.3s;
         }
@@ -149,30 +177,32 @@
             outline: none;
         }
 
+        /* BIGGER PLAN BOXES */
         .plans-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 15px;
             margin: 20px 0;
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
             padding-right: 5px;
         }
 
         .plan-card {
-            background: #f8f9fa;
+            background: white;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 15px;
+            padding: 20px 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             position: relative;
         }
 
         .plan-card:hover {
             border-color: #0066cc;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,102,204,0.15);
         }
 
         .plan-card.selected {
@@ -181,33 +211,33 @@
         }
 
         .plan-name {
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 5px;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
             color: #333;
         }
 
         .plan-price {
             color: #0066cc;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 3px;
+            font-weight: 800;
+            font-size: 22px;
+            margin-bottom: 5px;
         }
 
         .plan-validity {
-            font-size: 10px;
-            color: #666;
+            font-size: 12px;
+            color: #999;
         }
 
         .category-badge {
             position: absolute;
-            top: -8px;
-            left: 5px;
+            top: -10px;
+            left: 10px;
             background: #28a745;
             color: white;
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 10px;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 20px;
             font-weight: bold;
         }
 
@@ -285,10 +315,12 @@
             <div class="success-message" id="successMessage"></div>
             <div class="pending-message" id="pendingMessage"></div>
 
-            <!-- Network Tabs -->
+            <!-- Network Tabs with CIRCLE LOGOS -->
+            <div class="section-title">Select Network</div>
             <div class="network-tabs" id="networkTabs"></div>
             
-            <!-- Category Tabs -->
+            <!-- Data Type Tabs -->
+            <div class="section-title">Select Data Type</div>
             <div class="category-tabs" id="categoryTabs"></div>
 
             <div class="phone-input">
@@ -296,6 +328,7 @@
                 <input type="tel" id="phoneNumber" placeholder="Enter phone number">
             </div>
 
+            <div class="section-title">Select Plan</div>
             <div class="plans-grid" id="plansContainer"></div>
 
             <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>Select a plan</button>
@@ -310,12 +343,32 @@
         // Your profit margin (₦ per plan)
         const YOUR_PROFIT = 50;
         
-        // Network mapping
+        // Network mapping with image paths
         const networkMap = {
-            'mtn': { name: 'MTN', networkId: 1, categories: ['All', 'SME', 'GIFTING', 'DataTransfer'] },
-            'glo': { name: 'GLO', networkId: 2, categories: ['All', 'SME', 'GIFTING'] },
-            'airtel': { name: 'AIRTEL', networkId: 3, categories: ['All', 'SME', 'GIFTING'] },
-            '9mobile': { name: '9MOBILE', networkId: 4, categories: ['All', 'DataTransfer', 'GIFTING'] }
+            mtn: { 
+                name: 'MTN', 
+                networkId: 1, 
+                image: 'assets/networks/mtn-logo.png',
+                categories: ['All', 'SME', 'GIFTING', 'DataTransfer']
+            },
+            glo: { 
+                name: 'GLO', 
+                networkId: 2, 
+                image: 'assets/networks/glo-logo.png',
+                categories: ['All', 'SME', 'GIFTING']
+            },
+            airtel: { 
+                name: 'AIRTEL', 
+                networkId: 3, 
+                image: 'assets/networks/airtel-logo.jpeg',
+                categories: ['All', 'SME', 'GIFTING']
+            },
+            '9mobile': { 
+                name: '9MOBILE', 
+                networkId: 4, 
+                image: 'assets/networks/9mobile-logo.jpeg',
+                categories: ['All', 'DataTransfer', 'GIFTING']
+            }
         };
         
         // Plans from your API response images
@@ -337,15 +390,7 @@
                 { id: 140, name: '500MB', cost: 489, validity: '7 days', type: 'GIFTING' },
                 { id: 141, name: '1.2GB', cost: 820, validity: '7 days', type: 'GIFTING' },
                 { id: 144, name: '3.5GB', cost: 2487, validity: '30 Days', type: 'GIFTING' },
-                { id: 145, name: '7GB', cost: 3485, validity: '30 Days', type: 'GIFTING' },
-                { id: 146, name: '10GB', cost: 4466, validity: '30 Days', type: 'GIFTING' },
-                { id: 147, name: '12.5GB', cost: 5460, validity: '30 Days', type: 'GIFTING' },
-                { id: 148, name: '16.5GB', cost: 6460, validity: '30 Days', type: 'GIFTING' },
-                { id: 149, name: '20GB', cost: 7455, validity: '30 Days', type: 'GIFTING' },
-                { id: 150, name: '25GB', cost: 8950, validity: '30 Days', type: 'GIFTING' },
-                { id: 152, name: '36GB', cost: 10940, validity: '30 Days', type: 'GIFTING' },
-                { id: 154, name: '65GB', cost: 15915, validity: '30 Days', type: 'GIFTING' },
-                { id: 155, name: '75GB', cost: 17885, validity: '30 Days', type: 'GIFTING' }
+                { id: 145, name: '7GB', cost: 3485, validity: '30 Days', type: 'GIFTING' }
             ],
             airtel: [
                 { id: 105, name: '10GB SME', cost: 3450, validity: '30 days', type: 'SME' },
@@ -357,10 +402,7 @@
                 { id: 91, name: '200MB', cost: 99, validity: '2 days', type: 'GIFTING' },
                 { id: 166, name: '300MB SME', cost: 125, validity: '1 day', type: 'SME' },
                 { id: 100, name: '600MB SME', cost: 230, validity: '2 days', type: 'SME' },
-                { id: 101, name: '1.5GB SME', cost: 475, validity: '1 day', type: 'SME' },
-                { id: 125, name: '13GB SME', cost: 5525, validity: '30 days', type: 'SME' },
-                { id: 126, name: '35GB SME', cost: 11645, validity: '30 Days', type: 'SME' },
-                { id: 170, name: '60GB SME', cost: 17849, validity: '30 Days', type: 'SME' }
+                { id: 101, name: '1.5GB SME', cost: 475, validity: '1 day', type: 'SME' }
             ],
             glo: [
                 { id: 79, name: '150MB', cost: 94, validity: '1 day', type: 'GIFTING' },
@@ -370,11 +412,7 @@
                 { id: 109, name: '2.5GB SME', cost: 600, validity: '2 Days', type: 'SME' },
                 { id: 30, name: '2GB', cost: 890, validity: '30 Days', type: 'GIFTING' },
                 { id: 13, name: '3GB', cost: 969, validity: '30 Days', type: 'GIFTING' },
-                { id: 16, name: '10.8GB', cost: 2800, validity: '30days', type: 'GIFTING' },
-                { id: 75, name: '12.5GB', cost: 3845, validity: '30 days', type: 'GIFTING' },
-                { id: 77, name: '16GB', cost: 4770, validity: '30 Days', type: 'GIFTING' },
-                { id: 179, name: '28GB', cost: 7650, validity: '30 Days', type: 'GIFTING' },
-                { id: 180, name: '38GB', cost: 9590, validity: '300days', type: 'GIFTING' }
+                { id: 16, name: '10.8GB', cost: 2800, validity: '30days', type: 'GIFTING' }
             ],
             '9mobile': [
                 { id: 185, name: '40MB', cost: 49, validity: '1 day', type: 'DataTransfer' },
@@ -382,11 +420,7 @@
                 { id: 188, name: '250MB', cost: 197, validity: '7 days', type: 'DataTransfer' },
                 { id: 190, name: '2GB', cost: 990, validity: '30 Days', type: 'DataTransfer' },
                 { id: 191, name: '2.3GB', cost: 1190, validity: '30 Days', type: 'DataTransfer' },
-                { id: 192, name: '4.5GB', cost: 1985, validity: '300Days', type: 'DataTransfer' },
-                { id: 193, name: '5.2GB', cost: 2477, validity: '30 Days', type: 'DataTransfer' },
-                { id: 194, name: '6.2GB', cost: 2972, validity: '30 Days', type: 'DataTransfer' },
-                { id: 195, name: '8.4GB', cost: 3964, validity: '30 Days', type: 'DataTransfer' },
-                { id: 196, name: '11.4GB', cost: 4964, validity: '30 Days', type: 'DataTransfer' }
+                { id: 192, name: '4.5GB', cost: 1985, validity: '300Days', type: 'DataTransfer' }
             ]
         };
 
@@ -407,12 +441,19 @@
             loadPlans();
         });
 
-        // Load network tabs
+        // Load network tabs with CIRCLE LOGOS
         function loadNetworks() {
             const container = document.getElementById('networkTabs');
             let html = '';
             for (const [key, net] of Object.entries(networkMap)) {
-                html += `<div class="network-tab ${key === 'mtn' ? 'active' : ''}" onclick="switchNetwork('${key}')">${net.name}</div>`;
+                html += `
+                    <div class="network-tab ${key === 'mtn' ? 'active' : ''}" onclick="switchNetwork('${key}')">
+                        <div class="network-logo-circle">
+                            <img src="${net.image}" alt="${net.name}" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=${net.name.charAt(0)}'">
+                        </div>
+                        <span class="network-name">${net.name}</span>
+                    </div>
+                `;
             }
             container.innerHTML = html;
         }
@@ -422,7 +463,7 @@
             currentNetwork = network;
             currentCategory = 'All';
             document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
             loadCategories();
             loadPlans();
         }
@@ -450,6 +491,11 @@
         function loadPlans() {
             const container = document.getElementById('plansContainer');
             const allPlans = dataPlans[currentNetwork];
+            
+            if (!allPlans || allPlans.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No plans available</div>';
+                return;
+            }
             
             let filtered = allPlans;
             if (currentCategory !== 'All') {
@@ -558,7 +604,6 @@
             showPending('Processing transaction...');
 
             try {
-                // BIGISUB API CALL
                 const payload = {
                     plan: selectedPlanId,
                     phone_number: phone,
@@ -570,12 +615,10 @@
                 hidePending();
                 
                 if (result.success || result.status === 'success') {
-                    // Success - deduct from user balance
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    // Record transaction
                     const transaction = {
                         type: `${networkMap[currentNetwork].name} Data - ${selectedPlan}`,
                         amount: `-₦${selectedPrice}`,
@@ -588,13 +631,10 @@
                     
                     showSuccess(`✅ Success! ${selectedPlan} data sent to ${phone}`);
                     
-                    // Reset selection
                     selectedPlanId = null;
                     selectedPlan = null;
                     document.getElementById('purchaseBtn').disabled = true;
                     document.getElementById('purchaseBtn').textContent = 'Select a plan';
-                    
-                    // Remove selected class from plan cards
                     document.querySelectorAll('.plan-card').forEach(card => {
                         card.classList.remove('selected');
                     });
@@ -610,7 +650,7 @@
             }
         }
 
-        // Phone input listener to re-enable button if plan selected
+        // Phone input listener
         document.getElementById('phoneNumber').addEventListener('input', function() {
             if (selectedPlanId && this.value.length >= 11) {
                 document.getElementById('purchaseBtn').disabled = false;
