@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airtime - TUNZY SUB 4 YOU</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -65,7 +68,6 @@
             margin: 20px 0 15px;
         }
 
-        /* Network Tabs with SQUARE LOGOS */
         .network-tabs {
             display: flex;
             gap: 20px;
@@ -154,30 +156,29 @@
         .amount-presets {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 10px;
             margin: 20px 0;
         }
 
         .amount-btn {
-            background: white;
+            background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px 10px;
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
             cursor: pointer;
-            font-weight: 700;
-            font-size: 18px;
+            font-weight: 600;
             transition: all 0.3s;
         }
 
         .amount-btn:hover {
             border-color: #0066cc;
-            transform: translateY(-3px);
         }
 
         .amount-btn.selected {
             border-color: #0066cc;
-            background: #e6f0ff;
+            background: #0066cc;
+            color: white;
         }
 
         .custom-amount {
@@ -190,11 +191,6 @@
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 16px;
-        }
-
-        .custom-amount input:focus {
-            border-color: #0066cc;
-            outline: none;
         }
 
         .purchase-btn {
@@ -219,35 +215,81 @@
             cursor: not-allowed;
         }
 
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
+        /* Message Boxes */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 85%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            z-index: 1000;
             display: none;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .success-message {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            display: none;
+        .message-box.error {
+            border-top: 5px solid #dc3545;
         }
 
-        .pending-message {
-            background: #fff3e0;
-            color: #ef6c00;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
+        .message-box.success {
+            border-top: 5px solid #28a745;
+        }
+
+        .message-box.pending {
+            border-top: 5px solid #ffc107;
+        }
+
+        .message-icon {
+            font-size: 50px;
+        }
+
+        .message-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .message-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .message-btn:hover {
+            background: #004d99;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
             display: none;
         }
     </style>
 </head>
 <body>
+    <script src="js/firebase-config.js"></script>
     <script src="js/bigisub-config.js"></script>
     
     <div class="app-container">
@@ -261,10 +303,6 @@
                 <span>Your Balance</span>
                 <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
             </div>
-
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
-            <div class="pending-message" id="pendingMessage"></div>
 
             <div class="section-title">Select Network</div>
             <div class="network-tabs" id="networkTabs"></div>
@@ -285,8 +323,32 @@
         </div>
     </div>
 
+    <!-- Message Boxes -->
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="message-box error" id="errorBox">
+        <div class="message-icon">❌</div>
+        <div class="message-title">Error</div>
+        <div class="message-text" id="errorText">Something went wrong</div>
+        <button class="message-btn" onclick="closeError()">OK</button>
+    </div>
+
+    <div class="message-box success" id="successBox">
+        <div class="message-icon">✅</div>
+        <div class="message-title">Success</div>
+        <div class="message-text" id="successText">Transaction successful</div>
+        <button class="message-btn" onclick="closeSuccess()">OK</button>
+    </div>
+
+    <div class="message-box pending" id="pendingBox">
+        <div class="message-icon">⏳</div>
+        <div class="message-title">Processing</div>
+        <div class="message-text" id="pendingText">Please wait...</div>
+    </div>
+
     <script>
-        // Network mapping for Bigisub
+        // Network mapping - network IDs from Bigisub
+        // MTN = 1, GLO = 2, Airtel = 3, 9mobile = 4
         const networks = [
             { id: 'mtn', name: 'MTN', networkId: 1, image: 'assets/networks/mtn-logo.png' },
             { id: 'glo', name: 'GLO', networkId: 2, image: 'assets/networks/glo-logo.png' },
@@ -294,15 +356,22 @@
             { id: '9mobile', name: '9MOBILE', networkId: 4, image: 'assets/networks/9mobile-logo.jpeg' }
         ];
         
-        // NO PROFIT on airtime - 100 for 100 pricing!
-        const AIRTIME_PROFIT = 0;
-        
         let currentNetworkId = 1;
         let selectedAmount = 0;
         let userBalance = 0;
+        let userEmail = '';
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        // Check authentication
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'login-page.html';
+            } else {
+                userEmail = user.email;
+                loadUserData();
+            }
+        });
+
+        function loadUserData() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
             loadNetworks();
@@ -313,17 +382,15 @@
                 if (amount >= 50) {
                     selectedAmount = amount;
                     document.getElementById('purchaseBtn').disabled = false;
-                    const formattedAmount = amount.toLocaleString();
-                    document.getElementById('purchaseBtn').textContent = `Pay ₦${formattedAmount} for ₦${formattedAmount} airtime`;
+                    document.getElementById('purchaseBtn').textContent = `Pay ₦${amount.toLocaleString()} for ₦${amount.toLocaleString()} airtime`;
                 } else if (this.value === '') {
                     selectedAmount = 0;
                     document.getElementById('purchaseBtn').disabled = true;
                     document.getElementById('purchaseBtn').textContent = 'Select amount';
                 }
             });
-        });
+        }
 
-        // Load network tabs with SQUARE LOGOS
         function loadNetworks() {
             const container = document.getElementById('networkTabs');
             let html = '';
@@ -340,67 +407,71 @@
             container.innerHTML = html;
         }
 
-        // Switch network
         function switchNetwork(networkId, networkName) {
             currentNetworkId = networkId;
             document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            event.target.closest('.network-tab').classList.add('active');
         }
 
-        // Load amount presets with formatted numbers
         function loadAmountPresets() {
             const amounts = [100, 200, 500, 1000, 2000, 5000];
             const container = document.getElementById('amountPresets');
             let html = '';
             amounts.forEach(amt => {
-                const formattedAmt = amt.toLocaleString();
-                html += `<div class="amount-btn" onclick="selectAmount(${amt})">₦${formattedAmt}</div>`;
+                html += `<div class="amount-btn" onclick="selectAmount(${amt})">₦${amt.toLocaleString()}</div>`;
             });
             container.innerHTML = html;
         }
 
-        // Select amount from preset
         function selectAmount(amount) {
             selectedAmount = amount;
             document.getElementById('customAmount').value = amount;
             document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
+            event.target.classList.add('selected');
             
-            const formattedAmount = amount.toLocaleString();
             document.getElementById('purchaseBtn').disabled = false;
-            document.getElementById('purchaseBtn').textContent = `Pay ₦${formattedAmount} for ₦${formattedAmount} airtime`;
+            document.getElementById('purchaseBtn').textContent = `Pay ₦${amount.toLocaleString()} for ₦${amount.toLocaleString()} airtime`;
         }
 
-        // Show messages
-        function showError(msg) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = msg;
+        // Message functions
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('errorBox').style.display = 'flex';
+        }
+
+        function closeError() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('errorBox').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            document.getElementById('successText').textContent = message;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('successBox').style.display = 'flex';
             setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
+                closeSuccess();
+                window.location.href = 'dashboard.html';
+            }, 2000);
         }
 
-        function showSuccess(msg) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.style.display = 'block';
-            successDiv.textContent = msg;
-            setTimeout(() => {
-                successDiv.style.display = 'none';
-            }, 5000);
+        function closeSuccess() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('successBox').style.display = 'none';
         }
 
-        function showPending(msg) {
-            const pendingDiv = document.getElementById('pendingMessage');
-            pendingDiv.style.display = 'block';
-            pendingDiv.textContent = msg;
+        function showPending(message) {
+            document.getElementById('pendingText').textContent = message;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('pendingBox').style.display = 'flex';
         }
 
         function hidePending() {
-            document.getElementById('pendingMessage').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('pendingBox').style.display = 'none';
         }
 
-        // Purchase airtime - BIGISUB API CALL
+        // Purchase airtime - CORRECT BIGISUB API ENDPOINT
         async function purchaseAirtime() {
             const phone = document.getElementById('phoneNumber').value;
             
@@ -414,39 +485,39 @@
                 return;
             }
             
-            // User pays exactly the amount (NO PROFIT)
-            const userPayment = selectedAmount;
-            
-            if (userBalance < userPayment) {
-                showError('Insufficient balance. Please fund your wallet');
+            if (userBalance < selectedAmount) {
+                showError(`Insufficient balance. Your balance is ₦${userBalance.toLocaleString()}`);
                 return;
             }
 
             showPending('Processing transaction...');
 
             try {
-                // BIGISUB API CALL for airtime
+                // CORRECT ENDPOINT: /api/v2/vtu/airtime/purchase/
                 const payload = {
                     network: currentNetworkId,
                     phone_number: phone,
-                    amount: selectedAmount,
-                    pin_code: BIGISUB_CONFIG.PIN_CODE
+                    amount: selectedAmount.toString(),
+                    airtime_type: "vtu",
+                    pin: BIGISUB_CONFIG.PIN_CODE
                 };
                 
-                const result = await bigisubRequest('airtime/purchase/', 'POST', payload);
+                console.log('Sending to Bigisub:', payload);
+                
+                const result = await bigisubRequest('vtu/airtime/purchase/', 'POST', payload);
+                
+                console.log('Bigisub Response:', result);
                 
                 hidePending();
                 
-                if (result.success || result.status === 'success') {
+                if (result.success === true) {
                     // Success - deduct from user balance
-                    userBalance -= userPayment;
+                    userBalance -= selectedAmount;
                     localStorage.setItem('userBalance', userBalance);
-                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    // Record transaction
                     const transaction = {
                         type: `Airtime - ₦${selectedAmount.toLocaleString()}`,
-                        amount: `-₦${userPayment.toLocaleString()}`,
+                        amount: `-₦${selectedAmount.toLocaleString()}`,
                         date: new Date().toLocaleString()
                     };
                     
@@ -456,7 +527,6 @@
                     
                     showSuccess(`✅ Success! ₦${selectedAmount.toLocaleString()} airtime sent to ${phone}`);
                     
-                    // Reset selection
                     selectedAmount = 0;
                     document.getElementById('customAmount').value = '';
                     document.getElementById('purchaseBtn').disabled = true;
@@ -464,13 +534,24 @@
                     document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
                     
                 } else {
-                    showError(result.message || result.error || 'Purchase failed');
+                    // Show the error message from API
+                    let errorMsg = result.message || 'Purchase failed';
+                    
+                    // Check if there are detailed errors
+                    if (result.errors) {
+                        const errors = Object.values(result.errors);
+                        if (errors.length > 0) {
+                            errorMsg = errors[0][0] || errorMsg;
+                        }
+                    }
+                    
+                    showError(errorMsg);
                 }
                 
             } catch (error) {
                 hidePending();
-                showError('Network error. Please try again');
-                console.error(error);
+                console.error('Error:', error);
+                showError('Network error. Please check your connection and try again.');
             }
         }
     </script>
