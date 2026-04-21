@@ -65,31 +65,34 @@
             margin: 20px 0 15px;
         }
 
-        .provider-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 15px 0;
+        .provider-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
-        .provider-btn {
+        .provider-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px;
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
             font-weight: 600;
+            transition: all 0.3s;
         }
 
-        .provider-btn:hover {
+        .provider-tab:hover {
             border-color: #0066cc;
         }
 
-        .provider-btn.selected {
+        .provider-tab.active {
+            background: #0066cc;
+            color: white;
             border-color: #0066cc;
-            background: #e6f0ff;
         }
 
         .input-field {
@@ -135,14 +138,14 @@
             color: #0066cc;
         }
 
-        .package-grid {
+        .plans-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin: 20px 0;
         }
 
-        .package-card {
+        .plan-card {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
@@ -152,21 +155,22 @@
             transition: all 0.2s;
         }
 
-        .package-card:hover {
+        .plan-card:hover {
             border-color: #0066cc;
+            transform: translateY(-2px);
         }
 
-        .package-card.selected {
+        .plan-card.selected {
             border-color: #0066cc;
             background: #e6f0ff;
         }
 
-        .package-name {
+        .plan-name {
             font-weight: 600;
             margin-bottom: 5px;
         }
 
-        .package-price {
+        .plan-price {
             color: #0066cc;
             font-weight: 700;
             font-size: 18px;
@@ -219,7 +223,7 @@
     </style>
 </head>
 <body>
-    <script src="js/vtpass-config.js"></script>
+    <script src="js/bigisub-config.js"></script>
     
     <div class="app-container">
         <div class="header">
@@ -238,16 +242,11 @@
             <div class="pending-message" id="pendingMessage"></div>
 
             <div class="section-title">Select Provider</div>
-            <div class="provider-grid">
-                <div class="provider-btn selected" onclick="selectProvider('dstv')" id="prov-dstv">DSTV</div>
-                <div class="provider-btn" onclick="selectProvider('gotv')" id="prov-gotv">GOtv</div>
-                <div class="provider-btn" onclick="selectProvider('startimes')" id="prov-startimes">Startimes</div>
-                <div class="provider-btn" onclick="selectProvider('showmax')" id="prov-showmax">Showmax</div>
-            </div>
+            <div class="provider-tabs" id="providerTabs"></div>
 
             <div class="input-field">
                 <label>Smart Card / IUC Number</label>
-                <input type="text" id="cardNumber" placeholder="Enter card number" onblur="verifyCard()">
+                <input type="text" id="cardNumber" placeholder="Enter card number">
             </div>
 
             <div class="customer-info" id="customerInfo">
@@ -255,169 +254,146 @@
             </div>
 
             <div class="section-title">Select Package</div>
-            <div class="package-grid" id="packagesContainer">
-                <!-- Packages loaded by JavaScript -->
-            </div>
+            <div class="plans-grid" id="plansContainer"></div>
 
             <button class="purchase-btn" id="purchaseBtn" onclick="subscribeTV()" disabled>Select a package</button>
         </div>
     </div>
 
     <script>
-        const providerServiceMap = {
-            'dstv': VTPASS_CONFIG.services.DSTV,
-            'gotv': VTPASS_CONFIG.services.GOTV,
-            'startimes': VTPASS_CONFIG.services.STARTIMES,
-            'showmax': VTPASS_CONFIG.services.SHOWMAX
-        };
-
-        const packages = {
+        // TV Providers and their packages
+        const tvProviders = [
+            { id: 'dstv', name: 'DSTV', serviceId: 'dstv' },
+            { id: 'gotv', name: 'GOtv', serviceId: 'gotv' },
+            { id: 'startimes', name: 'Startimes', serviceId: 'startimes' },
+            { id: 'showmax', name: 'Showmax', serviceId: 'showmax' }
+        ];
+        
+        // TV Packages with costs and selling prices
+        const tvPackages = {
             dstv: [
-                { code: 'dstv-premier', name: 'Premium', cost: 24000, sellingPrice: calculateTVPrice(24000) },
-                { code: 'dstv-compact-plus', name: 'Compact+', cost: 15000, sellingPrice: calculateTVPrice(15000) },
-                { code: 'dstv-compact', name: 'Compact', cost: 10000, sellingPrice: calculateTVPrice(10000) },
-                { code: 'dstv-confam', name: 'Confam', cost: 6000, sellingPrice: calculateTVPrice(6000) }
+                { name: 'Premium', cost: 24000, sellingPrice: 24500 },
+                { name: 'Compact+', cost: 15000, sellingPrice: 15400 },
+                { name: 'Compact', cost: 10000, sellingPrice: 10300 },
+                { name: 'Confam', cost: 6000, sellingPrice: 6200 },
+                { name: 'Yanga', cost: 3600, sellingPrice: 3750 }
             ],
             gotv: [
-                { code: 'gotv-max', name: 'Max', cost: 5000, sellingPrice: calculateTVPrice(5000) },
-                { code: 'gotv-jolli', name: 'Jolli', cost: 3000, sellingPrice: calculateTVPrice(3000) },
-                { code: 'gotv-jinja', name: 'Jinja', cost: 2000, sellingPrice: calculateTVPrice(2000) },
-                { code: 'gotv-smallie', name: 'Smallie', cost: 1500, sellingPrice: calculateTVPrice(1500) }
+                { name: 'Max', cost: 5000, sellingPrice: 5200 },
+                { name: 'Jolli', cost: 3000, sellingPrice: 3150 },
+                { name: 'Jinja', cost: 2000, sellingPrice: 2100 },
+                { name: 'Smallie', cost: 1500, sellingPrice: 1600 }
             ],
             startimes: [
-                { code: 'startimes-nova', name: 'Nova', cost: 2500, sellingPrice: calculateTVPrice(2500) },
-                { code: 'startimes-basic', name: 'Basic', cost: 3500, sellingPrice: calculateTVPrice(3500) },
-                { code: 'startimes-smart', name: 'Smart', cost: 5000, sellingPrice: calculateTVPrice(5000) },
-                { code: 'startimes-super', name: 'Super', cost: 7500, sellingPrice: calculateTVPrice(7500) }
+                { name: 'Nova', cost: 2500, sellingPrice: 2650 },
+                { name: 'Basic', cost: 3500, sellingPrice: 3650 },
+                { name: 'Smart', cost: 5000, sellingPrice: 5200 },
+                { name: 'Super', cost: 7500, sellingPrice: 7700 }
             ],
             showmax: [
-                { code: 'showmax-mobile', name: 'Mobile', cost: 1200, sellingPrice: calculateTVPrice(1200) },
-                { code: 'showmax-standard', name: 'Standard', cost: 2500, sellingPrice: calculateTVPrice(2500) },
-                { code: 'showmax-premium', name: 'Premium', cost: 4500, sellingPrice: calculateTVPrice(4500) }
+                { name: 'Mobile', cost: 1200, sellingPrice: 1350 },
+                { name: 'Standard', cost: 2500, sellingPrice: 2650 },
+                { name: 'Premium', cost: 4500, sellingPrice: 4700 }
             ]
         };
-
+        
         let currentProvider = 'dstv';
         let selectedPackage = null;
-        let selectedCode = '';
         let selectedCost = 0;
         let selectedPrice = 0;
         let userBalance = 0;
-        let verifiedName = '';
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            loadPackages('dstv');
+            loadProviders();
+            loadPackages();
         });
 
-        function selectProvider(provider) {
-            currentProvider = provider;
-            document.querySelectorAll('.provider-btn').forEach(btn => {
-                btn.classList.remove('selected');
+        // Load provider tabs
+        function loadProviders() {
+            const container = document.getElementById('providerTabs');
+            let html = '';
+            tvProviders.forEach(prov => {
+                html += `<div class="provider-tab ${prov.id === 'dstv' ? 'active' : ''}" onclick="switchProvider('${prov.id}')">${prov.name}</div>`;
             });
-            document.getElementById(`prov-${provider}`).classList.add('selected');
-            loadPackages(provider);
-            document.getElementById('customerInfo').style.display = 'none';
-            selectedPackage = null;
-            updatePurchaseButton();
+            container.innerHTML = html;
         }
 
-        function loadPackages(provider) {
-            const container = document.getElementById('packagesContainer');
-            const providerPackages = packages[provider];
+        // Switch provider
+        function switchProvider(provider) {
+            currentProvider = provider;
+            document.querySelectorAll('.provider-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            loadPackages();
+            selectedPackage = null;
+            document.getElementById('purchaseBtn').disabled = true;
+            document.getElementById('purchaseBtn').textContent = 'Select a package';
+        }
+
+        // Load packages for selected provider
+        function loadPackages() {
+            const container = document.getElementById('plansContainer');
+            const packages = tvPackages[currentProvider];
             
             let html = '';
-            providerPackages.forEach(pkg => {
+            packages.forEach(pkg => {
                 html += `
-                    <div class="package-card" onclick="selectPackage('${pkg.code}', '${pkg.name}', ${pkg.cost}, ${pkg.sellingPrice})">
-                        <div class="package-name">${pkg.name}</div>
-                        <div class="package-price">₦${pkg.sellingPrice}</div>
+                    <div class="plan-card" onclick="selectPackage('${pkg.name}', ${pkg.cost}, ${pkg.sellingPrice})">
+                        <div class="plan-name">${pkg.name}</div>
+                        <div class="plan-price">₦${pkg.sellingPrice}</div>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        function selectPackage(code, name, cost, price) {
-            selectedCode = code;
+        // Select package
+        function selectPackage(name, cost, price) {
             selectedPackage = name;
             selectedCost = cost;
             selectedPrice = price;
             
-            document.querySelectorAll('.package-card').forEach(card => {
+            document.querySelectorAll('.plan-card').forEach(card => {
                 card.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
             
-            updatePurchaseButton();
+            document.getElementById('purchaseBtn').disabled = false;
+            document.getElementById('purchaseBtn').textContent = `Pay ₦${price} for ${name}`;
         }
 
-        function updatePurchaseButton() {
-            const btn = document.getElementById('purchaseBtn');
-            const cardNumber = document.getElementById('cardNumber').value;
-            
-            if (selectedPackage && cardNumber.length >= 6) {
-                btn.disabled = false;
-                btn.textContent = `Pay ₦${selectedPrice} for ${selectedPackage}`;
-            } else {
-                btn.disabled = true;
-                btn.textContent = 'Select a package';
-            }
-        }
-
-        async function verifyCard() {
-            const cardNumber = document.getElementById('cardNumber').value;
-            
-            if (!cardNumber || cardNumber.length < 6) {
-                return;
-            }
-
-            try {
-                const result = await verifyMeter(
-                    providerServiceMap[currentProvider],
-                    cardNumber,
-                    'verify'
-                );
-
-                if (result.success) {
-                    verifiedName = result.data.Customer_Name || 'Verified Customer';
-                    document.getElementById('customerName').textContent = verifiedName;
-                    document.getElementById('customerInfo').style.display = 'block';
-                    updatePurchaseButton();
-                } else {
-                    document.getElementById('customerInfo').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Verification failed:', error);
-            }
-        }
-
+        // Show messages
         function showError(msg) {
-            document.getElementById('errorMessage').style.display = 'block';
-            document.getElementById('errorMessage').textContent = msg;
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('errorMessage').style.display = 'none';
+                errorDiv.style.display = 'none';
             }, 5000);
         }
 
         function showSuccess(msg) {
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('successMessage').textContent = msg;
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
+                successDiv.style.display = 'none';
             }, 5000);
         }
 
         function showPending(msg) {
-            document.getElementById('pendingMessage').style.display = 'block';
-            document.getElementById('pendingMessage').textContent = msg;
+            const pendingDiv = document.getElementById('pendingMessage');
+            pendingDiv.style.display = 'block';
+            pendingDiv.textContent = msg;
         }
 
         function hidePending() {
             document.getElementById('pendingMessage').style.display = 'none';
         }
 
+        // Subscribe to TV - BIGISUB API CALL
         async function subscribeTV() {
             const cardNumber = document.getElementById('cardNumber').value;
             
@@ -427,43 +403,38 @@
             }
             
             if (!cardNumber || cardNumber.length < 6) {
-                showError('Please enter a valid card number');
+                showError('Please enter a valid smart card number');
                 return;
             }
             
             if (userBalance < selectedPrice) {
-                showError('Insufficient balance');
+                showError('Insufficient balance. Please fund your wallet');
                 return;
             }
 
             showPending('Processing subscription...');
 
             try {
+                // BIGISUB API CALL for TV subscription
                 const payload = {
-                    serviceID: providerServiceMap[currentProvider],
-                    billersCode: cardNumber,
-                    variation_code: selectedCode,
+                    service: currentProvider,
+                    card_number: cardNumber,
+                    package: selectedPackage,
                     amount: selectedCost,
-                    phone: localStorage.getItem('userPhone') || '08012345678'
+                    pin_code: BIGISUB_CONFIG.PIN_CODE
                 };
                 
-                const result = await vtpassApiCall('/pay', payload);
-                const response = result.handled;
+                const result = await bigisubRequest('tv/subscribe/', 'POST', payload);
                 
                 hidePending();
                 
-                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
+                if (result.success || result.status === 'success') {
+                    // Success - deduct from user balance
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    recordProfit(
-                        `${currentProvider.toUpperCase()} - ${selectedPackage}`,
-                        selectedCost,
-                        selectedPrice,
-                        `Card: ${cardNumber}`
-                    );
-                    
+                    // Record transaction
                     const transaction = {
                         type: `${currentProvider.toUpperCase()} - ${selectedPackage}`,
                         amount: `-₦${selectedPrice}`,
@@ -477,13 +448,16 @@
                     
                     showSuccess(`✅ Success! ${selectedPackage} subscribed on ${cardNumber}`);
                     
+                    // Reset selection
                     selectedPackage = null;
-                    updatePurchaseButton();
+                    document.getElementById('purchaseBtn').disabled = true;
+                    document.getElementById('purchaseBtn').textContent = 'Select a package';
+                    document.querySelectorAll('.plan-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
                     
-                } else if (response.isPending) {
-                    showPending('Subscription processing. Please wait...');
                 } else {
-                    showError(response.message);
+                    showError(result.message || result.error || 'Subscription failed');
                 }
                 
             } catch (error) {
@@ -493,7 +467,14 @@
             }
         }
 
-        document.getElementById('cardNumber').addEventListener('input', updatePurchaseButton);
+        // Card input listener
+        document.getElementById('cardNumber').addEventListener('input', function() {
+            if (selectedPackage && this.value.length >= 6) {
+                document.getElementById('purchaseBtn').disabled = false;
+            } else if (selectedPackage) {
+                document.getElementById('purchaseBtn').disabled = true;
+            }
+        });
     </script>
 </body>
 </html>
