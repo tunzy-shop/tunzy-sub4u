@@ -65,55 +65,34 @@
             margin: 20px 0 15px;
         }
 
-        .network-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 15px 0;
+        .network-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
-        .network-btn {
+        .network-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px;
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .network-btn:hover {
-            border-color: #0066cc;
-            transform: translateY(-2px);
-        }
-
-        .network-btn.selected {
-            border-color: #0066cc;
-            background: #e6f0ff;
-        }
-
-        .network-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #0066cc;
-            background: white;
-        }
-
-        .network-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .network-name {
             font-weight: 600;
-            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .network-tab:hover {
+            border-color: #0066cc;
+        }
+
+        .network-tab.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
         }
 
         .phone-input {
@@ -127,7 +106,6 @@
             color: #333;
         }
 
-        /* ✅ NO DEFAULT NUMBER - EMPTY PLACEHOLDER ONLY */
         .phone-input input {
             width: 100%;
             padding: 15px;
@@ -180,13 +158,6 @@
             font-size: 16px;
         }
 
-        .gift-option {
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .purchase-btn {
             width: 100%;
             padding: 18px;
@@ -202,6 +173,11 @@
 
         .purchase-btn:hover {
             background: #004d99;
+        }
+
+        .purchase-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
 
         .error-message {
@@ -233,7 +209,7 @@
     </style>
 </head>
 <body>
-    <script src="js/vtpass-config.js"></script>
+    <script src="js/bigisub-config.js"></script>
     
     <div class="app-container">
         <div class="header">
@@ -252,192 +228,177 @@
             <div class="pending-message" id="pendingMessage"></div>
 
             <div class="section-title">Select Network</div>
-            <div class="network-grid">
-                <div class="network-btn selected" onclick="selectNetwork('mtn')" id="airnet-mtn">
-                    <div class="network-image">
-                        <img src="assets/networks/mtn-logo.png" alt="MTN">
-                    </div>
-                    <span class="network-name">MTN</span>
-                </div>
-                <div class="network-btn" onclick="selectNetwork('glo')" id="airnet-glo">
-                    <div class="network-image">
-                        <img src="assets/networks/glo-logo.png" alt="GLO">
-                    </div>
-                    <span class="network-name">GLO</span>
-                </div>
-                <div class="network-btn" onclick="selectNetwork('airtel')" id="airnet-airtel">
-                    <div class="network-image">
-                        <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL">
-                    </div>
-                    <span class="network-name">AIRTEL</span>
-                </div>
-                <div class="network-btn" onclick="selectNetwork('9mobile')" id="airnet-9mobile">
-                    <div class="network-image">
-                        <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE">
-                    </div>
-                    <span class="network-name">9MOBILE</span>
-                </div>
-            </div>
+            <div class="network-tabs" id="networkTabs"></div>
 
             <div class="phone-input">
                 <label>Phone Number</label>
-                <!-- ✅ NO DEFAULT NUMBER - EMPTY -->
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number" value="">
-            </div>
-
-            <div class="gift-option">
-                <label>
-                    <input type="checkbox" id="isGift"> 🎁 Buy as gift
-                </label>
+                <input type="tel" id="phoneNumber" placeholder="Enter phone number">
             </div>
 
             <div class="section-title">Select Amount</div>
-            <div class="amount-presets">
-                <div class="amount-btn" onclick="selectAmount(100)">₦100</div>
-                <div class="amount-btn" onclick="selectAmount(200)">₦200</div>
-                <div class="amount-btn" onclick="selectAmount(500)">₦500</div>
-                <div class="amount-btn" onclick="selectAmount(1000)">₦1,000</div>
-                <div class="amount-btn" onclick="selectAmount(2000)">₦2,000</div>
-                <div class="amount-btn" onclick="selectAmount(5000)">₦5,000</div>
-            </div>
+            <div class="amount-presets" id="amountPresets"></div>
 
             <div class="custom-amount">
-                <input type="number" id="customAmount" placeholder="Or enter custom amount" min="50" max="50000" oninput="calculatePrice()">
+                <input type="number" id="customAmount" placeholder="Or enter custom amount" min="50" max="50000">
             </div>
 
-            <button class="purchase-btn" onclick="purchaseAirtime()">Buy Airtime</button>
+            <button class="purchase-btn" id="purchaseBtn" onclick="purchaseAirtime()" disabled>Select amount</button>
         </div>
     </div>
 
     <script>
-        const networkServiceMap = {
-            'mtn': VTPASS_CONFIG.services.MTN_AIRTIME,
-            'glo': VTPASS_CONFIG.services.GLO_AIRTIME,
-            'airtel': VTPASS_CONFIG.services.AIRTEL_AIRTIME,
-            '9mobile': VTPASS_CONFIG.services.NINEMOBILE_AIRTIME
-        };
-
-        const PROFIT_PER_AIRTIME = VTPASS_CONFIG.PROFIT.AIRTIME;
-
-        let currentNetwork = 'mtn';
+        // Network mapping for Bigisub
+        const networks = [
+            { id: 'mtn', name: 'MTN', networkId: 1 },
+            { id: 'glo', name: 'GLO', networkId: 2 },
+            { id: 'airtel', name: 'AIRTEL', networkId: 3 },
+            { id: '9mobile', name: '9MOBILE', networkId: 4 }
+        ];
+        
+        // Your profit margin for airtime (₦ per transaction)
+        const AIRTIME_PROFIT = 10;
+        
+        let currentNetworkId = 1;
         let selectedAmount = 0;
-        let sellingAmount = 0;
         let userBalance = 0;
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
+            loadNetworks();
+            loadAmountPresets();
+            
+            document.getElementById('customAmount').addEventListener('input', function() {
+                const amount = parseInt(this.value);
+                if (amount >= 50) {
+                    selectedAmount = amount;
+                    document.getElementById('purchaseBtn').disabled = false;
+                    const sellingPrice = amount + AIRTIME_PROFIT;
+                    document.getElementById('purchaseBtn').textContent = `Pay ₦${sellingPrice} for ₦${amount} airtime`;
+                } else if (this.value === '') {
+                    selectedAmount = 0;
+                    document.getElementById('purchaseBtn').disabled = true;
+                    document.getElementById('purchaseBtn').textContent = 'Select amount';
+                }
+            });
         });
 
-        function selectNetwork(network) {
-            currentNetwork = network;
-            document.querySelectorAll('.network-btn').forEach(btn => {
-                btn.classList.remove('selected');
+        // Load network tabs
+        function loadNetworks() {
+            const container = document.getElementById('networkTabs');
+            let html = '';
+            networks.forEach(net => {
+                html += `<div class="network-tab ${net.id === 'mtn' ? 'active' : ''}" onclick="switchNetwork(${net.networkId}, '${net.id}')">${net.name}</div>`;
             });
-            document.getElementById(`airnet-${network}`).classList.add('selected');
+            container.innerHTML = html;
         }
 
+        // Switch network
+        function switchNetwork(networkId, networkName) {
+            currentNetworkId = networkId;
+            document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Load amount presets
+        function loadAmountPresets() {
+            const amounts = [100, 200, 500, 1000, 2000, 5000];
+            const container = document.getElementById('amountPresets');
+            let html = '';
+            amounts.forEach(amt => {
+                html += `<div class="amount-btn" onclick="selectAmount(${amt})">₦${amt}</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Select amount from preset
         function selectAmount(amount) {
             selectedAmount = amount;
             document.getElementById('customAmount').value = amount;
-            calculatePrice();
+            document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
             
-            document.querySelectorAll('.amount-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.currentTarget.classList.add('selected');
+            const sellingPrice = amount + AIRTIME_PROFIT;
+            document.getElementById('purchaseBtn').disabled = false;
+            document.getElementById('purchaseBtn').textContent = `Pay ₦${sellingPrice} for ₦${amount} airtime`;
         }
 
-        function calculatePrice() {
-            const amount = parseInt(document.getElementById('customAmount').value) || selectedAmount;
-            if (amount >= 50) {
-                sellingAmount = amount + PROFIT_PER_AIRTIME;
-            }
-        }
-
+        // Show messages
         function showError(msg) {
-            document.getElementById('errorMessage').style.display = 'block';
-            document.getElementById('errorMessage').textContent = msg;
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('errorMessage').style.display = 'none';
+                errorDiv.style.display = 'none';
             }, 5000);
         }
 
         function showSuccess(msg) {
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('successMessage').textContent = msg;
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
+                successDiv.style.display = 'none';
             }, 5000);
         }
 
         function showPending(msg) {
-            document.getElementById('pendingMessage').style.display = 'block';
-            document.getElementById('pendingMessage').textContent = msg;
+            const pendingDiv = document.getElementById('pendingMessage');
+            pendingDiv.style.display = 'block';
+            pendingDiv.textContent = msg;
         }
 
         function hidePending() {
             document.getElementById('pendingMessage').style.display = 'none';
         }
 
+        // Purchase airtime - BIGISUB API CALL
         async function purchaseAirtime() {
             const phone = document.getElementById('phoneNumber').value;
-            const customAmount = document.getElementById('customAmount').value;
-            const isGift = document.getElementById('isGift').checked;
-            const recipientPhone = isGift ? phone : phone;
             
-            const costAmount = parseInt(customAmount) || selectedAmount;
-            sellingAmount = costAmount + PROFIT_PER_AIRTIME;
-            
-            if (!costAmount || costAmount < 50) {
-                showError('Please enter a valid amount (minimum ₦50)');
-                return;
-            }
-            
-            if (costAmount > 50000) {
-                showError('Maximum amount is ₦50,000');
+            if (!selectedAmount || selectedAmount < 50) {
+                showError('Please select or enter a valid amount (minimum ₦50)');
                 return;
             }
             
             if (!phone || phone.length < 11) {
-                showError('Please enter a valid phone number');
+                showError('Please enter a valid phone number (11 digits)');
                 return;
             }
             
-            if (userBalance < sellingAmount) {
-                showError('Insufficient balance');
+            const sellingPrice = selectedAmount + AIRTIME_PROFIT;
+            
+            if (userBalance < sellingPrice) {
+                showError('Insufficient balance. Please fund your wallet');
                 return;
             }
 
             showPending('Processing transaction...');
 
             try {
+                // BIGISUB API CALL for airtime
                 const payload = {
-                    serviceID: networkServiceMap[currentNetwork],
-                    amount: costAmount,
-                    phone: recipientPhone
+                    network: currentNetworkId,
+                    phone_number: phone,
+                    amount: selectedAmount,
+                    pin_code: BIGISUB_CONFIG.PIN_CODE
                 };
                 
-                const result = await vtpassApiCall('/pay', payload);
-                const response = result.handled;
+                const result = await bigisubRequest('airtime/purchase/', 'POST', payload);
                 
                 hidePending();
                 
-                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
-                    userBalance -= sellingAmount;
+                if (result.success || result.status === 'success') {
+                    // Success - deduct from user balance
+                    userBalance -= sellingPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    recordProfit(
-                        `${currentNetwork.toUpperCase()} Airtime`,
-                        costAmount,
-                        sellingAmount,
-                        `Phone: ${recipientPhone}`
-                    );
-                    
+                    // Record transaction
                     const transaction = {
-                        type: `${currentNetwork.toUpperCase()} Airtime`,
-                        amount: `-₦${sellingAmount}`,
+                        type: `Airtime - ₦${selectedAmount}`,
+                        amount: `-₦${sellingPrice}`,
                         date: new Date().toLocaleString()
                     };
                     
@@ -445,12 +406,17 @@
                     transactions.unshift(transaction);
                     localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
                     
-                    showSuccess(`✅ Success! ₦${costAmount} airtime sent to ${recipientPhone}`);
+                    showSuccess(`✅ Success! ₦${selectedAmount} airtime sent to ${phone}`);
                     
-                } else if (response.isPending) {
-                    showPending('Transaction processing. Please wait...');
+                    // Reset selection
+                    selectedAmount = 0;
+                    document.getElementById('customAmount').value = '';
+                    document.getElementById('purchaseBtn').disabled = true;
+                    document.getElementById('purchaseBtn').textContent = 'Select amount';
+                    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+                    
                 } else {
-                    showError(response.message);
+                    showError(result.message || result.error || 'Purchase failed');
                 }
                 
             } catch (error) {
