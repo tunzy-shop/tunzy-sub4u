@@ -65,64 +65,64 @@
             margin: 20px 0 15px;
         }
 
-        .network-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 15px 0;
+        .network-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
-        .network-btn {
+        .network-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px;
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .network-btn:hover {
-            border-color: #0066cc;
-            transform: translateY(-2px);
-        }
-
-        .network-btn.selected {
-            border-color: #0066cc;
-            background: #e6f0ff;
-        }
-
-        .network-image {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid #0066cc;
-            background: white;
-        }
-
-        .network-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .network-name {
             font-weight: 600;
-            font-size: 14px;
+            transition: all 0.3s;
         }
 
-        .sme-badge {
-            background: #ffc107;
-            color: #333;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
+        .network-tab:hover {
+            border-color: #0066cc;
+        }
+
+        .network-tab.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .category-tab {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .category-tab:hover {
+            border-color: #0066cc;
+        }
+
+        .category-tab.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
         }
 
         .phone-input {
@@ -136,7 +136,6 @@
             color: #333;
         }
 
-        /* ✅ NO DEFAULT NUMBER - EMPTY PLACEHOLDER ONLY */
         .phone-input input {
             width: 100%;
             padding: 15px;
@@ -148,26 +147,6 @@
         .phone-input input:focus {
             border-color: #0066cc;
             outline: none;
-        }
-
-        .gift-option {
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .gift-option label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .gift-option input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
         }
 
         .plans-grid {
@@ -193,15 +172,12 @@
 
         .plan-card:hover {
             border-color: #0066cc;
+            transform: translateY(-2px);
         }
 
         .plan-card.selected {
             border-color: #0066cc;
             background: #e6f0ff;
-        }
-
-        .plan-card.sme-plan {
-            border-left: 4px solid #ffc107;
         }
 
         .plan-name {
@@ -223,17 +199,22 @@
             color: #666;
         }
 
-        .plan-badge {
+        .category-badge {
             position: absolute;
             top: -8px;
-            right: 5px;
-            background: #ffc107;
-            color: #333;
+            left: 5px;
+            background: #28a745;
+            color: white;
             font-size: 9px;
             padding: 2px 6px;
             border-radius: 10px;
             font-weight: bold;
         }
+
+        .badge-sme { background: #ffc107; color: #333; }
+        .badge-gift { background: #17a2b8; color: white; }
+        .badge-social { background: #dc3545; color: white; }
+        .badge-corp { background: #6f42c1; color: white; }
 
         .purchase-btn {
             width: 100%;
@@ -286,7 +267,7 @@
     </style>
 </head>
 <body>
-    <script src="js/vtpass-config.js"></script>
+    <script src="js/bigisub-config.js"></script>
     
     <div class="app-container">
         <div class="header">
@@ -304,58 +285,18 @@
             <div class="success-message" id="successMessage"></div>
             <div class="pending-message" id="pendingMessage"></div>
 
-            <div class="section-title">Select Network</div>
-            <div class="network-grid" id="networkGrid">
-                <!-- MTN -->
-                <div class="network-btn" onclick="selectNetwork('mtn')" id="net-mtn">
-                    <div class="network-image">
-                        <img src="assets/networks/mtn-logo.png" alt="MTN">
-                    </div>
-                    <span class="network-name">MTN</span>
-                </div>
-                
-                <!-- GLO -->
-                <div class="network-btn" onclick="selectNetwork('glo')" id="net-glo">
-                    <div class="network-image">
-                        <img src="assets/networks/glo-logo.png" alt="GLO">
-                    </div>
-                    <span class="network-name">GLO</span>
-                    <span class="sme-badge">SME</span>
-                </div>
-                
-                <!-- Airtel -->
-                <div class="network-btn" onclick="selectNetwork('airtel')" id="net-airtel">
-                    <div class="network-image">
-                        <img src="assets/networks/airtel-logo.jpeg" alt="AIRTEL">
-                    </div>
-                    <span class="network-name">AIRTEL</span>
-                </div>
-                
-                <!-- 9mobile -->
-                <div class="network-btn" onclick="selectNetwork('9mobile')" id="net-9mobile">
-                    <div class="network-image">
-                        <img src="assets/networks/9mobile-logo.jpeg" alt="9MOBILE">
-                    </div>
-                    <span class="network-name">9MOBILE</span>
-                </div>
-            </div>
+            <!-- Network Tabs -->
+            <div class="network-tabs" id="networkTabs"></div>
+            
+            <!-- Category Tabs -->
+            <div class="category-tabs" id="categoryTabs"></div>
 
             <div class="phone-input">
                 <label>Phone Number</label>
-                <!-- ✅ NO DEFAULT NUMBER - EMPTY -->
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number" value="">
+                <input type="tel" id="phoneNumber" placeholder="Enter phone number">
             </div>
 
-            <div class="gift-option">
-                <label>
-                    <input type="checkbox" id="isGift"> 🎁 Buy as gift (for someone else)
-                </label>
-            </div>
-
-            <div class="section-title" id="plansTitle">Select Plan</div>
-            <div class="plans-grid" id="plansContainer">
-                <!-- Plans loaded by JavaScript -->
-            </div>
+            <div class="plans-grid" id="plansContainer"></div>
 
             <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>Select a plan</button>
         </div>
@@ -363,118 +304,185 @@
 
     <script>
         // ============================================
-        // DATA PLANS FROM VTPASS WITH PROFIT MARGINS
+        // BIGISUB DATA PLANS - FROM YOUR API RESPONSE
         // ============================================
         
+        // Your profit margin (₦ per plan)
+        const YOUR_PROFIT = 50;
+        
+        // Network mapping
+        const networkMap = {
+            'mtn': { name: 'MTN', networkId: 1, categories: ['All', 'SME', 'GIFTING', 'DataTransfer'] },
+            'glo': { name: 'GLO', networkId: 2, categories: ['All', 'SME', 'GIFTING'] },
+            'airtel': { name: 'AIRTEL', networkId: 3, categories: ['All', 'SME', 'GIFTING'] },
+            '9mobile': { name: '9MOBILE', networkId: 4, categories: ['All', 'DataTransfer', 'GIFTING'] }
+        };
+        
+        // Plans from your API response images
         const dataPlans = {
-            mtn: {
-                serviceId: VTPASS_CONFIG.services.MTN_DATA,
-                plans: [
-                    { code: 'mtn-10mb-100', name: '110MB Daily', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
-                    { code: 'mtn-50mb-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '2 Days' },
-                    { code: 'mtn-100mb-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
-                    { code: 'mtn-500mb-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
-                    { code: 'mtn-20hrs-1500', name: '6GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '7 Days' },
-                    { code: 'mtn-3gb-2500', name: '6GB', cost: 2500, sellingPrice: calculateDataPrice(2500), validity: '30 Days' },
-                    { code: 'mtn-data-3000', name: '8GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
-                    { code: 'mtn-1gb-3500', name: '10GB', cost: 3500, sellingPrice: calculateDataPrice(3500), validity: '30 Days' },
-                    { code: 'mtn-100hr-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
-                    { code: 'mtn-3gb-6000', name: '20GB', cost: 6000, sellingPrice: calculateDataPrice(6000), validity: '30 Days' },
-                    { code: 'mtn-40gb-10000', name: '40GB', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days' },
-                    { code: 'mtn-25gb-sme-10000', name: '25GB SME', cost: 10000, sellingPrice: calculateDataPrice(10000), validity: '30 Days', sme: true },
-                    { code: 'mtn-2-5gb-600', name: '2.5GB', cost: 600, sellingPrice: calculateDataPrice(600), validity: '2 Days' },
-                    { code: 'mtn-7gb-2000', name: '7GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '7 Days' }
-                ]
-            },
-            
-            glo: {
-                serviceId: VTPASS_CONFIG.services.GLO_DATA,
-                plans: [
-                    { code: 'glo100', name: '105MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '2 Days' },
-                    { code: 'glo200', name: '350MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '4 Days' },
-                    { code: 'glo500', name: '1.05GB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '14 Days' },
-                    { code: 'glo1000', name: '2.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
-                    { code: 'glo2000', name: '5.8GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
-                    { code: 'glo3000', name: '10GB', cost: 3000, sellingPrice: calculateDataPrice(3000), validity: '30 Days' },
-                    { code: 'glo-dg-70', name: '200MB SME', cost: 70, sellingPrice: calculateDataPrice(70), validity: '14 Days', sme: true },
-                    { code: 'glo-dg-320', name: '1GB SME', cost: 320, sellingPrice: calculateDataPrice(320), validity: '30 Days', sme: true },
-                    { code: 'glo-dg-640', name: '2GB SME', cost: 640, sellingPrice: calculateDataPrice(640), validity: '30 Days', sme: true },
-                    { code: 'glo-special-300', name: '1GB Special', cost: 300, sellingPrice: calculateDataPrice(300), validity: 'Special' }
-                ]
-            },
-            
-            airtel: {
-                serviceId: VTPASS_CONFIG.services.AIRTEL_DATA,
-                plans: [
-                    { code: 'airt-50', name: '25MB', cost: 50, sellingPrice: calculateDataPrice(50), validity: '1 Day' },
-                    { code: 'airt-100', name: '75MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
-                    { code: 'airt-200', name: '200MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '3 Days' },
-                    { code: 'airt-300', name: '350MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '7 Days' },
-                    { code: 'airt-500', name: '750MB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '14 Days' },
-                    { code: 'airt-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
-                    { code: 'airt-1500', name: '3GB', cost: 1500, sellingPrice: calculateDataPrice(1500), validity: '30 Days' },
-                    { code: 'airt-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
-                    { code: 'airt-400-1', name: '1.5GB', cost: 400, sellingPrice: calculateDataPrice(400), validity: '1 Day' }
-                ]
-            },
-            
-            '9mobile': {
-                serviceId: VTPASS_CONFIG.services.NINEMOBILE_DATA,
-                plans: [
-                    { code: 'eti-100', name: '100MB', cost: 100, sellingPrice: calculateDataPrice(100), validity: '1 Day' },
-                    { code: 'eti-200', name: '650MB', cost: 200, sellingPrice: calculateDataPrice(200), validity: '1 Day' },
-                    { code: 'eti-500', name: '500MB', cost: 500, sellingPrice: calculateDataPrice(500), validity: '30 Days' },
-                    { code: 'eti-1000', name: '1.5GB', cost: 1000, sellingPrice: calculateDataPrice(1000), validity: '30 Days' },
-                    { code: 'eti-2000', name: '4.5GB', cost: 2000, sellingPrice: calculateDataPrice(2000), validity: '30 Days' },
-                    { code: 'eti-5000', name: '15GB', cost: 5000, sellingPrice: calculateDataPrice(5000), validity: '30 Days' },
-                    { code: 'eti-300', name: '1GB + 100MB', cost: 300, sellingPrice: calculateDataPrice(300), validity: '1 Day' }
-                ]
-            }
+            mtn: [
+                { id: 199, name: '3.5GB', cost: 995, validity: 'Daily', type: 'GIFTING' },
+                { id: 210, name: '3.2GB', cost: 998, validity: '2 days', type: 'GIFTING' },
+                { id: 3, name: '2GB SME', cost: 1160, validity: '30 Days', type: 'SME' },
+                { id: 94, name: '2GB', cost: 1180, validity: '300 Days', type: 'DataTransfer' },
+                { id: 142, name: '2GB', cost: 1495, validity: '30 days', type: 'GIFTING' },
+                { id: 211, name: '3.5GB', cost: 1499, validity: '7 days', type: 'GIFTING' },
+                { id: 162, name: '1.5GB', cost: 640, validity: '2 days', type: 'GIFTING' },
+                { id: 2, name: '1GB SME', cost: 640, validity: '30 Days', type: 'SME' },
+                { id: 208, name: '2.5GB', cost: 645, validity: 'Daily', type: 'SME' },
+                { id: 93, name: '1GB', cost: 650, validity: '30 Days', type: 'DataTransfer' },
+                { id: 97, name: '500MB', cost: 355, validity: '7 days', type: 'DataTransfer' },
+                { id: 206, name: '1GB', cost: 425, validity: '7 days', type: 'DataTransfer' },
+                { id: 207, name: '1GB SME', cost: 435, validity: '7 days', type: 'SME' },
+                { id: 140, name: '500MB', cost: 489, validity: '7 days', type: 'GIFTING' },
+                { id: 141, name: '1.2GB', cost: 820, validity: '7 days', type: 'GIFTING' },
+                { id: 144, name: '3.5GB', cost: 2487, validity: '30 Days', type: 'GIFTING' },
+                { id: 145, name: '7GB', cost: 3485, validity: '30 Days', type: 'GIFTING' },
+                { id: 146, name: '10GB', cost: 4466, validity: '30 Days', type: 'GIFTING' },
+                { id: 147, name: '12.5GB', cost: 5460, validity: '30 Days', type: 'GIFTING' },
+                { id: 148, name: '16.5GB', cost: 6460, validity: '30 Days', type: 'GIFTING' },
+                { id: 149, name: '20GB', cost: 7455, validity: '30 Days', type: 'GIFTING' },
+                { id: 150, name: '25GB', cost: 8950, validity: '30 Days', type: 'GIFTING' },
+                { id: 152, name: '36GB', cost: 10940, validity: '30 Days', type: 'GIFTING' },
+                { id: 154, name: '65GB', cost: 15915, validity: '30 Days', type: 'GIFTING' },
+                { id: 155, name: '75GB', cost: 17885, validity: '30 Days', type: 'GIFTING' }
+            ],
+            airtel: [
+                { id: 105, name: '10GB SME', cost: 3450, validity: '30 days', type: 'SME' },
+                { id: 178, name: '10GB', cost: 3980, validity: '30 Days', type: 'GIFTING' },
+                { id: 92, name: '1.5GB', cost: 500, validity: '1 day', type: 'GIFTING' },
+                { id: 173, name: '2GB', cost: 600, validity: '2 days', type: 'GIFTING' },
+                { id: 172, name: '1GB', cost: 786, validity: '7 days', type: 'GIFTING' },
+                { id: 90, name: '75MB', cost: 74, validity: '1 day', type: 'GIFTING' },
+                { id: 91, name: '200MB', cost: 99, validity: '2 days', type: 'GIFTING' },
+                { id: 166, name: '300MB SME', cost: 125, validity: '1 day', type: 'SME' },
+                { id: 100, name: '600MB SME', cost: 230, validity: '2 days', type: 'SME' },
+                { id: 101, name: '1.5GB SME', cost: 475, validity: '1 day', type: 'SME' },
+                { id: 125, name: '13GB SME', cost: 5525, validity: '30 days', type: 'SME' },
+                { id: 126, name: '35GB SME', cost: 11645, validity: '30 Days', type: 'SME' },
+                { id: 170, name: '60GB SME', cost: 17849, validity: '30 Days', type: 'SME' }
+            ],
+            glo: [
+                { id: 79, name: '150MB', cost: 94, validity: '1 day', type: 'GIFTING' },
+                { id: 98, name: '200MB', cost: 95, validity: '14 days', type: 'GIFTING' },
+                { id: 71, name: '500MB', cost: 223, validity: '30', type: 'GIFTING' },
+                { id: 12, name: '3GB', cost: 473, validity: '1 month', type: 'GIFTING' },
+                { id: 109, name: '2.5GB SME', cost: 600, validity: '2 Days', type: 'SME' },
+                { id: 30, name: '2GB', cost: 890, validity: '30 Days', type: 'GIFTING' },
+                { id: 13, name: '3GB', cost: 969, validity: '30 Days', type: 'GIFTING' },
+                { id: 16, name: '10.8GB', cost: 2800, validity: '30days', type: 'GIFTING' },
+                { id: 75, name: '12.5GB', cost: 3845, validity: '30 days', type: 'GIFTING' },
+                { id: 77, name: '16GB', cost: 4770, validity: '30 Days', type: 'GIFTING' },
+                { id: 179, name: '28GB', cost: 7650, validity: '30 Days', type: 'GIFTING' },
+                { id: 180, name: '38GB', cost: 9590, validity: '300days', type: 'GIFTING' }
+            ],
+            '9mobile': [
+                { id: 185, name: '40MB', cost: 49, validity: '1 day', type: 'DataTransfer' },
+                { id: 187, name: '100MB', cost: 148, validity: '1 day', type: 'DataTransfer' },
+                { id: 188, name: '250MB', cost: 197, validity: '7 days', type: 'DataTransfer' },
+                { id: 190, name: '2GB', cost: 990, validity: '30 Days', type: 'DataTransfer' },
+                { id: 191, name: '2.3GB', cost: 1190, validity: '30 Days', type: 'DataTransfer' },
+                { id: 192, name: '4.5GB', cost: 1985, validity: '300Days', type: 'DataTransfer' },
+                { id: 193, name: '5.2GB', cost: 2477, validity: '30 Days', type: 'DataTransfer' },
+                { id: 194, name: '6.2GB', cost: 2972, validity: '30 Days', type: 'DataTransfer' },
+                { id: 195, name: '8.4GB', cost: 3964, validity: '30 Days', type: 'DataTransfer' },
+                { id: 196, name: '11.4GB', cost: 4964, validity: '30 Days', type: 'DataTransfer' }
+            ]
         };
 
         // State
         let currentNetwork = 'mtn';
+        let currentCategory = 'All';
         let selectedPlan = null;
-        let selectedCode = '';
+        let selectedPlanId = null;
         let selectedPrice = 0;
-        let selectedCost = 0;
         let userBalance = 0;
-        let currentRequestId = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            selectNetwork('mtn');
+            loadNetworks();
+            loadCategories();
+            loadPlans();
         });
 
-        // Select network
-        function selectNetwork(network) {
-            currentNetwork = network;
-            
-            document.querySelectorAll('.network-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            document.getElementById(`net-${network}`).classList.add('selected');
-            
-            loadPlans(network);
-            selectedPlan = null;
-            updatePurchaseButton();
+        // Load network tabs
+        function loadNetworks() {
+            const container = document.getElementById('networkTabs');
+            let html = '';
+            for (const [key, net] of Object.entries(networkMap)) {
+                html += `<div class="network-tab ${key === 'mtn' ? 'active' : ''}" onclick="switchNetwork('${key}')">${net.name}</div>`;
+            }
+            container.innerHTML = html;
         }
 
-        // Load plans for selected network
-        function loadPlans(network) {
+        // Switch network
+        function switchNetwork(network) {
+            currentNetwork = network;
+            currentCategory = 'All';
+            document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            loadCategories();
+            loadPlans();
+        }
+
+        // Load category tabs
+        function loadCategories() {
+            const categories = networkMap[currentNetwork].categories;
+            const container = document.getElementById('categoryTabs');
+            let html = '';
+            categories.forEach(cat => {
+                html += `<span class="category-tab ${cat === 'All' ? 'active' : ''}" onclick="switchCategory('${cat}')">${cat}</span>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Switch category
+        function switchCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            loadPlans();
+        }
+
+        // Load plans based on network and category
+        function loadPlans() {
             const container = document.getElementById('plansContainer');
-            const networkPlans = dataPlans[network].plans;
+            const allPlans = dataPlans[currentNetwork];
+            
+            let filtered = allPlans;
+            if (currentCategory !== 'All') {
+                filtered = allPlans.filter(plan => plan.type === currentCategory);
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No plans in this category</div>';
+                return;
+            }
             
             let html = '';
-            networkPlans.forEach(plan => {
-                const isSME = plan.sme || false;
+            filtered.forEach(plan => {
+                const sellingPrice = plan.cost + YOUR_PROFIT;
+                let badgeClass = '';
+                let badgeText = '';
+                
+                if (plan.type === 'SME') {
+                    badgeClass = 'badge-sme';
+                    badgeText = 'SME';
+                } else if (plan.type === 'GIFTING') {
+                    badgeClass = 'badge-gift';
+                    badgeText = 'GIFT';
+                } else if (plan.type === 'DataTransfer') {
+                    badgeClass = 'badge-corp';
+                    badgeText = 'DATA';
+                }
+                
                 html += `
-                    <div class="plan-card ${isSME ? 'sme-plan' : ''}" onclick="selectPlan('${plan.code}', '${plan.name}', ${plan.sellingPrice}, ${plan.cost})">
-                        ${isSME ? '<span class="plan-badge">SME</span>' : ''}
+                    <div class="plan-card" onclick="selectPlan(${plan.id}, '${plan.name}', ${sellingPrice})">
+                        ${badgeText ? `<span class="category-badge ${badgeClass}">${badgeText}</span>` : ''}
                         <div class="plan-name">${plan.name}</div>
-                        <div class="plan-price">₦${plan.sellingPrice}</div>
+                        <div class="plan-price">₦${sellingPrice}</div>
                         <div class="plan-validity">${plan.validity}</div>
                     </div>
                 `;
@@ -484,73 +492,61 @@
         }
 
         // Select plan
-        function selectPlan(code, name, price, cost) {
-            selectedCode = code;
+        function selectPlan(id, name, price) {
+            selectedPlanId = id;
             selectedPlan = name;
             selectedPrice = price;
-            selectedCost = cost;
             
             document.querySelectorAll('.plan-card').forEach(card => {
                 card.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
             
-            updatePurchaseButton();
-        }
-
-        // Update purchase button
-        function updatePurchaseButton() {
             const btn = document.getElementById('purchaseBtn');
-            const phone = document.getElementById('phoneNumber').value;
-            
-            if (selectedPlan && phone.length >= 11) {
-                btn.disabled = false;
-                btn.textContent = `Pay ₦${selectedPrice} for ${selectedPlan}`;
-            } else {
-                btn.disabled = true;
-                btn.textContent = 'Select a plan';
-            }
+            btn.disabled = false;
+            btn.textContent = `Pay ₦${price} for ${name}`;
         }
 
         // Show messages
         function showError(msg) {
-            document.getElementById('errorMessage').style.display = 'block';
-            document.getElementById('errorMessage').textContent = msg;
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('errorMessage').style.display = 'none';
+                errorDiv.style.display = 'none';
             }, 5000);
         }
 
         function showSuccess(msg) {
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('successMessage').textContent = msg;
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.textContent = msg;
             setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
+                successDiv.style.display = 'none';
             }, 5000);
         }
 
         function showPending(msg) {
-            document.getElementById('pendingMessage').style.display = 'block';
-            document.getElementById('pendingMessage').textContent = msg;
+            const pendingDiv = document.getElementById('pendingMessage');
+            pendingDiv.style.display = 'block';
+            pendingDiv.textContent = msg;
         }
 
         function hidePending() {
             document.getElementById('pendingMessage').style.display = 'none';
         }
 
-        // Purchase data
+        // Purchase data - BIGISUB API CALL
         async function purchaseData() {
             const phone = document.getElementById('phoneNumber').value;
-            const isGift = document.getElementById('isGift').checked;
-            const recipientPhone = isGift ? phone : phone;
             
-            if (!selectedPlan) {
+            if (!selectedPlanId) {
                 showError('Please select a plan');
                 return;
             }
             
             if (!phone || phone.length < 11) {
-                showError('Please enter a valid phone number');
+                showError('Please enter a valid phone number (11 digits)');
                 return;
             }
             
@@ -562,33 +558,26 @@
             showPending('Processing transaction...');
 
             try {
+                // BIGISUB API CALL
                 const payload = {
-                    serviceID: dataPlans[currentNetwork].serviceId,
-                    billersCode: recipientPhone,
-                    variation_code: selectedCode,
-                    amount: selectedCost,
-                    phone: recipientPhone
+                    plan: selectedPlanId,
+                    phone_number: phone,
+                    pin_code: BIGISUB_CONFIG.PIN_CODE
                 };
                 
-                const result = await vtpassApiCall('/pay', payload);
-                const response = result.handled;
+                const result = await bigisubRequest('purchase/', 'POST', payload);
                 
                 hidePending();
                 
-                if (response.isSuccess && result.content?.transactions?.status === 'delivered') {
+                if (result.success || result.status === 'success') {
+                    // Success - deduct from user balance
                     userBalance -= selectedPrice;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
-                    recordProfit(
-                        `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
-                        selectedCost,
-                        selectedPrice,
-                        `Phone: ${recipientPhone}`
-                    );
-                    
+                    // Record transaction
                     const transaction = {
-                        type: `${currentNetwork.toUpperCase()} Data - ${selectedPlan}`,
+                        type: `${networkMap[currentNetwork].name} Data - ${selectedPlan}`,
                         amount: `-₦${selectedPrice}`,
                         date: new Date().toLocaleString()
                     };
@@ -597,18 +586,21 @@
                     transactions.unshift(transaction);
                     localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
                     
-                    showSuccess(`✅ Success! ${selectedPlan} data sent to ${recipientPhone}`);
+                    showSuccess(`✅ Success! ${selectedPlan} data sent to ${phone}`);
                     
+                    // Reset selection
+                    selectedPlanId = null;
                     selectedPlan = null;
-                    updatePurchaseButton();
+                    document.getElementById('purchaseBtn').disabled = true;
+                    document.getElementById('purchaseBtn').textContent = 'Select a plan';
                     
-                } else if (response.isPending) {
-                    showPending('Transaction processing. Please wait...');
-                    currentRequestId = result.requestId;
-                    setTimeout(() => requeryTransaction(currentRequestId), 10000);
+                    // Remove selected class from plan cards
+                    document.querySelectorAll('.plan-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
                     
                 } else {
-                    showError(response.message);
+                    showError(result.message || result.error || 'Purchase failed');
                 }
                 
             } catch (error) {
@@ -618,29 +610,14 @@
             }
         }
 
-        // Requery transaction
-        async function requeryTransaction(requestId) {
-            if (!requestId) return;
-            
-            try {
-                const result = await requeryTransaction(requestId);
-                
-                if (result.content?.transactions?.status === 'delivered') {
-                    hidePending();
-                    showSuccess('✅ Transaction completed successfully!');
-                } else if (result.content?.transactions?.status === 'pending') {
-                    setTimeout(() => requeryTransaction(requestId), 15000);
-                } else {
-                    hidePending();
-                    showError('Transaction failed. Contact support');
-                }
-                
-            } catch (error) {
-                console.error('Requery failed:', error);
+        // Phone input listener to re-enable button if plan selected
+        document.getElementById('phoneNumber').addEventListener('input', function() {
+            if (selectedPlanId && this.value.length >= 11) {
+                document.getElementById('purchaseBtn').disabled = false;
+            } else if (selectedPlanId) {
+                document.getElementById('purchaseBtn').disabled = true;
             }
-        }
-
-        document.getElementById('phoneNumber').addEventListener('input', updatePurchaseButton);
+        });
     </script>
 </body>
 </html>
