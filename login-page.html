@@ -138,15 +138,6 @@
             display: none;
         }
 
-        .success-message {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
         .loading {
             display: none;
             text-align: center;
@@ -164,7 +155,6 @@
             <h1>TUNZY SUB 4 YOU</h1>
 
             <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
             <div class="loading" id="loading">Processing...</div>
 
             <form id="loginForm">
@@ -196,13 +186,18 @@
         // Check if already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // User is signed in
                 localStorage.setItem('currentUser', JSON.stringify({
                     email: user.email,
-                    name: user.displayName || user.email.split('@')[0]
+                    name: user.displayName || user.email.split('@')[0],
+                    uid: user.uid
                 }));
                 localStorage.setItem('userName', user.displayName || user.email.split('@')[0]);
                 localStorage.setItem('userEmail', user.email);
+                
+                if (localStorage.getItem('userBalance') === null) {
+                    localStorage.setItem('userBalance', '0');
+                }
+                
                 window.location.href = 'dashboard.html';
             }
         });
@@ -215,7 +210,6 @@
             const password = document.getElementById('password').value;
             
             document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
             
             try {
@@ -224,25 +218,18 @@
                 
                 localStorage.setItem('currentUser', JSON.stringify({
                     email: user.email,
-                    name: user.displayName || user.email.split('@')[0]
+                    name: user.displayName || user.email.split('@')[0],
+                    uid: user.uid
                 }));
                 localStorage.setItem('userName', user.displayName || user.email.split('@')[0]);
                 localStorage.setItem('userEmail', user.email);
                 
-                // Get balance from localStorage or create new
-                let balance = localStorage.getItem('userBalance');
-                if (balance === null) {
-                    balance = '0';
-                    localStorage.setItem('userBalance', balance);
+                if (localStorage.getItem('userBalance') === null) {
+                    localStorage.setItem('userBalance', '0');
                 }
                 
                 document.getElementById('loading').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                window.location.href = 'dashboard.html';
                 
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
@@ -255,13 +242,17 @@
                     errorMessage = 'Incorrect password';
                 } else if (error.code === 'auth/too-many-requests') {
                     errorMessage = 'Too many failed attempts. Try again later';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Check your internet connection';
                 }
                 
                 document.getElementById('errorMessage').textContent = errorMessage;
             }
         });
 
-        // Forgot password (sends email)
+        // Forgot password
         async function resetPassword() {
             const email = document.getElementById('email').value;
             
