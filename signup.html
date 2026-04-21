@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - TUNZY SUB 4 YOU</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -33,26 +35,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
-        .back-to-slider {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .back-to-slider a {
-            color: #666;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .back-to-slider a:hover {
-            color: #0066cc;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
         .logo-circle {
             width: 80px;
             height: 80px;
@@ -64,7 +46,6 @@
             justify-content: center;
             overflow: hidden;
             border: 3px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .logo-circle img {
@@ -73,15 +54,11 @@
             object-fit: cover;
         }
 
-        .logo h1 {
+        h1 {
             color: #0066cc;
+            text-align: center;
+            margin-bottom: 30px;
             font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .logo p {
-            color: #666;
-            font-size: 14px;
         }
 
         .form-group {
@@ -118,13 +95,11 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
             margin: 20px 0;
         }
 
         .signup-btn:hover {
             background: #004d99;
-            transform: translateY(-2px);
         }
 
         .login-link {
@@ -146,24 +121,35 @@
             margin-bottom: 20px;
             display: none;
         }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+            color: #0066cc;
+        }
     </style>
 </head>
 <body>
     <div class="signup-container">
         <div class="signup-box">
-            <div class="back-to-slider">
-                <a href="index.html">← Back to Welcome</a>
+            <div class="logo-circle">
+                <img src="assets/my-logo.jpg" alt="TUNZY">
             </div>
-
-            <div class="logo">
-                <div class="logo-circle">
-                    <img src="assets/my-logo.jpg" alt="TUNZY">
-                </div>
-                <h1>TUNZY SUB 4 YOU</h1>
-                <p>Create your account</p>
-            </div>
+            <h1>TUNZY SUB 4 YOU</h1>
 
             <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            <div class="loading" id="loading">Creating account...</div>
 
             <form id="signupForm">
                 <div class="form-group">
@@ -200,8 +186,9 @@
         </div>
     </div>
 
+    <script src="js/firebase-config.js"></script>
     <script>
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('name').value;
@@ -211,6 +198,7 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
             
             if (!name || !email || !phone || !password) {
                 showError('All fields are required');
@@ -227,28 +215,61 @@
                 return;
             }
             
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const existingUser = users.find(u => u.email === email);
+            document.getElementById('loading').style.display = 'block';
             
-            if (existingUser) {
-                showError('Email already registered');
-                return;
+            try {
+                // Create user in Firebase
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Update profile with name
+                await user.updateProfile({
+                    displayName: name
+                });
+                
+                // Save user data to localStorage
+                localStorage.setItem('currentUser', JSON.stringify({
+                    email: email,
+                    name: name
+                }));
+                localStorage.setItem('userName', name);
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userBalance', '0');
+                
+                // Save to your users list (keep existing structure)
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    password: password,
+                    balance: 0,
+                    created: new Date().toISOString()
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('successMessage').textContent = 'Account created successfully! Redirecting...';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+                
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                let errorMessage = 'Signup failed';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Email already registered';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password is too weak';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address';
+                }
+                
+                showError(errorMessage);
             }
-            
-            const newUser = {
-                name: name,
-                email: email,
-                phone: phone,
-                password: password,
-                balance: 0,
-                created: new Date().toISOString()
-            };
-            
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            alert('✅ Account created successfully! Please login.');
-            window.location.href = 'login-page.html';
         });
 
         function showError(message) {
