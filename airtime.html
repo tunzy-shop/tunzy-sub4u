@@ -469,7 +469,7 @@
             document.getElementById('pendingBox').style.display = 'none';
         }
 
-        // Purchase airtime - EXACTLY LIKE YOUR WORKING CURL COMMAND
+        // Purchase airtime - EXACT MATCH TO YOUR WORKING curl COMMAND
         async function purchaseAirtime() {
             const phone = document.getElementById('phoneNumber').value;
             
@@ -490,27 +490,29 @@
 
             showPending('Processing transaction...');
 
+            // --- THE CRITICAL FIX IS HERE ---
+            // Create the payload EXACTLY as your working curl command does
+            const payload = {
+                network: currentNetworkId,              // e.g., 1 for MTN
+                phone_number: phone,                    // The phone number string
+                amount: selectedAmount.toString(),      // Amount as a string, e.g., "50"
+                airtime_type: "vtu",                   // This field MUST be exactly "vtu"
+                pin: BIGISUB_CONFIG.PIN_CODE           // Your 4-digit PIN as a string
+            };
+            
+            console.log('Sending payload to Bigisub (should match curl):', payload);
+            
+            // Use the API endpoint that matches your curl command
+            const endpoint = 'vtu/airtime/purchase/';
+            
             try {
-                // EXACT PAYLOAD FROM YOUR WORKING CURL COMMAND
-                const payload = {
-                    network: currentNetworkId,
-                    phone_number: phone,
-                    amount: selectedAmount.toString(),
-                    airtime_type: "vtu",
-                    pin: BIGISUB_CONFIG.PIN_CODE
-                };
-                
-                console.log('Sending to Bigisub:', payload);
-                
-                const result = await bigisubRequest('vtu/airtime/purchase/', 'POST', payload);
-                
+                const result = await bigisubRequest(endpoint, 'POST', payload);
                 console.log('Bigisub Response:', result);
                 
                 hidePending();
                 
-                // Check if success is true
                 if (result.success === true) {
-                    // Success - deduct from user balance
+                    // --- SUCCESS ---
                     userBalance -= selectedAmount;
                     localStorage.setItem('userBalance', userBalance);
                     document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
@@ -528,7 +530,7 @@
                     
                     showSuccess(`✅ Success! ₦${selectedAmount.toLocaleString()} airtime sent to ${phone}\n\nReference: ${result.data?.reference || 'N/A'}`);
                     
-                    // Reset selection
+                    // Reset the form
                     selectedAmount = 0;
                     document.getElementById('customAmount').value = '';
                     document.getElementById('purchaseBtn').disabled = true;
@@ -536,27 +538,20 @@
                     document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
                     
                 } else {
-                    // Show the error message from API
+                    // --- FAILURE ---
                     let errorMsg = result.message || 'Purchase failed';
-                    
-                    // Check if there are detailed errors
                     if (result.errors) {
                         const errors = Object.values(result.errors);
                         if (errors.length > 0) {
-                            if (Array.isArray(errors[0])) {
-                                errorMsg = errors[0][0] || errorMsg;
-                            } else {
-                                errorMsg = errors[0] || errorMsg;
-                            }
+                            errorMsg = Array.isArray(errors[0]) ? errors[0][0] : errors[0];
                         }
                     }
-                    
                     showError(errorMsg);
                 }
                 
             } catch (error) {
                 hidePending();
-                console.error('Error:', error);
+                console.error('Fetch Error:', error);
                 showError('Network error. Please check your connection and try again.');
             }
         }
