@@ -309,7 +309,7 @@
 
             <div class="phone-input">
                 <label>Phone Number</label>
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number">
+                <input type="tel" id="phoneNumber" placeholder="Enter phone number" value="09067345425">
             </div>
 
             <div class="section-title">Select Amount</div>
@@ -359,14 +359,12 @@
         let currentNetworkId = 1;
         let selectedAmount = 0;
         let userBalance = 0;
-        let userEmail = '';
 
         // Check authentication
         auth.onAuthStateChanged((user) => {
             if (!user) {
                 window.location.href = 'login-page.html';
             } else {
-                userEmail = user.email;
                 loadUserData();
             }
         });
@@ -396,7 +394,7 @@
             let html = '';
             networks.forEach(net => {
                 html += `
-                    <div class="network-tab ${net.id === 'mtn' ? 'active' : ''}" onclick="switchNetwork(${net.networkId}, '${net.id}')">
+                    <div class="network-tab ${net.id === 'mtn' ? 'active' : ''}" onclick="switchNetwork(${net.networkId})">
                         <div class="network-logo-box">
                             <img src="${net.image}" alt="${net.name}" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=${net.name.charAt(0)}'">
                         </div>
@@ -407,10 +405,10 @@
             container.innerHTML = html;
         }
 
-        function switchNetwork(networkId, networkName) {
+        function switchNetwork(networkId) {
             currentNetworkId = networkId;
             document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.closest('.network-tab').classList.add('active');
+            event.currentTarget.closest('.network-tab').classList.add('active');
         }
 
         function loadAmountPresets() {
@@ -471,7 +469,7 @@
             document.getElementById('pendingBox').style.display = 'none';
         }
 
-        // Purchase airtime - CORRECT BIGISUB API ENDPOINT
+        // Purchase airtime - EXACTLY LIKE YOUR WORKING CURL COMMAND
         async function purchaseAirtime() {
             const phone = document.getElementById('phoneNumber').value;
             
@@ -493,7 +491,7 @@
             showPending('Processing transaction...');
 
             try {
-                // CORRECT ENDPOINT: /api/v2/vtu/airtime/purchase/
+                // EXACT PAYLOAD FROM YOUR WORKING CURL COMMAND
                 const payload = {
                     network: currentNetworkId,
                     phone_number: phone,
@@ -510,23 +508,27 @@
                 
                 hidePending();
                 
+                // Check if success is true
                 if (result.success === true) {
                     // Success - deduct from user balance
                     userBalance -= selectedAmount;
                     localStorage.setItem('userBalance', userBalance);
+                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
                     
                     const transaction = {
                         type: `Airtime - ₦${selectedAmount.toLocaleString()}`,
                         amount: `-₦${selectedAmount.toLocaleString()}`,
-                        date: new Date().toLocaleString()
+                        date: new Date().toLocaleString(),
+                        reference: result.data?.reference || 'N/A'
                     };
                     
                     let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
                     transactions.unshift(transaction);
                     localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
                     
-                    showSuccess(`✅ Success! ₦${selectedAmount.toLocaleString()} airtime sent to ${phone}`);
+                    showSuccess(`✅ Success! ₦${selectedAmount.toLocaleString()} airtime sent to ${phone}\n\nReference: ${result.data?.reference || 'N/A'}`);
                     
+                    // Reset selection
                     selectedAmount = 0;
                     document.getElementById('customAmount').value = '';
                     document.getElementById('purchaseBtn').disabled = true;
@@ -541,7 +543,11 @@
                     if (result.errors) {
                         const errors = Object.values(result.errors);
                         if (errors.length > 0) {
-                            errorMsg = errors[0][0] || errorMsg;
+                            if (Array.isArray(errors[0])) {
+                                errorMsg = errors[0][0] || errorMsg;
+                            } else {
+                                errorMsg = errors[0] || errorMsg;
+                            }
                         }
                     }
                     
