@@ -3,9 +3,9 @@
 // ============================================
 
 const BIGISUB_CONFIG = {
-    TOKEN: 'ed27cc939ed9475a3b7e6c3ade328d72fa956ad6',
+    TOKEN: 'ed27cc939ed9475a3b76e63ade328d72fa956ad6',
     BASE_URL: 'https://api.bigisub.ng/api/v2/',
-    PIN_CODE: '2010'  // 🔴 YOUR PIN FROM THE SCREENSHOT
+    PIN_CODE: '2010'  // Your PIN from the screenshot
 };
 
 async function bigisubRequest(endpoint, method = 'GET', data = null) {
