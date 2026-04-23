@@ -1,560 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airtime - TUNZY SUB 4 YOU</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-        }
-
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: #0066cc;
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .back-btn {
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-            text-decoration: none;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .balance-info {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            border: 1px solid #e0e0e0;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0066cc;
-            margin: 20px 0 15px;
-        }
-
-        .network-tabs {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-
-        .network-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            opacity: 0.7;
-        }
-
-        .network-tab:hover {
-            opacity: 1;
-            transform: translateY(-3px);
-        }
-
-        .network-tab.active {
-            opacity: 1;
-        }
-
-        .network-logo-box {
-            width: 70px;
-            height: 70px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .network-tab.active .network-logo-box {
-            border-color: #0066cc;
-            background: #e6f0ff;
-        }
-
-        .network-logo-box img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
-        }
-
-        .network-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .network-tab.active .network-name {
-            color: #0066cc;
-        }
-
-        .phone-input {
-            margin: 20px 0;
-        }
-
-        .phone-input label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .phone-input input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .phone-input input:focus {
-            border-color: #0066cc;
-            outline: none;
-        }
-
-        .amount-presets {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .amount-btn {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .amount-btn:hover {
-            border-color: #0066cc;
-        }
-
-        .amount-btn.selected {
-            border-color: #0066cc;
-            background: #0066cc;
-            color: white;
-        }
-
-        .custom-amount {
-            margin: 20px 0;
-        }
-
-        .custom-amount input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .purchase-btn {
-            width: 100%;
-            padding: 18px;
-            background: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-
-        .purchase-btn:hover {
-            background: #004d99;
-        }
-
-        .purchase-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Message Boxes */
-        .message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message-box.error {
-            border-top: 5px solid #dc3545;
-        }
-
-        .message-box.success {
-            border-top: 5px solid #28a745;
-        }
-
-        .message-box.pending {
-            border-top: 5px solid #ffc107;
-        }
-
-        .message-icon {
-            font-size: 50px;
-        }
-
-        .message-title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .message-text {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .message-btn {
-            background: #0066cc;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .message-btn:hover {
-            background: #004d99;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airtime - TUNZY SUB 4 YOU</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .amount-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 0 16px;
+    margin-bottom: 6px;
+  }
+  .amount-btn {
+    background: #f0f4f8;
+    border: 2px solid #d0d8e4;
+    border-radius: 12px;
+    padding: 14px 6px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    color: #333;
+    transition: all 0.2s;
+  }
+  .amount-btn:hover { border-color: #0066cc; color: #0066cc; }
+  .amount-btn.selected {
+    border-color: #0066cc;
+    background: #0066cc;
+    color: white;
+  }
+  .custom-amount {
+    padding: 0 16px;
+    margin: 10px 0 4px;
+  }
+  .custom-amount input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #d0d8e4;
+    border-radius: 12px;
+    font-size: 16px;
+    background: #f8fafc;
+    color: #111;
+  }
+  .custom-amount input:focus {
+    border-color: #0066cc;
+    outline: none;
+    background: #fff;
+  }
+</style>
 </head>
 <body>
-    <script src="js/firebase-config.js"></script>
-    <script src="js/bigisub-config.js"></script>
-    
-    <div class="app-container">
-        <div class="header">
-            <a href="dashboard.html" class="back-btn">←</a>
-            <h1>Airtime</h1>
-        </div>
 
-        <div class="container">
-            <div class="balance-info">
-                <span>Your Balance</span>
-                <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
-            </div>
+<!-- SPINNER -->
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="spinner-box">
+    <div class="spinner"></div>
+    <div class="spinner-text">Processing transaction…</div>
+  </div>
+</div>
 
-            <div class="section-title">Select Network</div>
-            <div class="network-tabs" id="networkTabs"></div>
+<!-- TOAST -->
+<div class="toast-overlay" id="toastOverlay">
+  <div class="toast-box">
+    <div class="toast-icon" id="toastIcon">✅</div>
+    <div class="toast-title" id="toastTitle">Success!</div>
+    <div class="toast-msg" id="toastMsg"></div>
+    <button class="toast-btn" id="toastBtn" onclick="closeToast()">OK</button>
+  </div>
+</div>
 
-            <div class="phone-input">
-                <label>Phone Number</label>
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number" value="09067345425">
-            </div>
+<div class="app-container">
 
-            <div class="section-title">Select Amount</div>
-            <div class="amount-presets" id="amountPresets"></div>
+  <div class="header">
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Buy Airtime</h1>
+  </div>
 
-            <div class="custom-amount">
-                <input type="number" id="customAmount" placeholder="Or enter custom amount" min="50" max="50000">
-            </div>
+  <div class="balance-info" style="margin-top:14px;">
+    <span>💰 Your Balance</span>
+    <span id="balanceDisplay">₦0.00</span>
+  </div>
 
-            <button class="purchase-btn" id="purchaseBtn" onclick="purchaseAirtime()" disabled>Select amount</button>
-        </div>
+  <div class="section-title">Select Network</div>
+  <div class="network-tabs" id="networkTabs"></div>
+
+  <div class="phone-input">
+    <label>📱 Phone Number</label>
+    <input type="tel" id="phoneNumber" placeholder="e.g. 08012345678" maxlength="11">
+  </div>
+
+  <div class="section-title">Select Amount</div>
+  <div class="amount-presets" id="amountPresets"></div>
+
+  <div class="custom-amount">
+    <input type="number" id="customAmount" placeholder="Or enter custom amount (min ₦50)" min="50" max="50000">
+  </div>
+
+  <button class="purchase-btn" id="purchaseBtn" onclick="purchaseAirtime()" disabled>
+    Select amount
+  </button>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
+  <a href="history.html"   class="nav-item"><span class="nav-icon">🕐</span>History</a>
+  <a href="buy-data.html"  class="nav-item"><span class="nav-icon">📶</span>Data</a>
+  <a href="support.html"   class="nav-item"><span class="nav-icon">🎧</span>Support</a>
+  <a href="profile.html"   class="nav-item"><span class="nav-icon">👤</span>Profile</a>
+</nav>
+
+<script src="js/bigisub-config.js"></script>
+<script>
+
+const networks = [
+  { id: 'mtn',     name: 'MTN',    networkId: 1, image: 'assets/networks/mtn-logo.png' },
+  { id: 'glo',     name: 'GLO',    networkId: 2, image: 'assets/networks/glo-logo.png' },
+  { id: 'airtel',  name: 'AIRTEL', networkId: 3, image: 'assets/networks/airtel-logo.jpeg' },
+  { id: '9mobile', name: '9MOBILE',networkId: 4, image: 'assets/networks/9mobile-logo.jpeg' }
+];
+
+let currentNetworkId = 1;
+let selectedAmount   = 0;
+let userBalance      = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+  userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+  document.getElementById('balanceDisplay').textContent = '₦' + userBalance.toLocaleString() + '.00';
+  loadNetworks();
+  loadAmountPresets();
+
+  document.getElementById('customAmount').addEventListener('input', function () {
+    const amt = parseInt(this.value);
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+    if (amt >= 50) {
+      selectedAmount = amt;
+      updateBtn();
+    } else {
+      selectedAmount = 0;
+      updateBtn();
+    }
+  });
+
+  document.getElementById('phoneNumber').addEventListener('input', updateBtn);
+});
+
+function loadNetworks() {
+  document.getElementById('networkTabs').innerHTML = networks.map(net => `
+    <div class="network-tab ${net.id === 'mtn' ? 'active' : ''}"
+         onclick="switchNetwork(${net.networkId}, this)">
+      <div class="network-logo-box">
+        <img src="${net.image}" alt="${net.name}"
+             onerror="this.style.display='none';this.parentNode.innerHTML='<b style=color:#0066cc;font-size:16px>${net.name[0]}</b>'">
+      </div>
+      <span class="network-name">${net.name}</span>
     </div>
+  `).join('');
+}
 
-    <!-- Message Boxes -->
-    <div class="overlay" id="overlay"></div>
-    
-    <div class="message-box error" id="errorBox">
-        <div class="message-icon">❌</div>
-        <div class="message-title">Error</div>
-        <div class="message-text" id="errorText">Something went wrong</div>
-        <button class="message-btn" onclick="closeError()">OK</button>
-    </div>
+function switchNetwork(id, el) {
+  currentNetworkId = id;
+  document.querySelectorAll('.network-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
 
-    <div class="message-box success" id="successBox">
-        <div class="message-icon">✅</div>
-        <div class="message-title">Success</div>
-        <div class="message-text" id="successText">Transaction successful</div>
-        <button class="message-btn" onclick="closeSuccess()">OK</button>
-    </div>
+function loadAmountPresets() {
+  const amounts = [100, 200, 500, 1000, 2000, 5000];
+  document.getElementById('amountPresets').innerHTML = amounts.map(a => `
+    <div class="amount-btn" onclick="selectAmount(${a}, this)">₦${a.toLocaleString()}</div>
+  `).join('');
+}
 
-    <div class="message-box pending" id="pendingBox">
-        <div class="message-icon">⏳</div>
-        <div class="message-title">Processing</div>
-        <div class="message-text" id="pendingText">Please wait...</div>
-    </div>
+function selectAmount(amount, el) {
+  selectedAmount = amount;
+  document.getElementById('customAmount').value = amount;
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  updateBtn();
+}
 
-    <script>
-        // Network mapping - network IDs from Bigisub
-        // MTN = 1, GLO = 2, Airtel = 3, 9mobile = 4
-        const networks = [
-            { id: 'mtn', name: 'MTN', networkId: 1, image: 'assets/networks/mtn-logo.png' },
-            { id: 'glo', name: 'GLO', networkId: 2, image: 'assets/networks/glo-logo.png' },
-            { id: 'airtel', name: 'AIRTEL', networkId: 3, image: 'assets/networks/airtel-logo.jpeg' },
-            { id: '9mobile', name: '9MOBILE', networkId: 4, image: 'assets/networks/9mobile-logo.jpeg' }
-        ];
-        
-        let currentNetworkId = 1;
-        let selectedAmount = 0;
-        let userBalance = 0;
+function updateBtn() {
+  const phone = document.getElementById('phoneNumber').value;
+  const btn   = document.getElementById('purchaseBtn');
+  if (selectedAmount >= 50 && phone.length >= 11) {
+    btn.disabled    = false;
+    btn.textContent = `Pay ₦${selectedAmount.toLocaleString()} Airtime`;
+  } else if (selectedAmount >= 50) {
+    btn.disabled    = true;
+    btn.textContent = 'Enter phone number';
+  } else {
+    btn.disabled    = true;
+    btn.textContent = 'Select amount';
+  }
+}
 
-        // Check authentication
-        auth.onAuthStateChanged((user) => {
-            if (!user) {
-                window.location.href = 'login-page.html';
-            } else {
-                loadUserData();
-            }
-        });
+// ── TOAST ────────────────────────────────────────────────
+function showToast(type, title, msg) {
+  const map = {
+    success: { icon: '✅', btnClass: '',            btnText: 'OK' },
+    error:   { icon: '❌', btnClass: 'error-btn',   btnText: 'Close' },
+    pending: { icon: '⏳', btnClass: 'pending-btn', btnText: 'OK' }
+  };
+  const cfg = map[type] || map.success;
+  document.getElementById('toastIcon').textContent  = cfg.icon;
+  document.getElementById('toastIcon').className    = `toast-icon ${type}`;
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent   = msg;
+  const btn = document.getElementById('toastBtn');
+  btn.className   = `toast-btn ${cfg.btnClass}`;
+  btn.textContent = cfg.btnText;
+  document.getElementById('toastOverlay').classList.add('show');
+}
+function closeToast() { document.getElementById('toastOverlay').classList.remove('show'); }
+function showSpinner() { document.getElementById('spinnerOverlay').classList.add('show'); }
+function hideSpinner() { document.getElementById('spinnerOverlay').classList.remove('show'); }
 
-        function loadUserData() {
-            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            loadNetworks();
-            loadAmountPresets();
-            
-            document.getElementById('customAmount').addEventListener('input', function() {
-                const amount = parseInt(this.value);
-                if (amount >= 50) {
-                    selectedAmount = amount;
-                    document.getElementById('purchaseBtn').disabled = false;
-                    document.getElementById('purchaseBtn').textContent = `Pay ₦${amount.toLocaleString()} for ₦${amount.toLocaleString()} airtime`;
-                } else if (this.value === '') {
-                    selectedAmount = 0;
-                    document.getElementById('purchaseBtn').disabled = true;
-                    document.getElementById('purchaseBtn').textContent = 'Select amount';
-                }
-            });
-        }
+// ── PURCHASE ─────────────────────────────────────────────
+async function purchaseAirtime() {
+  const phone = document.getElementById('phoneNumber').value.trim();
 
-        function loadNetworks() {
-            const container = document.getElementById('networkTabs');
-            let html = '';
-            networks.forEach(net => {
-                html += `
-                    <div class="network-tab ${net.id === 'mtn' ? 'active' : ''}" onclick="switchNetwork(${net.networkId})">
-                        <div class="network-logo-box">
-                            <img src="${net.image}" alt="${net.name}" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=${net.name.charAt(0)}'">
-                        </div>
-                        <span class="network-name">${net.name}</span>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
+  if (!selectedAmount || selectedAmount < 50) {
+    showToast('error', 'Invalid Amount', 'Please select or enter a valid amount (minimum ₦50).');
+    return;
+  }
+  if (!phone || phone.length < 11) {
+    showToast('error', 'Invalid Number', 'Please enter a valid 11-digit phone number.');
+    return;
+  }
+  if (userBalance < selectedAmount) {
+    showToast('error', 'Insufficient Balance',
+      `Your balance ₦${userBalance.toLocaleString()} is not enough. Please fund your wallet.`);
+    return;
+  }
 
-        function switchNetwork(networkId) {
-            currentNetworkId = networkId;
-            document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
-            event.currentTarget.closest('.network-tab').classList.add('active');
-        }
+  showSpinner();
 
-        function loadAmountPresets() {
-            const amounts = [100, 200, 500, 1000, 2000, 5000];
-            const container = document.getElementById('amountPresets');
-            let html = '';
-            amounts.forEach(amt => {
-                html += `<div class="amount-btn" onclick="selectAmount(${amt})">₦${amt.toLocaleString()}</div>`;
-            });
-            container.innerHTML = html;
-        }
+  try {
+    const payload = {
+      network:      currentNetworkId,
+      phone_number: phone,
+      amount:       selectedAmount.toString(),
+      airtime_type: 'vtu',
+      pin:          BIGISUB_CONFIG.PIN_CODE
+    };
 
-        function selectAmount(amount) {
-            selectedAmount = amount;
-            document.getElementById('customAmount').value = amount;
-            document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
-            
-            document.getElementById('purchaseBtn').disabled = false;
-            document.getElementById('purchaseBtn').textContent = `Pay ₦${amount.toLocaleString()} for ₦${amount.toLocaleString()} airtime`;
-        }
+    const result = await bigisubRequest('vtu/airtime/purchase/', 'POST', payload);
+    hideSpinner();
 
-        // Message functions
-        function showError(message) {
-            document.getElementById('errorText').textContent = message;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('errorBox').style.display = 'flex';
-        }
+    if (result.success === true) {
+      userBalance -= selectedAmount;
+      localStorage.setItem('userBalance', userBalance);
+      document.getElementById('balanceDisplay').textContent = '₦' + userBalance.toLocaleString() + '.00';
 
-        function closeError() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('errorBox').style.display = 'none';
-        }
+      const txs = JSON.parse(localStorage.getItem('transactions') || '[]');
+      txs.unshift({
+        type:   `Airtime – ₦${selectedAmount.toLocaleString()}`,
+        amount: `-₦${selectedAmount.toLocaleString()}`,
+        date:   new Date().toLocaleString(),
+        ref:    result.data?.reference || ''
+      });
+      localStorage.setItem('transactions', JSON.stringify(txs.slice(0, 50)));
 
-        function showSuccess(message) {
-            document.getElementById('successText').textContent = message;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('successBox').style.display = 'flex';
-            setTimeout(() => {
-                closeSuccess();
-                window.location.href = 'dashboard.html';
-            }, 2000);
-        }
+      showToast('success', 'Airtime Sent! 🎉',
+        `₦${selectedAmount.toLocaleString()} airtime has been sent to ${phone} successfully.`);
 
-        function closeSuccess() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('successBox').style.display = 'none';
-        }
+      // Reset
+      selectedAmount = 0;
+      document.getElementById('customAmount').value   = '';
+      document.getElementById('phoneNumber').value    = '';
+      document.getElementById('purchaseBtn').disabled = true;
+      document.getElementById('purchaseBtn').textContent = 'Select amount';
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
 
-        function showPending(message) {
-            document.getElementById('pendingText').textContent = message;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('pendingBox').style.display = 'flex';
-        }
+    } else {
+      let msg = result.message || 'Purchase failed.';
+      if (result.errors) {
+        const errs = Object.values(result.errors);
+        if (errs.length) msg = Array.isArray(errs[0]) ? errs[0][0] : errs[0];
+      }
+      showToast('error', 'Purchase Failed', msg);
+    }
 
-        function hidePending() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('pendingBox').style.display = 'none';
-        }
-
-        // Purchase airtime - EXACT MATCH TO YOUR WORKING curl COMMAND
-        async function purchaseAirtime() {
-            const phone = document.getElementById('phoneNumber').value;
-            
-            if (!selectedAmount || selectedAmount < 50) {
-                showError('Please select or enter a valid amount (minimum ₦50)');
-                return;
-            }
-            
-            if (!phone || phone.length < 11) {
-                showError('Please enter a valid phone number (11 digits)');
-                return;
-            }
-            
-            if (userBalance < selectedAmount) {
-                showError(`Insufficient balance. Your balance is ₦${userBalance.toLocaleString()}`);
-                return;
-            }
-
-            showPending('Processing transaction...');
-
-            // --- THE CRITICAL FIX IS HERE ---
-            // Create the payload EXACTLY as your working curl command does
-            const payload = {
-                network: currentNetworkId,              // e.g., 1 for MTN
-                phone_number: phone,                    // The phone number string
-                amount: selectedAmount.toString(),      // Amount as a string, e.g., "50"
-                airtime_type: "vtu",                   // This field MUST be exactly "vtu"
-                pin: BIGISUB_CONFIG.PIN_CODE           // Your 4-digit PIN as a string
-            };
-            
-            console.log('Sending payload to Bigisub (should match curl):', payload);
-            
-            // Use the API endpoint that matches your curl command
-            const endpoint = 'vtu/airtime/purchase/';
-            
-            try {
-                const result = await bigisubRequest(endpoint, 'POST', payload);
-                console.log('Bigisub Response:', result);
-                
-                hidePending();
-                
-                if (result.success === true) {
-                    // --- SUCCESS ---
-                    userBalance -= selectedAmount;
-                    localStorage.setItem('userBalance', userBalance);
-                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-                    
-                    const transaction = {
-                        type: `Airtime - ₦${selectedAmount.toLocaleString()}`,
-                        amount: `-₦${selectedAmount.toLocaleString()}`,
-                        date: new Date().toLocaleString(),
-                        reference: result.data?.reference || 'N/A'
-                    };
-                    
-                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-                    transactions.unshift(transaction);
-                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-                    
-                    showSuccess(`✅ Success! ₦${selectedAmount.toLocaleString()} airtime sent to ${phone}\n\nReference: ${result.data?.reference || 'N/A'}`);
-                    
-                    // Reset the form
-                    selectedAmount = 0;
-                    document.getElementById('customAmount').value = '';
-                    document.getElementById('purchaseBtn').disabled = true;
-                    document.getElementById('purchaseBtn').textContent = 'Select amount';
-                    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
-                    
-                } else {
-                    // --- FAILURE ---
-                    let errorMsg = result.message || 'Purchase failed';
-                    if (result.errors) {
-                        const errors = Object.values(result.errors);
-                        if (errors.length > 0) {
-                            errorMsg = Array.isArray(errors[0]) ? errors[0][0] : errors[0];
-                        }
-                    }
-                    showError(errorMsg);
-                }
-                
-            } catch (error) {
-                hidePending();
-                console.error('Fetch Error:', error);
-                showError('Network error. Please check your connection and try again.');
-            }
-        }
-    </script>
+  } catch (err) {
+    hideSpinner();
+    showToast('error', 'Network Error', 'Could not reach the server. Check your internet and try again.');
+    console.error(err);
+  }
+}
+</script>
 </body>
 </html>
