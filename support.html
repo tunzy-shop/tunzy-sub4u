@@ -1,88 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Support - TUNZY SUB 4 YOU</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - TUNZY SUB 4 YOU</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
+        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh}
+        .header{background:#0066cc;padding:20px;color:white;display:flex;align-items:center;gap:20px}
+        .back-btn{font-size:24px;cursor:pointer;color:white;text-decoration:none}
+        .header h1{font-size:20px;font-weight:600}
+        .container{padding:20px}
+        .whatsapp-btn{width:100%;background:#25D366;color:white;border:none;border-radius:15px;padding:20px;display:flex;align-items:center;gap:15px;cursor:pointer;margin-bottom:15px}
+        .btn-icon{font-size:40px;background:rgba(255,255,255,0.2);width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+        .btn-text{flex:1;text-align:left}
+        .btn-text h3{font-size:18px}
+        .btn-text p{font-size:13px;opacity:0.9}
+        .link-card{background:#f8f9fa;border:2px solid #e0e0e0;border-radius:12px;padding:20px;margin-bottom:15px}
+        .link-header{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+        .link-icon{font-size:30px}
+        .link-title{font-size:16px;font-weight:600}
+        .link-container{display:flex;gap:10px}
+        .link-url{flex:1;background:white;border:1px solid #e0e0e0;border-radius:8px;padding:12px;font-size:13px;word-break:break-all}
+        .copy-btn{background:#0066cc;color:white;border:none;border-radius:8px;padding:0 20px;font-weight:600;cursor:pointer}
+        .copy-btn.copied{background:#28a745}
+        .faq-section{background:#f8f9fa;border-radius:15px;padding:20px;margin-top:20px}
+        .faq-title{font-size:16px;font-weight:600;color:#0066cc;margin-bottom:15px}
+        .faq-item{background:white;padding:15px;border-radius:10px;margin-bottom:10px;border:1px solid #e0e0e0;cursor:pointer}
+        .faq-question{font-weight:600;display:flex;justify-content:space-between}
+        .faq-answer{margin-top:10px;color:#666;font-size:14px;display:none;padding-top:10px;border-top:1px solid #e0e0e0}
+        .faq-item.active .faq-answer{display:block}
+    </style>
 </head>
 <body>
-
-<div class="app-container">
-
-  <div class="header">
-    <a href="dashboard.html" class="back-btn">←</a>
-    <h1>Support</h1>
-  </div>
-
-  <div style="padding:16px 0;">
-
-    <a href="https://wa.me/2348154310650" target="_blank" class="support-item">
-      <div class="support-icon" style="background:#d4f7e0;">💬</div>
-      <div class="support-text">
-        <h3>WhatsApp Support</h3>
-        <p>Chat with us: +234 815 431 0650</p>
-      </div>
-      <span class="support-arrow">›</span>
-    </a>
-
-    <a href="tel:+2348154310650" class="support-item">
-      <div class="support-icon" style="background:#ddeeff;">📞</div>
-      <div class="support-text">
-        <h3>Call Support</h3>
-        <p>Call us directly: +234 815 431 0650</p>
-      </div>
-      <span class="support-arrow">›</span>
-    </a>
-
-    <a href="mailto:mysavesupport@gmail.com" class="support-item">
-      <div class="support-icon" style="background:#fdecea;">✉️</div>
-      <div class="support-text">
-        <h3>Email Support</h3>
-        <p>mysavesupport@gmail.com</p>
-      </div>
-      <span class="support-arrow">›</span>
-    </a>
-
-    <a href="#" class="support-item">
-      <div class="support-icon" style="background:#d4f7e0;">📣</div>
-      <div class="support-text">
-        <h3>WhatsApp Channel</h3>
-        <p>Follow for updates and announcements</p>
-      </div>
-      <span class="support-arrow">›</span>
-    </a>
-
-    <a href="#" target="_blank" class="support-item">
-      <div class="support-icon" style="background:#ddeeff;">📘</div>
-      <div class="support-text">
-        <h3>Facebook Page</h3>
-        <p>Follow for updates and announcements</p>
-      </div>
-      <span class="support-arrow">›</span>
-    </a>
-
-    <a href="#" target="_blank" class="support-item">
-      <div class="support-icon" style="background:#f7d4e0;">📸</div>
-      <div class="support-text">
-        <h3>Instagram</h3>
-        <p>Follow us on Instagram</p>
-      </div>
-      <span class="support-arrow">›</span>
-    </a>
-
-  </div>
-
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
-  <a href="history.html"   class="nav-item"><span class="nav-icon">🕐</span>History</a>
-  <a href="buy-data.html"  class="nav-item"><span class="nav-icon">📶</span>Data</a>
-  <a href="support.html"   class="nav-item active"><span class="nav-icon">🎧</span>Support</a>
-  <a href="profile.html"   class="nav-item"><span class="nav-icon">👤</span>Profile</a>
-</nav>
-
+    <script src="js/firebase-config.js"></script>
+    <div class="app-container">
+        <div class="header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1>Support</h1>
+        </div>
+        <div class="container">
+            <button class="whatsapp-btn" onclick="window.open('https://wa.me/2349067345425', '_blank')">
+                <div class="btn-icon">💬</div>
+                <div class="btn-text"><h3>Chat on WhatsApp</h3><p>Talk to support instantly</p></div>
+            </button>
+            <div class="link-card">
+                <div class="link-header"><span class="link-icon">📢</span><span class="link-title">WhatsApp Channel</span></div>
+                <div class="link-container">
+                    <span class="link-url" id="channelLink">https://whatsapp.com/channel/0029Vb7JTkq9RZAfZImtfj0s</span>
+                    <button class="copy-btn" onclick="copyLink('channelLink', this)">Copy</button>
+                </div>
+            </div>
+            <div class="link-card">
+                <div class="link-header"><span class="link-icon">👥</span><span class="link-title">WhatsApp Group</span></div>
+                <div class="link-container">
+                    <span class="link-url" id="groupLink">https://chat.whatsapp.com/KdJiyNSJRztGgXfo3NgasH</span>
+                    <button class="copy-btn" onclick="copyLink('groupLink', this)">Copy</button>
+                </div>
+            </div>
+            <div class="faq-section">
+                <div class="faq-title">Frequently Asked Questions</div>
+                <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-question">How do I buy data? <span>▼</span></div><div class="faq-answer">Select network, choose plan, enter phone number, and confirm payment.</div></div>
+                <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-question">How long do transfers take? <span>▼</span></div><div class="faq-answer">Usually instant, maximum 5 minutes.</div></div>
+                <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-question">How do I set transaction PIN? <span>▼</span></div><div class="faq-answer">Go to Profile → Security Settings → Transaction PIN.</div></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleFAQ(el) { el.classList.toggle('active'); }
+        function copyLink(id, btn) {
+            navigator.clipboard.writeText(document.getElementById(id).innerText);
+            btn.innerText = 'Copied!'; btn.classList.add('copied');
+            setTimeout(() => { btn.innerText = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        }
+        auth.onAuthStateChanged((user) => { if (!user) window.location.href = 'login-page.html'; });
+    </script>
 </body>
 </html>
