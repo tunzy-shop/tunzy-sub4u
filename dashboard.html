@@ -1,354 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - TUNZY SUB 4 YOU</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - TUNZY SUB 4 YOU</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* Dashboard-specific overrides */
+  .dash-header {
+    background: linear-gradient(135deg, #0066cc, #004d99);
+    padding: 16px 16px 0;
+    color: white;
+  }
+  .dash-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: 2px solid rgba(255,255,255,0.5);
+  }
+  .user-greeting { font-size: 16px; font-weight: 700; }
+  .user-kyc {
+    font-size: 11px;
+    opacity: 0.8;
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 3px;
+  }
+  .support-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; cursor: pointer;
+    text-decoration: none; color: white;
+  }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: #f5f5f5;
-        }
+  /* Balance card inside header */
+  .dash-balance-card {
+    background: rgba(255,255,255,0.12);
+    border-radius: 16px 16px 0 0;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .dash-balance-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .dash-balance-amount {
+    font-size: 38px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .eye-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    font-size: 16px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .acct-number {
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .acct-label {
+    font-size: 10px;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .acct-num { font-weight: 700; font-size: 16px; letter-spacing: 1px; }
+  .copy-btn {
+    background: rgba(255,255,255,0.2);
+    border: none; color: white;
+    font-size: 14px; width: 30px; height: 30px;
+    border-radius: 8px; cursor: pointer;
+  }
+  .dash-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .dash-action-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 30px;
+    border: 2px solid rgba(255,255,255,0.55);
+    background: transparent;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .dash-action-btn:hover { background: rgba(255,255,255,0.18); }
 
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* Header with logo */
-        .header {
-            background: #0066cc;
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-circle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: white;
-            overflow: hidden;
-            border: 2px solid white;
-        }
-
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .app-title {
-            font-size: 18px;
-            font-weight: 600;
-            flex: 1;
-        }
-
-        /* Welcome Card */
-        .welcome-card {
-            padding: 20px 20px 10px;
-        }
-
-        .welcome-text {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .user-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: #0066cc;
-        }
-
-        /* Balance Card */
-        .balance-card {
-            background: #0066cc;
-            color: white;
-            margin: 10px 20px 20px;
-            padding: 20px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .balance-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .balance-label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .balance-amount {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .balance-amount.hidden {
-            letter-spacing: 4px;
-        }
-
-        .eye-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: white;
-            padding: 8px;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .eye-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .fund-btn {
-            background: white;
-            color: #0066cc;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .fund-btn:hover {
-            background: #f0f0f0;
-        }
-
-        /* Services Grid - SMALLER BUTTONS */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 15px;
-            margin-top: 10px;
-        }
-
-        .service-card {
-            background: #f8f9fa;
-            padding: 20px 10px;
-            border-radius: 15px;
-            text-align: center;
-            text-decoration: none;
-            color: #333;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .service-card:hover {
-            border-color: #0066cc;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,102,204,0.15);
-        }
-
-        /* Image container - smaller */
-        .service-image {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .service-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .service-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0066cc;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            position: fixed;
-            bottom: 0;
-            max-width: 500px;
-            width: 100%;
-            z-index: 100;
-        }
-
-        .nav-item {
-            text-align: center;
-            text-decoration: none;
-            color: #999;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .nav-item.active {
-            color: #0066cc;
-        }
-
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 3px;
-        }
-
-        body {
-            padding-bottom: 70px;
-        }
-    </style>
+  /* White body below header */
+  .dash-body {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    margin-top: -1px;
+    padding-top: 6px;
+  }
+</style>
 </head>
 <body>
-    <script>
-        (function() {
-            const currentUser = localStorage.getItem('currentUser');
-            if (!currentUser) {
-                window.location.href = 'index.html';
-                return;
-            }
-        })();
-    </script>
 
-    <div class="app-container">
-        <!-- Header with logo -->
-        <div class="header">
-            <div class="logo-circle">
-                <img src="assets/my-logo.jpg" alt="TUNZY" onerror="this.src='https://via.placeholder.com/45/0066cc/ffffff?text=T'">
-            </div>
-            <span class="app-title">TUNZY SUB 4 YOU</span>
+<div class="app-container">
+
+  <!-- HEADER -->
+  <div class="dash-header">
+    <div class="dash-top">
+      <div class="user-info">
+        <div class="user-avatar">👤</div>
+        <div>
+          <div class="user-greeting">Hi, <span id="userName">User</span> 👋</div>
+          <div class="user-kyc">KYC: Tier 1</div>
         </div>
-
-        <!-- Welcome -->
-        <div class="welcome-card">
-            <div class="welcome-text">Welcome back,</div>
-            <div class="user-name" id="userName">Loading...</div>
-        </div>
-
-        <!-- Balance Card -->
-        <div class="balance-card">
-            <div class="balance-left">
-                <div>
-                    <div class="balance-label">Wallet Balance</div>
-                    <div class="balance-amount" id="balanceAmount">₦0.00</div>
-                </div>
-                <button class="eye-btn" onclick="toggleBalance()" id="eyeBtn">👁️</button>
-            </div>
-            <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
-        </div>
-
-        <!-- 4 SMALLER BUTTONS - ONLY NAMES! -->
-        <div class="services-grid">
-            <!-- Buy Data -->
-            <a href="buy-data.html" class="service-card">
-                <div class="service-image">
-                    <img src="assets/buydata.png" alt="Buy Data" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=Data'">
-                </div>
-                <div class="service-title">Buy Data</div>
-            </a>
-
-            <!-- Airtime -->
-            <a href="airtime.html" class="service-card">
-                <div class="service-image">
-                    <img src="assets/airtime.png" alt="Airtime" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=Airtime'">
-                </div>
-                <div class="service-title">Airtime</div>
-            </a>
-
-            <!-- Cable TV -->
-            <a href="tv.html" class="service-card">
-                <div class="service-image">
-                    <img src="assets/cabletv.png" alt="Cable TV" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=TV'">
-                </div>
-                <div class="service-title">Cable TV</div>
-            </a>
-
-            <!-- Electricity - NOW USING electricity.png -->
-            <a href="electricity.html" class="service-card">
-                <div class="service-image">
-                    <img src="assets/electricity.png" alt="Electricity" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=Power'">
-                </div>
-                <div class="service-title">Electricity</div>
-            </a>
-        </div>
+      </div>
+      <a href="support.html" class="support-btn">🎧</a>
     </div>
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item active">
-            <div class="nav-icon">🏠</div>
-            <div>Home</div>
-        </a>
-        <a href="history.html" class="nav-item">
-            <div class="nav-icon">📊</div>
-            <div>History</div>
-        </a>
-        <a href="support.html" class="nav-item">
-            <div class="nav-icon">❓</div>
-            <div>Support</div>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <div class="nav-icon">👤</div>
-            <div>Profile</div>
-        </a>
+    <!-- Balance Card -->
+    <div class="dash-balance-card">
+      <div class="dash-balance-label">Available Balance</div>
+      <div class="dash-balance-amount">
+        <span id="balanceDisplay">₦0.00</span>
+        <button class="eye-btn" onclick="toggleBalance()">👁</button>
+      </div>
+
+      <div class="acct-number">
+        <div>
+          <div class="acct-label">Account Number</div>
+          <div class="acct-num" id="acctNum">—</div>
+        </div>
+        <button class="copy-btn" onclick="copyAcct()" title="Copy">📋</button>
+      </div>
+
+      <div class="dash-actions">
+        <a href="fund.html" class="dash-action-btn">⇄ Transfer</a>
+        <a href="fund.html" class="dash-action-btn">+ Fund Wallet</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="dash-body">
+
+    <!-- SERVICES -->
+    <div class="section-title">Services</div>
+    <div class="services-grid">
+      <a href="buy-data.html" class="service-item">
+        <div class="service-icon">📶</div>
+        <div class="service-name">Data</div>
+      </a>
+      <a href="airtime.html" class="service-item">
+        <div class="service-icon">📱</div>
+        <div class="service-name">Airtime</div>
+      </a>
+      <a href="tv.html" class="service-item">
+        <div class="service-icon">📺</div>
+        <div class="service-name">Cable TV</div>
+      </a>
+      <a href="electricity.html" class="service-item">
+        <div class="service-icon">⚡</div>
+        <div class="service-name">Electricity</div>
+      </a>
+      <a href="results.html" class="service-item">
+        <div class="service-icon">🎓</div>
+        <div class="service-name">Exam Pins</div>
+      </a>
+      <a href="savings.html" class="service-item">
+        <div class="service-icon">🐷</div>
+        <div class="service-name">Savings</div>
+      </a>
+      <a href="airtime.html" class="service-item">
+        <div class="service-icon">🔄</div>
+        <div class="service-name">Airt. 2 Cash</div>
+      </a>
+      <a href="#" class="service-item">
+        <div class="service-icon">💳</div>
+        <div class="service-name">Virtual Cards</div>
+      </a>
     </div>
 
-    <script>
-        let balanceVisible = true;
-        let currentBalance = 0;
+    <!-- PROMO BANNER -->
+    <div class="promo-banner">
+      <div class="promo-title">30% Data Discount</div>
+      <div class="promo-sub">Stay connected for less. Cheap bundles on all networks.</div>
+      <a href="buy-data.html" class="promo-cta">Tap Now</a>
+    </div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            currentBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-            
-            document.getElementById('userName').textContent = user?.name || 'User';
-            updateBalanceDisplay();
-        });
+    <!-- RECENT TRANSACTIONS -->
+    <div class="section-title">Recent Transactions</div>
+    <div id="recentTx">
+      <div class="empty-state">
+        <div class="empty-icon">📄</div>
+        <p>No transactions yet</p>
+      </div>
+    </div>
+    <div style="text-align:center; padding: 10px 0 6px;">
+      <a href="history.html" style="color:#0066cc; font-weight:700; font-size:14px; text-decoration:none;">
+        View All History →
+      </a>
+    </div>
 
-        function updateBalanceDisplay() {
-            const balanceElement = document.getElementById('balanceAmount');
-            if (balanceVisible) {
-                balanceElement.textContent = `₦${currentBalance.toLocaleString()}.00`;
-                balanceElement.classList.remove('hidden');
-            } else {
-                balanceElement.textContent = '••••••';
-                balanceElement.classList.add('hidden');
-            }
-        }
+  </div>
+</div>
 
-        function toggleBalance() {
-            balanceVisible = !balanceVisible;
-            const eyeBtn = document.getElementById('eyeBtn');
-            eyeBtn.textContent = balanceVisible ? '👁️' : '👁️‍🗨️';
-            updateBalanceDisplay();
-        }
-    </script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="nav-item active">
+    <span class="nav-icon">🏠</span>Home
+  </a>
+  <a href="history.html" class="nav-item">
+    <span class="nav-icon">🕐</span>History
+  </a>
+  <a href="buy-data.html" class="nav-item">
+    <span class="nav-icon">📶</span>Data
+  </a>
+  <a href="support.html" class="nav-item">
+    <span class="nav-icon">🎧</span>Support
+  </a>
+  <a href="profile.html" class="nav-item">
+    <span class="nav-icon">👤</span>Profile
+  </a>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const user    = JSON.parse(localStorage.getItem('userData') || '{}');
+  const balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+
+  document.getElementById('userName').textContent = user.name || 'User';
+  document.getElementById('balanceDisplay').textContent = '₦' + balance.toLocaleString() + '.00';
+  document.getElementById('acctNum').textContent = user.accountNumber || localStorage.getItem('accountNumber') || '—';
+
+  // Recent transactions
+  const txs = JSON.parse(localStorage.getItem('transactions') || '[]').slice(0, 3);
+  if (txs.length > 0) {
+    document.getElementById('recentTx').innerHTML = txs.map(tx => `
+      <div class="tx-item">
+        <div class="tx-icon">📡</div>
+        <div class="tx-details">
+          <div class="tx-type">${tx.type}</div>
+          <div class="tx-date">${tx.date}</div>
+        </div>
+        <div class="tx-amount">${tx.amount}</div>
+      </div>
+    `).join('');
+  }
+});
+
+let balanceVisible = true;
+function toggleBalance() {
+  balanceVisible = !balanceVisible;
+  const el = document.getElementById('balanceDisplay');
+  if (!balanceVisible) {
+    el.textContent = '₦ ****';
+  } else {
+    const bal = parseFloat(localStorage.getItem('userBalance')) || 0;
+    el.textContent = '₦' + bal.toLocaleString() + '.00';
+  }
+}
+
+function copyAcct() {
+  const num = document.getElementById('acctNum').textContent;
+  if (num && num !== '—') {
+    navigator.clipboard.writeText(num).then(() => {
+      alert('Account number copied!');
+    });
+  }
+}
+</script>
 </body>
 </html>
