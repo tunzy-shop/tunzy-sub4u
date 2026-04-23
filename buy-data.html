@@ -1,641 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy Data - TUNZY SUB 4 YOU</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-        }
-
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: #0066cc;
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .back-btn {
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-            text-decoration: none;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .balance-info {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            border: 1px solid #e0e0e0;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0066cc;
-            margin: 20px 0 15px;
-        }
-
-        /* Network Tabs with SQUARE LOGOS - NO OUTLINE UNTIL CLICKED */
-        .network-tabs {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-
-        .network-tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            opacity: 0.7;
-        }
-
-        .network-tab:hover {
-            opacity: 1;
-            transform: translateY(-3px);
-        }
-
-        .network-tab.active {
-            opacity: 1;
-        }
-
-        /* SQUARE LOGO - NO OUTLINE BY DEFAULT */
-        .network-logo-box {
-            width: 70px;
-            height: 70px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-
-        /* Only show outline when ACTIVE (clicked) */
-        .network-tab.active .network-logo-box {
-            border-color: #0066cc;
-            background: #e6f0ff;
-        }
-
-        .network-logo-box img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
-        }
-
-        .network-name {
-            font-weight: 600;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .network-tab.active .network-name {
-            color: #0066cc;
-        }
-
-        /* Data Type Tabs */
-        .category-tabs {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .category-tab {
-            padding: 10px 20px;
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 30px;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .category-tab:hover {
-            border-color: #0066cc;
-        }
-
-        .category-tab.active {
-            background: #0066cc;
-            color: white;
-            border-color: #0066cc;
-        }
-
-        .phone-input {
-            margin: 20px 0;
-        }
-
-        .phone-input label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .phone-input input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .phone-input input:focus {
-            border-color: #0066cc;
-            outline: none;
-        }
-
-        /* BIGGER PLAN BOXES - NO BADGES */
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-            max-height: 450px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .plan-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .plan-card:hover {
-            border-color: #0066cc;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,102,204,0.15);
-        }
-
-        .plan-card.selected {
-            border-color: #0066cc;
-            background: #e6f0ff;
-        }
-
-        .plan-name {
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .plan-price {
-            color: #0066cc;
-            font-weight: 800;
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-
-        .plan-validity {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .purchase-btn {
-            width: 100%;
-            padding: 18px;
-            background: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-
-        .purchase-btn:hover {
-            background: #004d99;
-        }
-
-        .purchase-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            display: none;
-        }
-
-        .success-message {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            display: none;
-        }
-
-        .pending-message {
-            background: #fff3e0;
-            color: #ef6c00;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy Data - TUNZY SUB 4 YOU</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <script src="js/bigisub-config.js"></script>
-    
-    <div class="app-container">
-        <div class="header">
-            <a href="dashboard.html" class="back-btn">←</a>
-            <h1>Buy Data</h1>
-        </div>
 
-        <div class="container">
-            <div class="balance-info">
-                <span>Your Balance</span>
-                <span style="font-weight: bold; color: #0066cc;" id="balanceDisplay">₦0.00</span>
-            </div>
+<!-- SPINNER OVERLAY -->
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="spinner-box">
+    <div class="spinner"></div>
+    <div class="spinner-text">Processing transaction…</div>
+  </div>
+</div>
 
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
-            <div class="pending-message" id="pendingMessage"></div>
+<!-- TOAST OVERLAY -->
+<div class="toast-overlay" id="toastOverlay">
+  <div class="toast-box">
+    <div class="toast-icon" id="toastIcon">✅</div>
+    <div class="toast-title" id="toastTitle">Success!</div>
+    <div class="toast-msg" id="toastMsg"></div>
+    <button class="toast-btn" id="toastBtn" onclick="closeToast()">OK</button>
+  </div>
+</div>
 
-            <!-- Network Tabs with SQUARE LOGOS -->
-            <div class="section-title">Select Network</div>
-            <div class="network-tabs" id="networkTabs"></div>
-            
-            <!-- Data Type Tabs -->
-            <div class="section-title">Select Data Type</div>
-            <div class="category-tabs" id="categoryTabs"></div>
+<div class="app-container">
 
-            <div class="phone-input">
-                <label>Phone Number</label>
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number">
-            </div>
+  <!-- HEADER -->
+  <div class="header">
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Buy Data</h1>
+  </div>
 
-            <div class="section-title">Select Plan</div>
-            <div class="plans-grid" id="plansContainer"></div>
+  <!-- BALANCE INFO -->
+  <div class="balance-info" style="margin-top:14px;">
+    <span>💰 Your Balance</span>
+    <span id="balanceDisplay">₦0.00</span>
+  </div>
 
-            <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>Select a plan</button>
-        </div>
+  <!-- SELECT NETWORK -->
+  <div class="section-title">Select Network</div>
+  <div class="network-tabs" id="networkTabs"></div>
+
+  <!-- SELECT DATA TYPE -->
+  <div class="section-title" id="dataTypeTitle" style="display:none;">Select Data Type</div>
+  <div class="category-tabs" id="categoryTabs"></div>
+
+  <!-- PHONE NUMBER -->
+  <div class="phone-input">
+    <label>📱 Phone Number</label>
+    <input type="tel" id="phoneNumber" placeholder="e.g. 08012345678" maxlength="11">
+  </div>
+
+  <!-- PLANS -->
+  <div class="section-title" id="plansTitle" style="display:none;">Select Plan</div>
+  <div class="plans-grid" id="plansContainer"></div>
+
+  <!-- PURCHASE BUTTON -->
+  <button class="purchase-btn" id="purchaseBtn" onclick="purchaseData()" disabled>
+    Select a plan
+  </button>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <span class="nav-icon">🏠</span>Home
+  </a>
+  <a href="history.html" class="nav-item">
+    <span class="nav-icon">🕐</span>History
+  </a>
+  <a href="buy-data.html" class="nav-item active">
+    <span class="nav-icon">📶</span>Data
+  </a>
+  <a href="support.html" class="nav-item">
+    <span class="nav-icon">🎧</span>Support
+  </a>
+  <a href="profile.html" class="nav-item">
+    <span class="nav-icon">👤</span>Profile
+  </a>
+</nav>
+
+<script src="js/bigisub-config.js"></script>
+<script>
+
+// ── CONFIG ──────────────────────────────────────────────
+const YOUR_PROFIT = 50;
+
+const networkMap = {
+  mtn: {
+    name: 'MTN',
+    networkId: 1,
+    image: 'assets/networks/mtn-logo.png',
+    categories: ['All', 'SME', 'GIFTING', 'DataTransfer']
+  },
+  glo: {
+    name: 'GLO',
+    networkId: 2,
+    image: 'assets/networks/glo-logo.png',
+    categories: ['All', 'SME', 'GIFTING']
+  },
+  airtel: {
+    name: 'AIRTEL',
+    networkId: 3,
+    image: 'assets/networks/airtel-logo.jpeg',
+    categories: ['All', 'SME', 'GIFTING']
+  },
+  '9mobile': {
+    name: '9MOBILE',
+    networkId: 4,
+    image: 'assets/networks/9mobile-logo.jpeg',
+    categories: ['All', 'DataTransfer', 'GIFTING']
+  }
+};
+
+const dataPlans = {
+  mtn: [
+    { id: 199, name: '3.5GB', cost: 995,  validity: 'Daily',    type: 'GIFTING' },
+    { id: 210, name: '3.2GB', cost: 998,  validity: '2 days',   type: 'GIFTING' },
+    { id: 3,   name: '2GB',   cost: 1160, validity: '30 Days',  type: 'SME' },
+    { id: 94,  name: '2GB',   cost: 1180, validity: '300 Days', type: 'DataTransfer' },
+    { id: 142, name: '2GB',   cost: 1495, validity: '30 days',  type: 'GIFTING' },
+    { id: 211, name: '3.5GB', cost: 1499, validity: '7 days',   type: 'GIFTING' },
+    { id: 162, name: '1.5GB', cost: 640,  validity: '2 days',   type: 'GIFTING' },
+    { id: 2,   name: '1GB',   cost: 640,  validity: '30 Days',  type: 'SME' },
+    { id: 208, name: '2.5GB', cost: 645,  validity: 'Daily',    type: 'SME' },
+    { id: 93,  name: '1GB',   cost: 650,  validity: '30 Days',  type: 'DataTransfer' },
+    { id: 97,  name: '500MB', cost: 355,  validity: '7 days',   type: 'DataTransfer' },
+    { id: 206, name: '1GB',   cost: 425,  validity: '7 days',   type: 'DataTransfer' },
+    { id: 207, name: '1GB',   cost: 435,  validity: '7 days',   type: 'SME' },
+    { id: 140, name: '500MB', cost: 489,  validity: '7 days',   type: 'GIFTING' },
+    { id: 141, name: '1.2GB', cost: 820,  validity: '7 days',   type: 'GIFTING' },
+    { id: 144, name: '3.5GB', cost: 2487, validity: '30 Days',  type: 'GIFTING' },
+    { id: 145, name: '7GB',   cost: 3485, validity: '30 Days',  type: 'GIFTING' }
+  ],
+  airtel: [
+    { id: 105, name: '10GB',   cost: 3450, validity: '30 days', type: 'SME' },
+    { id: 178, name: '10GB',   cost: 3980, validity: '30 Days', type: 'GIFTING' },
+    { id: 92,  name: '1.5GB',  cost: 500,  validity: '1 day',   type: 'GIFTING' },
+    { id: 173, name: '2GB',    cost: 600,  validity: '2 days',  type: 'GIFTING' },
+    { id: 172, name: '1GB',    cost: 786,  validity: '7 days',  type: 'GIFTING' },
+    { id: 90,  name: '75MB',   cost: 74,   validity: '1 day',   type: 'GIFTING' },
+    { id: 91,  name: '200MB',  cost: 99,   validity: '2 days',  type: 'GIFTING' },
+    { id: 166, name: '300MB',  cost: 125,  validity: '1 day',   type: 'SME' },
+    { id: 100, name: '600MB',  cost: 230,  validity: '2 days',  type: 'SME' },
+    { id: 101, name: '1.5GB',  cost: 475,  validity: '1 day',   type: 'SME' }
+  ],
+  glo: [
+    { id: 79,  name: '150MB',   cost: 94,   validity: '1 day',    type: 'GIFTING' },
+    { id: 98,  name: '200MB',   cost: 95,   validity: '14 days',  type: 'GIFTING' },
+    { id: 71,  name: '500MB',   cost: 223,  validity: '30 days',  type: 'GIFTING' },
+    { id: 12,  name: '3GB',     cost: 473,  validity: '1 month',  type: 'GIFTING' },
+    { id: 109, name: '2.5GB',   cost: 600,  validity: '2 Days',   type: 'SME' },
+    { id: 30,  name: '2GB',     cost: 890,  validity: '30 Days',  type: 'GIFTING' },
+    { id: 13,  name: '3GB',     cost: 969,  validity: '30 Days',  type: 'GIFTING' },
+    { id: 16,  name: '10.8GB',  cost: 2800, validity: '30 days',  type: 'GIFTING' }
+  ],
+  '9mobile': [
+    { id: 185, name: '40MB',   cost: 49,   validity: '1 day',    type: 'DataTransfer' },
+    { id: 187, name: '100MB',  cost: 148,  validity: '1 day',    type: 'DataTransfer' },
+    { id: 188, name: '250MB',  cost: 197,  validity: '7 days',   type: 'DataTransfer' },
+    { id: 190, name: '2GB',    cost: 990,  validity: '30 Days',  type: 'DataTransfer' },
+    { id: 191, name: '2.3GB',  cost: 1190, validity: '30 Days',  type: 'DataTransfer' },
+    { id: 192, name: '4.5GB',  cost: 1985, validity: '300 Days', type: 'DataTransfer' }
+  ]
+};
+
+// ── STATE ────────────────────────────────────────────────
+let currentNetwork  = 'mtn';
+let currentCategory = 'All';
+let selectedPlan    = null;
+let selectedPlanId  = null;
+let selectedPrice   = 0;
+let userBalance     = 0;
+
+// ── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+  document.getElementById('balanceDisplay').textContent =
+    '₦' + userBalance.toLocaleString() + '.00';
+
+  loadNetworks();
+  loadCategories();
+  loadPlans();
+
+  document.getElementById('phoneNumber').addEventListener('input', function () {
+    checkBtn();
+  });
+});
+
+// ── NETWORKS ─────────────────────────────────────────────
+function loadNetworks() {
+  const c = document.getElementById('networkTabs');
+  c.innerHTML = Object.entries(networkMap).map(([key, net]) => `
+    <div class="network-tab ${key === 'mtn' ? 'active' : ''}"
+         onclick="switchNetwork('${key}', this)">
+      <div class="network-logo-box">
+        <img src="${net.image}" alt="${net.name}"
+             onerror="this.style.display='none';this.parentNode.innerHTML='<span style=font-weight:800;font-size:18px;color:#0066cc>${net.name[0]}</span>'">
+      </div>
+      <span class="network-name">${net.name}</span>
     </div>
+  `).join('');
+}
 
-    <script>
-        // ============================================
-        // BIGISUB DATA PLANS - FROM YOUR API RESPONSE
-        // ============================================
-        
-        // Your profit margin (₦ per plan) - NOT DISPLAYED TO USER
-        const YOUR_PROFIT = 50;
-        
-        // Network mapping with image paths
-        const networkMap = {
-            mtn: { 
-                name: 'MTN', 
-                networkId: 1, 
-                image: 'assets/networks/mtn-logo.png',
-                categories: ['All', 'SME', 'GIFTING', 'DataTransfer']
-            },
-            glo: { 
-                name: 'GLO', 
-                networkId: 2, 
-                image: 'assets/networks/glo-logo.png',
-                categories: ['All', 'SME', 'GIFTING']
-            },
-            airtel: { 
-                name: 'AIRTEL', 
-                networkId: 3, 
-                image: 'assets/networks/airtel-logo.jpeg',
-                categories: ['All', 'SME', 'GIFTING']
-            },
-            '9mobile': { 
-                name: '9MOBILE', 
-                networkId: 4, 
-                image: 'assets/networks/9mobile-logo.jpeg',
-                categories: ['All', 'DataTransfer', 'GIFTING']
-            }
-        };
-        
-        // Plans from your API response images - NO BADGES DISPLAYED
-        const dataPlans = {
-            mtn: [
-                { id: 199, name: '3.5GB', cost: 995, validity: 'Daily', type: 'GIFTING' },
-                { id: 210, name: '3.2GB', cost: 998, validity: '2 days', type: 'GIFTING' },
-                { id: 3, name: '2GB', cost: 1160, validity: '30 Days', type: 'SME' },
-                { id: 94, name: '2GB', cost: 1180, validity: '300 Days', type: 'DataTransfer' },
-                { id: 142, name: '2GB', cost: 1495, validity: '30 days', type: 'GIFTING' },
-                { id: 211, name: '3.5GB', cost: 1499, validity: '7 days', type: 'GIFTING' },
-                { id: 162, name: '1.5GB', cost: 640, validity: '2 days', type: 'GIFTING' },
-                { id: 2, name: '1GB', cost: 640, validity: '30 Days', type: 'SME' },
-                { id: 208, name: '2.5GB', cost: 645, validity: 'Daily', type: 'SME' },
-                { id: 93, name: '1GB', cost: 650, validity: '30 Days', type: 'DataTransfer' },
-                { id: 97, name: '500MB', cost: 355, validity: '7 days', type: 'DataTransfer' },
-                { id: 206, name: '1GB', cost: 425, validity: '7 days', type: 'DataTransfer' },
-                { id: 207, name: '1GB', cost: 435, validity: '7 days', type: 'SME' },
-                { id: 140, name: '500MB', cost: 489, validity: '7 days', type: 'GIFTING' },
-                { id: 141, name: '1.2GB', cost: 820, validity: '7 days', type: 'GIFTING' },
-                { id: 144, name: '3.5GB', cost: 2487, validity: '30 Days', type: 'GIFTING' },
-                { id: 145, name: '7GB', cost: 3485, validity: '30 Days', type: 'GIFTING' }
-            ],
-            airtel: [
-                { id: 105, name: '10GB', cost: 3450, validity: '30 days', type: 'SME' },
-                { id: 178, name: '10GB', cost: 3980, validity: '30 Days', type: 'GIFTING' },
-                { id: 92, name: '1.5GB', cost: 500, validity: '1 day', type: 'GIFTING' },
-                { id: 173, name: '2GB', cost: 600, validity: '2 days', type: 'GIFTING' },
-                { id: 172, name: '1GB', cost: 786, validity: '7 days', type: 'GIFTING' },
-                { id: 90, name: '75MB', cost: 74, validity: '1 day', type: 'GIFTING' },
-                { id: 91, name: '200MB', cost: 99, validity: '2 days', type: 'GIFTING' },
-                { id: 166, name: '300MB', cost: 125, validity: '1 day', type: 'SME' },
-                { id: 100, name: '600MB', cost: 230, validity: '2 days', type: 'SME' },
-                { id: 101, name: '1.5GB', cost: 475, validity: '1 day', type: 'SME' }
-            ],
-            glo: [
-                { id: 79, name: '150MB', cost: 94, validity: '1 day', type: 'GIFTING' },
-                { id: 98, name: '200MB', cost: 95, validity: '14 days', type: 'GIFTING' },
-                { id: 71, name: '500MB', cost: 223, validity: '30', type: 'GIFTING' },
-                { id: 12, name: '3GB', cost: 473, validity: '1 month', type: 'GIFTING' },
-                { id: 109, name: '2.5GB', cost: 600, validity: '2 Days', type: 'SME' },
-                { id: 30, name: '2GB', cost: 890, validity: '30 Days', type: 'GIFTING' },
-                { id: 13, name: '3GB', cost: 969, validity: '30 Days', type: 'GIFTING' },
-                { id: 16, name: '10.8GB', cost: 2800, validity: '30days', type: 'GIFTING' }
-            ],
-            '9mobile': [
-                { id: 185, name: '40MB', cost: 49, validity: '1 day', type: 'DataTransfer' },
-                { id: 187, name: '100MB', cost: 148, validity: '1 day', type: 'DataTransfer' },
-                { id: 188, name: '250MB', cost: 197, validity: '7 days', type: 'DataTransfer' },
-                { id: 190, name: '2GB', cost: 990, validity: '30 Days', type: 'DataTransfer' },
-                { id: 191, name: '2.3GB', cost: 1190, validity: '30 Days', type: 'DataTransfer' },
-                { id: 192, name: '4.5GB', cost: 1985, validity: '300Days', type: 'DataTransfer' }
-            ]
-        };
+function switchNetwork(network, el) {
+  currentNetwork  = network;
+  currentCategory = 'All';
+  document.querySelectorAll('.network-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  resetSelection();
+  loadCategories();
+  loadPlans();
+}
 
-        // State
-        let currentNetwork = 'mtn';
-        let currentCategory = 'All';
-        let selectedPlan = null;
-        let selectedPlanId = null;
-        let selectedPrice = 0;
-        let userBalance = 0;
+// ── CATEGORIES ───────────────────────────────────────────
+function loadCategories() {
+  const cats = networkMap[currentNetwork].categories;
+  const c    = document.getElementById('categoryTabs');
+  const title = document.getElementById('dataTypeTitle');
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-            document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-            loadNetworks();
-            loadCategories();
-            loadPlans();
-        });
+  if (cats.length <= 1) {
+    c.innerHTML = '';
+    title.style.display = 'none';
+    return;
+  }
 
-        // Load network tabs with SQUARE LOGOS
-        function loadNetworks() {
-            const container = document.getElementById('networkTabs');
-            let html = '';
-            for (const [key, net] of Object.entries(networkMap)) {
-                html += `
-                    <div class="network-tab ${key === 'mtn' ? 'active' : ''}" onclick="switchNetwork('${key}')">
-                        <div class="network-logo-box">
-                            <img src="${net.image}" alt="${net.name}" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=${net.name.charAt(0)}'">
-                        </div>
-                        <span class="network-name">${net.name}</span>
-                    </div>
-                `;
-            }
-            container.innerHTML = html;
-        }
+  title.style.display = 'block';
+  c.innerHTML = cats.map(cat => `
+    <span class="category-tab ${cat === 'All' ? 'active' : ''}"
+          onclick="switchCategory('${cat}', this)">${cat}</span>
+  `).join('');
+}
 
-        // Switch network
-        function switchNetwork(network) {
-            currentNetwork = network;
-            currentCategory = 'All';
-            document.querySelectorAll('.network-tab').forEach(tab => tab.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            loadCategories();
-            loadPlans();
-        }
+function switchCategory(category, el) {
+  currentCategory = category;
+  document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  resetSelection();
+  loadPlans();
+}
 
-        // Load category tabs
-        function loadCategories() {
-            const categories = networkMap[currentNetwork].categories;
-            const container = document.getElementById('categoryTabs');
-            let html = '';
-            categories.forEach(cat => {
-                html += `<span class="category-tab ${cat === 'All' ? 'active' : ''}" onclick="switchCategory('${cat}')">${cat}</span>`;
-            });
-            container.innerHTML = html;
-        }
+// ── PLANS ────────────────────────────────────────────────
+function loadPlans() {
+  const c      = document.getElementById('plansContainer');
+  const title  = document.getElementById('plansTitle');
+  const all    = dataPlans[currentNetwork] || [];
+  const filtered = currentCategory === 'All'
+    ? all
+    : all.filter(p => p.type === currentCategory);
 
-        // Switch category
-        function switchCategory(category) {
-            currentCategory = category;
-            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-            loadPlans();
-        }
+  if (filtered.length === 0) {
+    title.style.display = 'none';
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No plans available for this category</p></div>';
+    return;
+  }
 
-        // Load plans - NO BADGES DISPLAYED
-        function loadPlans() {
-            const container = document.getElementById('plansContainer');
-            const allPlans = dataPlans[currentNetwork];
-            
-            if (!allPlans || allPlans.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No plans available</div>';
-                return;
-            }
-            
-            let filtered = allPlans;
-            if (currentCategory !== 'All') {
-                filtered = allPlans.filter(plan => plan.type === currentCategory);
-            }
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No plans in this category</div>';
-                return;
-            }
-            
-            let html = '';
-            filtered.forEach(plan => {
-                const sellingPrice = plan.cost + YOUR_PROFIT;
-                // Format price with commas (e.g., 1,000 instead of 1000)
-                const formattedPrice = sellingPrice.toLocaleString();
-                
-                html += `
-                    <div class="plan-card" onclick="selectPlan(${plan.id}, '${plan.name}', ${sellingPrice})">
-                        <div class="plan-name">${plan.name}</div>
-                        <div class="plan-price">₦${formattedPrice}</div>
-                        <div class="plan-validity">${plan.validity}</div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
+  title.style.display = 'block';
+  c.innerHTML = filtered.map(plan => {
+    const price = plan.cost + YOUR_PROFIT;
+    return `
+      <div class="plan-card" onclick="selectPlan(${plan.id}, '${plan.name}', ${price}, this)">
+        <div class="plan-name">${plan.name}</div>
+        <div class="plan-price">₦${price.toLocaleString()}</div>
+        <div class="plan-validity">⏱ ${plan.validity}</div>
+      </div>
+    `;
+  }).join('');
+}
 
-        // Select plan
-        function selectPlan(id, name, price) {
-            selectedPlanId = id;
-            selectedPlan = name;
-            selectedPrice = price;
-            
-            document.querySelectorAll('.plan-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            event.currentTarget.classList.add('selected');
-            
-            const btn = document.getElementById('purchaseBtn');
-            btn.disabled = false;
-            btn.textContent = `Pay ₦${price.toLocaleString()} for ${name}`;
-        }
+// ── SELECT PLAN ──────────────────────────────────────────
+function selectPlan(id, name, price, el) {
+  selectedPlanId = id;
+  selectedPlan   = name;
+  selectedPrice  = price;
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  checkBtn();
+}
 
-        // Show messages
-        function showError(msg) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = msg;
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-            }, 5000);
-        }
+function resetSelection() {
+  selectedPlanId = null;
+  selectedPlan   = null;
+  selectedPrice  = 0;
+  const btn = document.getElementById('purchaseBtn');
+  btn.disabled    = true;
+  btn.textContent = 'Select a plan';
+}
 
-        function showSuccess(msg) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.style.display = 'block';
-            successDiv.textContent = msg;
-            setTimeout(() => {
-                successDiv.style.display = 'none';
-            }, 5000);
-        }
+function checkBtn() {
+  const phone = document.getElementById('phoneNumber').value;
+  const btn   = document.getElementById('purchaseBtn');
+  if (selectedPlanId && phone.length >= 11) {
+    btn.disabled    = false;
+    btn.textContent = `Pay ₦${selectedPrice.toLocaleString()} for ${selectedPlan}`;
+  } else {
+    btn.disabled    = true;
+    btn.textContent = selectedPlan
+      ? 'Enter phone number'
+      : 'Select a plan';
+  }
+}
 
-        function showPending(msg) {
-            const pendingDiv = document.getElementById('pendingMessage');
-            pendingDiv.style.display = 'block';
-            pendingDiv.textContent = msg;
-        }
+// ── TOAST ────────────────────────────────────────────────
+function showToast(type, title, msg) {
+  const overlay = document.getElementById('toastOverlay');
+  const icon    = document.getElementById('toastIcon');
+  const ttl     = document.getElementById('toastTitle');
+  const txt     = document.getElementById('toastMsg');
+  const btn     = document.getElementById('toastBtn');
 
-        function hidePending() {
-            document.getElementById('pendingMessage').style.display = 'none';
-        }
+  const map = {
+    success: { icon: '✅', btnClass: '',           btnText: 'OK' },
+    error:   { icon: '❌', btnClass: 'error-btn',  btnText: 'Close' },
+    pending: { icon: '⏳', btnClass: 'pending-btn', btnText: 'OK' }
+  };
 
-        // Purchase data - BIGISUB API CALL
-        async function purchaseData() {
-            const phone = document.getElementById('phoneNumber').value;
-            
-            if (!selectedPlanId) {
-                showError('Please select a plan');
-                return;
-            }
-            
-            if (!phone || phone.length < 11) {
-                showError('Please enter a valid phone number (11 digits)');
-                return;
-            }
-            
-            if (userBalance < selectedPrice) {
-                showError('Insufficient balance. Please fund your wallet');
-                return;
-            }
+  const cfg = map[type] || map.success;
+  icon.textContent  = cfg.icon;
+  icon.className    = `toast-icon ${type}`;
+  ttl.textContent   = title;
+  txt.textContent   = msg;
+  btn.className     = `toast-btn ${cfg.btnClass}`;
+  btn.textContent   = cfg.btnText;
+  overlay.classList.add('show');
+}
 
-            showPending('Processing transaction...');
+function closeToast() {
+  document.getElementById('toastOverlay').classList.remove('show');
+}
 
-            try {
-                const payload = {
-                    plan: selectedPlanId,
-                    phone_number: phone,
-                    pin_code: BIGISUB_CONFIG.PIN_CODE
-                };
-                
-                const result = await bigisubRequest('purchase/', 'POST', payload);
-                
-                hidePending();
-                
-                if (result.success || result.status === 'success') {
-                    userBalance -= selectedPrice;
-                    localStorage.setItem('userBalance', userBalance);
-                    document.getElementById('balanceDisplay').textContent = `₦${userBalance.toLocaleString()}.00`;
-                    
-                    const transaction = {
-                        type: `${networkMap[currentNetwork].name} Data - ${selectedPlan}`,
-                        amount: `-₦${selectedPrice.toLocaleString()}`,
-                        date: new Date().toLocaleString()
-                    };
-                    
-                    let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-                    transactions.unshift(transaction);
-                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
-                    
-                    showSuccess(`✅ Success! ${selectedPlan} data sent to ${phone}`);
-                    
-                    selectedPlanId = null;
-                    selectedPlan = null;
-                    document.getElementById('purchaseBtn').disabled = true;
-                    document.getElementById('purchaseBtn').textContent = 'Select a plan';
-                    document.querySelectorAll('.plan-card').forEach(card => {
-                        card.classList.remove('selected');
-                    });
-                    
-                } else {
-                    showError(result.message || result.error || 'Purchase failed');
-                }
-                
-            } catch (error) {
-                hidePending();
-                showError('Network error. Please try again');
-                console.error(error);
-            }
-        }
+function showSpinner() {
+  document.getElementById('spinnerOverlay').classList.add('show');
+}
 
-        // Phone input listener
-        document.getElementById('phoneNumber').addEventListener('input', function() {
-            if (selectedPlanId && this.value.length >= 11) {
-                document.getElementById('purchaseBtn').disabled = false;
-            } else if (selectedPlanId) {
-                document.getElementById('purchaseBtn').disabled = true;
-            }
-        });
-    </script>
+function hideSpinner() {
+  document.getElementById('spinnerOverlay').classList.remove('show');
+}
+
+// ── PURCHASE ─────────────────────────────────────────────
+async function purchaseData() {
+  const phone = document.getElementById('phoneNumber').value.trim();
+
+  if (!selectedPlanId) {
+    showToast('error', 'No Plan Selected', 'Please select a data plan first.');
+    return;
+  }
+  if (!phone || phone.length < 11) {
+    showToast('error', 'Invalid Number', 'Please enter a valid 11-digit phone number.');
+    return;
+  }
+  if (userBalance < selectedPrice) {
+    showToast('error', 'Insufficient Balance',
+      `Your balance ₦${userBalance.toLocaleString()} is not enough. Please fund your wallet.`);
+    return;
+  }
+
+  showSpinner();
+
+  try {
+    const payload = {
+      plan: selectedPlanId,
+      phone_number: phone,
+      pin_code: BIGISUB_CONFIG.PIN_CODE
+    };
+
+    const result = await bigisubRequest('purchase/', 'POST', payload);
+
+    hideSpinner();
+
+    if (result.success || result.status === 'success') {
+      // Deduct balance
+      userBalance -= selectedPrice;
+      localStorage.setItem('userBalance', userBalance);
+      document.getElementById('balanceDisplay').textContent =
+        '₦' + userBalance.toLocaleString() + '.00';
+
+      // Save transaction
+      const tx = {
+        type:   `${networkMap[currentNetwork].name} Data – ${selectedPlan}`,
+        amount: `-₦${selectedPrice.toLocaleString()}`,
+        date:   new Date().toLocaleString()
+      };
+      const txs = JSON.parse(localStorage.getItem('transactions') || '[]');
+      txs.unshift(tx);
+      localStorage.setItem('transactions', JSON.stringify(txs.slice(0, 50)));
+
+      showToast('success', 'Purchase Successful!',
+        `${selectedPlan} data has been sent to ${phone} successfully.`);
+
+      // Reset
+      resetSelection();
+      document.getElementById('phoneNumber').value = '';
+
+    } else {
+      showToast('error', 'Purchase Failed',
+        result.message || result.error || 'Something went wrong. Please try again.');
+    }
+
+  } catch (err) {
+    hideSpinner();
+    showToast('error', 'Network Error', 'Could not reach the server. Check your internet and try again.');
+    console.error(err);
+  }
+}
+
+</script>
 </body>
 </html>
