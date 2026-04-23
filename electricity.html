@@ -1,383 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Electricity - TUNZY SUB 4 YOU</title>
-<link rel="stylesheet" href="css/style.css">
-<style>
-  .disco-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    padding: 0 16px;
-    margin-bottom: 4px;
-  }
-  .disco-btn {
-    background: #f0f4f8;
-    border: 2px solid #d0d8e4;
-    border-radius: 12px;
-    padding: 12px 6px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 13px;
-    color: #333;
-    transition: all 0.2s;
-  }
-  .disco-btn:hover  { border-color: #0066cc; color: #0066cc; }
-  .disco-btn.active { border-color: #0066cc; background: #ddeeff; color: #0066cc; }
-
-  .meter-type {
-    display: flex;
-    gap: 10px;
-    padding: 0 16px;
-    margin-bottom: 4px;
-  }
-  .meter-option {
-    flex: 1;
-    padding: 12px;
-    background: #f0f4f8;
-    border: 2px solid #d0d8e4;
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 14px;
-    color: #333;
-    transition: all 0.2s;
-  }
-  .meter-option:hover  { border-color: #0066cc; }
-  .meter-option.active { border-color: #0066cc; background: #ddeeff; color: #0066cc; }
-
-  .customer-info-box {
-    margin: 0 16px;
-    background: #ddeeff;
-    border-left: 4px solid #0066cc;
-    border-radius: 10px;
-    padding: 12px 16px;
-    display: none;
-    font-size: 14px;
-  }
-  .customer-info-box p       { margin: 4px 0; color: #333; }
-  .customer-info-box strong  { color: #0066cc; }
-
-  .token-display {
-    margin: 0 16px;
-    background: #fffbdd;
-    border: 2px solid #f0c040;
-    border-radius: 12px;
-    padding: 18px;
-    text-align: center;
-    display: none;
-  }
-  .token-label  { font-size: 13px; color: #888; margin-bottom: 6px; }
-  .token-number {
-    font-size: 26px;
-    font-weight: 900;
-    color: #0066cc;
-    letter-spacing: 3px;
-    margin-bottom: 6px;
-    word-break: break-all;
-  }
-  .token-hint { font-size: 11px; color: #aaa; }
-  .copy-token-btn {
-    margin-top: 10px;
-    background: #0066cc;
-    color: white;
-    border: none;
-    padding: 8px 24px;
-    border-radius: 8px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity - TUNZY SUB 4 YOU</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
+        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh}
+        .header{background:#0066cc;padding:20px;color:white;display:flex;align-items:center;gap:20px}
+        .back-btn{font-size:24px;cursor:pointer;color:white;text-decoration:none}
+        .header h1{font-size:20px;font-weight:600}
+        .container{padding:20px}
+        .balance-info{background:#f8f9fa;padding:15px;border-radius:10px;margin-bottom:20px;display:flex;justify-content:space-between;border:1px solid #e0e0e0}
+        .section-title{font-size:16px;font-weight:600;color:#0066cc;margin:20px 0 15px}
+        .disco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+        .disco-btn{background:#f8f9fa;border:2px solid #e0e0e0;border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-weight:600;font-size:13px}
+        .disco-btn.selected{border-color:#0066cc;background:#e6f0ff}
+        .meter-type{display:flex;gap:10px;margin:20px 0}
+        .meter-option{flex:1;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:10px;padding:15px;text-align:center;cursor:pointer;font-weight:600}
+        .meter-option.selected{border-color:#0066cc;background:#e6f0ff}
+        .input-field{margin:20px 0}
+        .input-field label{display:block;margin-bottom:8px;font-weight:500}
+        .input-field input{width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:10px;font-size:16px}
+        .customer-info{background:#e6f0ff;padding:15px;border-radius:10px;margin:15px 0;border-left:4px solid #0066cc;display:none}
+        .purchase-btn{width:100%;padding:18px;background:#0066cc;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin:20px 0}
+        .purchase-btn:disabled{background:#ccc}
+        .message-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:20px;padding:25px;width:85%;max-width:320px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);z-index:1000;display:none;flex-direction:column;gap:15px}
+        .message-box.error{border-top:5px solid #dc3545}
+        .message-box.success{border-top:5px solid #28a745}
+        .message-box.pending{border-top:5px solid #ffc107}
+        .message-icon{font-size:50px}
+        .message-title{font-size:20px;font-weight:bold}
+        .message-text{color:#666;font-size:14px}
+        .message-btn{background:#0066cc;color:white;border:none;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;margin-top:10px}
+        .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none}
+        .token-display{background:#fff3cd;border:2px solid #ffc107;padding:20px;border-radius:10px;margin:20px 0;text-align:center;display:none}
+        .token-number{font-size:24px;font-weight:bold;color:#0066cc;letter-spacing:2px}
+    </style>
 </head>
 <body>
-
-<!-- SPINNER -->
-<div class="spinner-overlay" id="spinnerOverlay">
-  <div class="spinner-box">
-    <div class="spinner"></div>
-    <div class="spinner-text">Processing payment…</div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast-overlay" id="toastOverlay">
-  <div class="toast-box">
-    <div class="toast-icon" id="toastIcon">✅</div>
-    <div class="toast-title" id="toastTitle">Success!</div>
-    <div class="toast-msg" id="toastMsg"></div>
-    <button class="toast-btn" id="toastBtn" onclick="closeToast()">OK</button>
-  </div>
-</div>
-
-<div class="app-container">
-
-  <div class="header">
-    <a href="dashboard.html" class="back-btn">←</a>
-    <h1>Electricity</h1>
-  </div>
-
-  <div class="balance-info" style="margin-top:14px;">
-    <span>💰 Your Balance</span>
-    <span id="balanceDisplay">₦0.00</span>
-  </div>
-
-  <!-- TOKEN RESULT (shown after success) -->
-  <div class="token-display" id="tokenDisplay" style="margin-top:14px;">
-    <div class="token-label">⚡ Your Prepaid Token</div>
-    <div class="token-number" id="tokenNumber">—</div>
-    <div class="token-hint">Keep this safe — load it on your meter</div>
-    <button class="copy-token-btn" onclick="copyToken()">📋 Copy Token</button>
-  </div>
-
-  <div class="section-title">Select Distribution Company</div>
-  <div class="disco-grid" id="discoGrid"></div>
-
-  <div class="section-title" style="margin-top:14px;">Meter Type</div>
-  <div class="meter-type">
-    <div class="meter-option active" id="meter-prepaid"  onclick="selectMeter('prepaid',  this)">Prepaid</div>
-    <div class="meter-option"        id="meter-postpaid" onclick="selectMeter('postpaid', this)">Postpaid</div>
-  </div>
-
-  <div class="phone-input" style="margin-top:14px;">
-    <label>🔢 Meter Number</label>
-    <input type="text" id="meterNumber" placeholder="Enter meter number" onblur="verifyMeter()">
-  </div>
-
-  <div class="customer-info-box" id="customerInfo">
-    <p><strong>Customer:</strong> <span id="customerName">—</span></p>
-    <p><strong>Address:</strong>  <span id="customerAddress">—</span></p>
-  </div>
-
-  <div class="phone-input">
-    <label>💵 Amount (₦)</label>
-    <input type="number" id="amount" placeholder="Minimum ₦500" min="500">
-  </div>
-
-  <button class="purchase-btn" id="purchaseBtn" onclick="payElectricity()" disabled>
-    Enter all details
-  </button>
-
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
-  <a href="history.html"   class="nav-item"><span class="nav-icon">🕐</span>History</a>
-  <a href="buy-data.html"  class="nav-item"><span class="nav-icon">📶</span>Data</a>
-  <a href="support.html"   class="nav-item"><span class="nav-icon">🎧</span>Support</a>
-  <a href="profile.html"   class="nav-item"><span class="nav-icon">👤</span>Profile</a>
-</nav>
-
-<script src="js/bigisub-config.js"></script>
-<script>
-
-const ELEC_PROFIT = 50;
-
-const discos = [
-  { id: 'ikedc',  label: 'IKEDC',  service: 'ikeja-electric' },
-  { id: 'ekedc',  label: 'EKEDC',  service: 'eko-electric' },
-  { id: 'ibedc',  label: 'IBEDC',  service: 'ibadan-electric' },
-  { id: 'aedc',   label: 'AEDC',   service: 'abuja-electric' },
-  { id: 'phed',   label: 'PHED',   service: 'phed' },
-  { id: 'kedco',  label: 'KEDCO',  service: 'kano-electric' },
-  { id: 'kaedco', label: 'KAEDCO', service: 'kaduna-electric' },
-  { id: 'eedc',   label: 'EEDC',   service: 'enugu-electric' },
-  { id: 'bedc',   label: 'BEDC',   service: 'benin-electric' },
-  { id: 'aba',    label: 'ABA',    service: 'aba-electric' },
-  { id: 'yedc',   label: 'YEDC',   service: 'yola-electric' },
-  { id: 'jedc',   label: 'JEDC',   service: 'jos-electric' }
-];
-
-let currentDisco   = 'ikedc';
-let meterType      = 'prepaid';
-let verifiedData   = null;
-let userBalance    = 0;
-let selectedCost   = 0;
-let selectedPrice  = 0;
-
-document.addEventListener('DOMContentLoaded', () => {
-  userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-  document.getElementById('balanceDisplay').textContent = '₦' + userBalance.toLocaleString() + '.00';
-
-  // Build disco grid
-  document.getElementById('discoGrid').innerHTML = discos.map((d, i) => `
-    <div class="disco-btn ${i === 0 ? 'active' : ''}" onclick="selectDisco('${d.id}', this)">
-      ${d.label}
+    <script src="js/firebase-config.js"></script>
+    <script src="js/bigisub-config.js"></script>
+    
+    <div class="app-container">
+        <div class="header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1>Electricity</h1>
+        </div>
+        <div class="container">
+            <div class="balance-info">
+                <span>Your Balance</span>
+                <span style="font-weight:bold;color:#0066cc" id="balanceDisplay">₦0.00</span>
+            </div>
+            <div class="section-title">Select Distribution Company</div>
+            <div class="disco-grid" id="discoGrid"></div>
+            <div class="meter-type">
+                <div class="meter-option selected" onclick="selectMeterType('prepaid')" id="meter-prepaid">Prepaid</div>
+                <div class="meter-option" onclick="selectMeterType('postpaid')" id="meter-postpaid">Postpaid</div>
+            </div>
+            <div class="input-field">
+                <label>Meter Number</label>
+                <input type="text" id="meterNumber" placeholder="Enter meter number" onblur="verifyMeter()">
+            </div>
+            <div class="customer-info" id="customerInfo">
+                <p><span style="font-weight:600;color:#0066cc">Customer Name:</span> <span id="customerName"></span></p>
+                <p><span style="font-weight:600;color:#0066cc">Address:</span> <span id="customerAddress"></span></p>
+            </div>
+            <div class="input-field">
+                <label>Amount (₦)</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="500">
+            </div>
+            <div class="token-display" id="tokenDisplay">
+                <div>Your Token</div>
+                <div class="token-number" id="tokenNumber"></div>
+            </div>
+            <button class="purchase-btn" id="purchaseBtn" onclick="payElectricity()" disabled>Pay Bill</button>
+        </div>
     </div>
-  `).join('');
 
-  document.getElementById('amount').addEventListener('input', function () {
-    const amt = parseInt(this.value);
-    if (amt >= 500) {
-      selectedCost  = amt;
-      selectedPrice = amt + ELEC_PROFIT;
-    } else {
-      selectedCost  = 0;
-      selectedPrice = 0;
-    }
-    checkBtn();
-  });
-});
+    <div class="overlay" id="overlay"></div>
+    <div class="message-box error" id="errorBox"><div class="message-icon">❌</div><div class="message-title">Error</div><div class="message-text" id="errorText"></div><button class="message-btn" onclick="closeError()">OK</button></div>
+    <div class="message-box success" id="successBox"><div class="message-icon">✅</div><div class="message-title">Success</div><div class="message-text" id="successText"></div><button class="message-btn" onclick="closeSuccess()">OK</button></div>
+    <div class="message-box pending" id="pendingBox"><div class="message-icon">⏳</div><div class="message-title">Processing</div><div class="message-text" id="pendingText">Please wait...</div></div>
 
-function selectDisco(id, el) {
-  currentDisco = id;
-  document.querySelectorAll('.disco-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  verifiedData = null;
-  document.getElementById('customerInfo').style.display = 'none';
-  checkBtn();
-}
+    <script>
+        const discos = [
+            { id: 'ikedc', name: 'IKEDC' }, { id: 'ekedc', name: 'EKEDC' }, { id: 'ibedc', name: 'IBEDC' },
+            { id: 'aedc', name: 'AEDC' }, { id: 'phed', name: 'PHED' }, { id: 'kedco', name: 'KEDCO' },
+            { id: 'kaedco', name: 'KAEDCO' }, { id: 'eedc', name: 'EEDC' }, { id: 'bedc', name: 'BEDC' }
+        ];
+        let currentDisco = 'ikedc', meterType = 'prepaid', verifiedData = null, userBalance = 0, selectedCost = 0, selectedPrice = 0, ELECTRICITY_PROFIT = 50;
 
-function selectMeter(type, el) {
-  meterType = type;
-  document.querySelectorAll('.meter-option').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  verifiedData = null;
-  document.getElementById('customerInfo').style.display = 'none';
-  checkBtn();
-}
+        auth.onAuthStateChanged((user) => { if (!user) window.location.href = 'login-page.html'; else loadUserData(); });
 
-async function verifyMeter() {
-  const meter = document.getElementById('meterNumber').value.trim();
-  if (!meter || meter.length < 6) return;
+        function loadUserData() {
+            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('balanceDisplay').innerText = `₦${userBalance.toLocaleString()}.00`;
+            loadDiscos();
+            document.getElementById('amount').addEventListener('input', function() {
+                let amt = parseInt(this.value);
+                if (amt >= 500) { selectedCost = amt; selectedPrice = amt + ELECTRICITY_PROFIT; updatePurchaseButton(); }
+                else { selectedCost = 0; selectedPrice = 0; updatePurchaseButton(); }
+            });
+        }
 
-  try {
-    const disco = discos.find(d => d.id === currentDisco);
-    const result = await bigisubRequest('electricity/verify/', 'POST', {
-      service:      disco.service,
-      meter_number: meter,
-      meter_type:   meterType
-    });
+        function loadDiscos() {
+            let html = '';
+            discos.forEach(disco => {
+                html += `<div class="disco-btn ${disco.id === 'ikedc' ? 'selected' : ''}" onclick="selectDisco('${disco.id}')">${disco.name}</div>`;
+            });
+            document.getElementById('discoGrid').innerHTML = html;
+        }
 
-    if (result.success && result.data) {
-      verifiedData = result.data;
-      document.getElementById('customerName').textContent    = result.data.customer_name || 'N/A';
-      document.getElementById('customerAddress').textContent = result.data.address || 'N/A';
-      document.getElementById('customerInfo').style.display  = 'block';
-    } else {
-      verifiedData = null;
-      document.getElementById('customerInfo').style.display = 'none';
-    }
-  } catch (e) {
-    console.warn('Meter verify failed:', e);
-    // Don't block — user may still try to pay
-    verifiedData = { fallback: true };
-  }
-  checkBtn();
-}
+        function selectDisco(disco) { currentDisco = disco; document.querySelectorAll('.disco-btn').forEach(d => d.classList.remove('selected')); event.target.classList.add('selected'); document.getElementById('customerInfo').style.display = 'none'; verifiedData = null; updatePurchaseButton(); }
+        function selectMeterType(type) { meterType = type; document.querySelectorAll('.meter-option').forEach(m => m.classList.remove('selected')); event.target.classList.add('selected'); document.getElementById('customerInfo').style.display = 'none'; verifiedData = null; }
 
-function checkBtn() {
-  const meter  = document.getElementById('meterNumber').value.trim();
-  const btn    = document.getElementById('purchaseBtn');
-  const ready  = meter.length >= 6 && selectedCost >= 500 && verifiedData;
-  btn.disabled    = !ready;
-  btn.textContent = ready ? `Pay ₦${selectedPrice.toLocaleString()} for Electricity` : 'Enter all details';
-}
+        async function verifyMeter() {
+            let meterNumber = document.getElementById('meterNumber').value;
+            if (!meterNumber || meterNumber.length < 6) return;
+            try {
+                let result = await bigisubRequest('electricity/verify/', 'POST', { service: currentDisco, meter_number: meterNumber, meter_type: meterType });
+                if (result.success && result.data) {
+                    verifiedData = result.data;
+                    document.getElementById('customerName').innerText = result.data.customer_name || 'N/A';
+                    document.getElementById('customerAddress').innerText = result.data.address || 'N/A';
+                    document.getElementById('customerInfo').style.display = 'block';
+                } else { document.getElementById('customerInfo').style.display = 'none'; }
+            } catch (error) { console.error(error); }
+            updatePurchaseButton();
+        }
 
-function copyToken() {
-  const t = document.getElementById('tokenNumber').textContent;
-  if (t && t !== '—') navigator.clipboard.writeText(t).then(() => alert('Token copied!'));
-}
+        function updatePurchaseButton() {
+            let meterNumber = document.getElementById('meterNumber').value, amount = parseInt(document.getElementById('amount').value);
+            if (meterNumber && meterNumber.length >= 6 && amount >= 500 && verifiedData) {
+                document.getElementById('purchaseBtn').disabled = false;
+                document.getElementById('purchaseBtn').innerText = `Pay ₦${selectedPrice}`;
+            } else { document.getElementById('purchaseBtn').disabled = true; document.getElementById('purchaseBtn').innerText = 'Enter all details'; }
+        }
 
-// ── TOAST ────────────────────────────────────────────────
-function showToast(type, title, msg) {
-  const map = {
-    success: { icon: '✅', btnClass: '',           btnText: 'OK' },
-    error:   { icon: '❌', btnClass: 'error-btn',  btnText: 'Close' },
-    pending: { icon: '⏳', btnClass: 'pending-btn',btnText: 'OK' }
-  };
-  const cfg = map[type] || map.success;
-  document.getElementById('toastIcon').textContent  = cfg.icon;
-  document.getElementById('toastIcon').className    = `toast-icon ${type}`;
-  document.getElementById('toastTitle').textContent = title;
-  document.getElementById('toastMsg').textContent   = msg;
-  const btn = document.getElementById('toastBtn');
-  btn.className   = `toast-btn ${cfg.btnClass}`;
-  btn.textContent = cfg.btnText;
-  document.getElementById('toastOverlay').classList.add('show');
-}
-function closeToast() { document.getElementById('toastOverlay').classList.remove('show'); }
-function showSpinner() { document.getElementById('spinnerOverlay').classList.add('show'); }
-function hideSpinner() { document.getElementById('spinnerOverlay').classList.remove('show'); }
+        function showError(msg) { document.getElementById('errorText').innerText = msg; document.getElementById('overlay').style.display = 'block'; document.getElementById('errorBox').style.display = 'flex'; }
+        function closeError() { document.getElementById('overlay').style.display = 'none'; document.getElementById('errorBox').style.display = 'none'; }
+        function showSuccess(msg) { document.getElementById('successText').innerText = msg; document.getElementById('overlay').style.display = 'block'; document.getElementById('successBox').style.display = 'flex'; setTimeout(() => { closeSuccess(); window.location.href = 'dashboard.html'; }, 2000); }
+        function closeSuccess() { document.getElementById('overlay').style.display = 'none'; document.getElementById('successBox').style.display = 'none'; }
+        function showPending(msg) { document.getElementById('pendingText').innerText = msg; document.getElementById('overlay').style.display = 'block'; document.getElementById('pendingBox').style.display = 'flex'; }
+        function hidePending() { document.getElementById('overlay').style.display = 'none'; document.getElementById('pendingBox').style.display = 'none'; }
 
-// ── PAY ──────────────────────────────────────────────────
-async function payElectricity() {
-  const meter = document.getElementById('meterNumber').value.trim();
-
-  if (!meter || meter.length < 6) {
-    showToast('error', 'Invalid Meter', 'Please enter a valid meter number (min 6 digits).'); return;
-  }
-  if (selectedCost < 500) {
-    showToast('error', 'Invalid Amount', 'Minimum electricity recharge is ₦500.'); return;
-  }
-  if (userBalance < selectedPrice) {
-    showToast('error', 'Insufficient Balance',
-      `Your balance ₦${userBalance.toLocaleString()} is not enough. Please fund your wallet.`); return;
-  }
-
-  showSpinner();
-
-  try {
-    const disco = discos.find(d => d.id === currentDisco);
-    const payload = {
-      service:      disco.service,
-      meter_number: meter,
-      meter_type:   meterType,
-      amount:       selectedCost,
-      pin_code:     BIGISUB_CONFIG.PIN_CODE
-    };
-
-    const result = await bigisubRequest('electricity/pay/', 'POST', payload);
-    hideSpinner();
-
-    if (result.success || result.status === 'success') {
-      userBalance -= selectedPrice;
-      localStorage.setItem('userBalance', userBalance);
-      document.getElementById('balanceDisplay').textContent = '₦' + userBalance.toLocaleString() + '.00';
-
-      // Show token if returned
-      if (result.token || result.data?.token) {
-        const token = result.token || result.data.token;
-        document.getElementById('tokenNumber').textContent = token;
-        document.getElementById('tokenDisplay').style.display = 'block';
-      }
-
-      const txs = JSON.parse(localStorage.getItem('transactions') || '[]');
-      txs.unshift({
-        type:   `${currentDisco.toUpperCase()} Electricity – ${meterType}`,
-        amount: `-₦${selectedPrice.toLocaleString()}`,
-        date:   new Date().toLocaleString()
-      });
-      localStorage.setItem('transactions', JSON.stringify(txs.slice(0, 50)));
-
-      showToast('success', 'Payment Successful! ⚡',
-        `₦${selectedCost.toLocaleString()} electricity units added to meter ${meter}.`);
-
-      // Reset
-      document.getElementById('meterNumber').value = '';
-      document.getElementById('amount').value      = '';
-      selectedCost  = 0;
-      selectedPrice = 0;
-      verifiedData  = null;
-      document.getElementById('customerInfo').style.display = 'none';
-      document.getElementById('purchaseBtn').disabled    = true;
-      document.getElementById('purchaseBtn').textContent  = 'Enter all details';
-
-    } else {
-      showToast('error', 'Payment Failed',
-        result.message || result.error || 'Something went wrong. Please try again.');
-    }
-
-  } catch (err) {
-    hideSpinner();
-    showToast('error', 'Network Error', 'Could not reach the server. Check your internet and try again.');
-    console.error(err);
-  }
-}
-</script>
+        async function payElectricity() {
+            let meterNumber = document.getElementById('meterNumber').value;
+            if (!meterNumber) { showError('Enter meter number'); return; }
+            if (!selectedCost || selectedCost < 500) { showError('Minimum amount ₦500'); return; }
+            if (userBalance < selectedPrice) { showError('Insufficient balance'); return; }
+            showPending('Processing...');
+            let payload = { service: currentDisco, meter_number: meterNumber, meter_type: meterType, amount: selectedCost, pin: BIGISUB_CONFIG.PIN_CODE };
+            try {
+                let result = await bigisubRequest('electricity/pay/', 'POST', payload);
+                hidePending();
+                if (result.success === true) {
+                    userBalance -= selectedPrice;
+                    localStorage.setItem('userBalance', userBalance);
+                    document.getElementById('balanceDisplay').innerText = `₦${userBalance.toLocaleString()}.00`;
+                    if (result.token) { document.getElementById('tokenNumber').innerText = result.token; document.getElementById('tokenDisplay').style.display = 'block'; }
+                    let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                    transactions.unshift({ type: `${currentDisco.toUpperCase()} Electricity - ${meterType}`, amount: `-₦${selectedPrice.toLocaleString()}`, date: new Date().toLocaleString(), meter: meterNumber });
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    showSuccess(`✅ Payment successful!`);
+                } else { showError(result.message || 'Payment failed'); }
+            } catch (error) { hidePending(); showError('Network error'); }
+        }
+    </script>
 </body>
 </html>
