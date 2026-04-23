@@ -1,303 +1,170 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cable TV - TUNZY SUB 4 YOU</title>
-<link rel="stylesheet" href="css/style.css">
-<style>
-  .provider-tabs {
-    display: flex;
-    gap: 10px;
-    padding: 0 16px;
-    flex-wrap: wrap;
-  }
-  .provider-tab {
-    flex: 1;
-    min-width: 90px;
-    padding: 12px 8px;
-    background: #f0f4f8;
-    border: 2px solid #d0d8e4;
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 14px;
-    color: #333;
-    transition: all 0.2s;
-  }
-  .provider-tab:hover  { border-color: #0066cc; color: #0066cc; }
-  .provider-tab.active { background: #0066cc; color: white; border-color: #0066cc; }
-
-  .customer-info-box {
-    margin: 0 16px;
-    background: #ddeeff;
-    border-left: 4px solid #0066cc;
-    border-radius: 10px;
-    padding: 12px 16px;
-    display: none;
-    font-size: 14px;
-  }
-  .customer-info-box p { margin: 4px 0; color: #333; }
-  .customer-info-box strong { color: #0066cc; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cable TV - TUNZY SUB 4 YOU</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
+        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh}
+        .header{background:#0066cc;padding:20px;color:white;display:flex;align-items:center;gap:20px}
+        .back-btn{font-size:24px;cursor:pointer;color:white;text-decoration:none}
+        .header h1{font-size:20px;font-weight:600}
+        .container{padding:20px}
+        .balance-info{background:#f8f9fa;padding:15px;border-radius:10px;margin-bottom:20px;display:flex;justify-content:space-between;border:1px solid #e0e0e0}
+        .section-title{font-size:16px;font-weight:600;color:#0066cc;margin:20px 0 15px}
+        .provider-tabs{display:flex;gap:15px;margin:20px 0;flex-wrap:wrap}
+        .provider-tab{flex:1;min-width:100px;padding:15px;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:10px;text-align:center;cursor:pointer;font-weight:600}
+        .provider-tab.active{background:#0066cc;color:white;border-color:#0066cc}
+        .input-field{margin:20px 0}
+        .input-field label{display:block;margin-bottom:8px;font-weight:500}
+        .input-field input{width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:10px;font-size:16px}
+        .customer-info{background:#e6f0ff;padding:15px;border-radius:10px;margin:15px 0;border-left:4px solid #0066cc;display:none}
+        .plans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin:20px 0}
+        .plan-card{background:#f8f9fa;border:2px solid #e0e0e0;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .plan-card:hover{border-color:#0066cc;transform:translateY(-3px)}
+        .plan-card.selected{border-color:#0066cc;background:#e6f0ff}
+        .plan-name{font-weight:700;font-size:16px;margin-bottom:5px}
+        .plan-price{color:#0066cc;font-weight:700;font-size:20px}
+        .purchase-btn{width:100%;padding:18px;background:#0066cc;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin:20px 0}
+        .purchase-btn:disabled{background:#ccc}
+        .message-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:20px;padding:25px;width:85%;max-width:320px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.2);z-index:1000;display:none;flex-direction:column;gap:15px}
+        .message-box.error{border-top:5px solid #dc3545}
+        .message-box.success{border-top:5px solid #28a745}
+        .message-box.pending{border-top:5px solid #ffc107}
+        .message-icon{font-size:50px}
+        .message-title{font-size:20px;font-weight:bold}
+        .message-text{color:#666;font-size:14px}
+        .message-btn{background:#0066cc;color:white;border:none;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;margin-top:10px}
+        .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none}
+    </style>
 </head>
 <body>
-
-<!-- SPINNER -->
-<div class="spinner-overlay" id="spinnerOverlay">
-  <div class="spinner-box">
-    <div class="spinner"></div>
-    <div class="spinner-text">Processing subscription…</div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast-overlay" id="toastOverlay">
-  <div class="toast-box">
-    <div class="toast-icon" id="toastIcon">✅</div>
-    <div class="toast-title" id="toastTitle">Success!</div>
-    <div class="toast-msg" id="toastMsg"></div>
-    <button class="toast-btn" id="toastBtn" onclick="closeToast()">OK</button>
-  </div>
-</div>
-
-<div class="app-container">
-
-  <div class="header">
-    <a href="dashboard.html" class="back-btn">←</a>
-    <h1>Cable TV</h1>
-  </div>
-
-  <div class="balance-info" style="margin-top:14px;">
-    <span>💰 Your Balance</span>
-    <span id="balanceDisplay">₦0.00</span>
-  </div>
-
-  <div class="section-title">Select Provider</div>
-  <div class="provider-tabs" id="providerTabs"></div>
-
-  <div class="phone-input" style="margin-top:16px;">
-    <label>📟 Smart Card / IUC Number</label>
-    <input type="text" id="cardNumber" placeholder="Enter smart card number">
-  </div>
-
-  <div class="customer-info-box" id="customerInfo">
-    <p><strong>Customer:</strong> <span id="customerName">—</span></p>
-  </div>
-
-  <div class="section-title" style="margin-top:14px;">Select Package</div>
-  <div class="plans-grid" id="plansContainer"></div>
-
-  <button class="purchase-btn" id="purchaseBtn" onclick="subscribeTV()" disabled>
-    Select a package
-  </button>
-
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
-  <a href="history.html"   class="nav-item"><span class="nav-icon">🕐</span>History</a>
-  <a href="buy-data.html"  class="nav-item"><span class="nav-icon">📶</span>Data</a>
-  <a href="support.html"   class="nav-item"><span class="nav-icon">🎧</span>Support</a>
-  <a href="profile.html"   class="nav-item"><span class="nav-icon">👤</span>Profile</a>
-</nav>
-
-<script src="js/bigisub-config.js"></script>
-<script>
-
-const tvProviders = [
-  { id: 'dstv',     name: 'DSTV',     serviceId: 'dstv' },
-  { id: 'gotv',     name: 'GOtv',     serviceId: 'gotv' },
-  { id: 'startimes',name: 'StarTimes',serviceId: 'startimes' },
-  { id: 'showmax',  name: 'Showmax',  serviceId: 'showmax' }
-];
-
-const tvPackages = {
-  dstv: [
-    { name: 'Premium',  cost: 24000, price: 24500 },
-    { name: 'Compact+', cost: 15000, price: 15400 },
-    { name: 'Compact',  cost: 10000, price: 10300 },
-    { name: 'Confam',   cost: 6000,  price: 6200  },
-    { name: 'Yanga',    cost: 3600,  price: 3750  },
-    { name: 'Padi',     cost: 2400,  price: 2550  }
-  ],
-  gotv: [
-    { name: 'Max',     cost: 5000, price: 5200 },
-    { name: 'Jolli',   cost: 3000, price: 3150 },
-    { name: 'Jinja',   cost: 2000, price: 2100 },
-    { name: 'Smallie', cost: 1500, price: 1600 }
-  ],
-  startimes: [
-    { name: 'Nova',  cost: 2500, price: 2650 },
-    { name: 'Basic', cost: 3500, price: 3650 },
-    { name: 'Smart', cost: 5000, price: 5200 },
-    { name: 'Super', cost: 7500, price: 7700 }
-  ],
-  showmax: [
-    { name: 'Mobile',   cost: 1200, price: 1350 },
-    { name: 'Standard', cost: 2500, price: 2650 },
-    { name: 'Premium',  cost: 4500, price: 4700 }
-  ]
-};
-
-let currentProvider = 'dstv';
-let selectedPackage = null;
-let selectedCost    = 0;
-let selectedPrice   = 0;
-let userBalance     = 0;
-
-document.addEventListener('DOMContentLoaded', () => {
-  userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-  document.getElementById('balanceDisplay').textContent = '₦' + userBalance.toLocaleString() + '.00';
-  loadProviders();
-  loadPackages();
-
-  document.getElementById('cardNumber').addEventListener('input', checkBtn);
-});
-
-function loadProviders() {
-  document.getElementById('providerTabs').innerHTML = tvProviders.map(p => `
-    <div class="provider-tab ${p.id === 'dstv' ? 'active' : ''}"
-         onclick="switchProvider('${p.id}', this)">${p.name}</div>
-  `).join('');
-}
-
-function switchProvider(id, el) {
-  currentProvider = id;
-  document.querySelectorAll('.provider-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  resetSelection();
-  loadPackages();
-  document.getElementById('customerInfo').style.display = 'none';
-}
-
-function loadPackages() {
-  const pkgs = tvPackages[currentProvider] || [];
-  document.getElementById('plansContainer').innerHTML = pkgs.map(pkg => `
-    <div class="plan-card" onclick="selectPackage('${pkg.name}', ${pkg.cost}, ${pkg.price}, this)">
-      <div class="plan-name">${pkg.name}</div>
-      <div class="plan-price">₦${pkg.price.toLocaleString()}</div>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/bigisub-config.js"></script>
+    
+    <div class="app-container">
+        <div class="header">
+            <a href="dashboard.html" class="back-btn">←</a>
+            <h1>Cable TV</h1>
+        </div>
+        <div class="container">
+            <div class="balance-info">
+                <span>Your Balance</span>
+                <span style="font-weight:bold;color:#0066cc" id="balanceDisplay">₦0.00</span>
+            </div>
+            <div class="section-title">Select Provider</div>
+            <div class="provider-tabs" id="providerTabs"></div>
+            <div class="input-field">
+                <label>Smart Card / IUC Number</label>
+                <input type="text" id="cardNumber" placeholder="Enter card number">
+            </div>
+            <div class="customer-info" id="customerInfo">
+                <p><span style="font-weight:600;color:#0066cc">Customer Name:</span> <span id="customerName"></span></p>
+            </div>
+            <div class="section-title">Select Package</div>
+            <div class="plans-grid" id="plansContainer"></div>
+            <button class="purchase-btn" id="purchaseBtn" onclick="subscribeTV()" disabled>Select a package</button>
+        </div>
     </div>
-  `).join('');
-}
 
-function selectPackage(name, cost, price, el) {
-  selectedPackage = name;
-  selectedCost    = cost;
-  selectedPrice   = price;
-  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  checkBtn();
-}
+    <div class="overlay" id="overlay"></div>
+    <div class="message-box error" id="errorBox"><div class="message-icon">❌</div><div class="message-title">Error</div><div class="message-text" id="errorText"></div><button class="message-btn" onclick="closeError()">OK</button></div>
+    <div class="message-box success" id="successBox"><div class="message-icon">✅</div><div class="message-title">Success</div><div class="message-text" id="successText"></div><button class="message-btn" onclick="closeSuccess()">OK</button></div>
+    <div class="message-box pending" id="pendingBox"><div class="message-icon">⏳</div><div class="message-title">Processing</div><div class="message-text" id="pendingText">Please wait...</div></div>
 
-function resetSelection() {
-  selectedPackage = null;
-  selectedCost    = 0;
-  selectedPrice   = 0;
-  const btn = document.getElementById('purchaseBtn');
-  btn.disabled    = true;
-  btn.textContent = 'Select a package';
-}
+    <script>
+        const tvProviders = [
+            { id: 'dstv', name: 'DSTV' }, { id: 'gotv', name: 'GOtv' }, { id: 'startimes', name: 'Startimes' }, { id: 'showmax', name: 'Showmax' }
+        ];
+        const tvPackages = {
+            dstv: [{ name: 'Premium', cost: 24000, sellingPrice: 24500 }, { name: 'Compact+', cost: 15000, sellingPrice: 15400 }, { name: 'Compact', cost: 10000, sellingPrice: 10300 }, { name: 'Confam', cost: 6000, sellingPrice: 6200 }],
+            gotv: [{ name: 'Max', cost: 5000, sellingPrice: 5200 }, { name: 'Jolli', cost: 3000, sellingPrice: 3150 }, { name: 'Jinja', cost: 2000, sellingPrice: 2100 }],
+            startimes: [{ name: 'Nova', cost: 2500, sellingPrice: 2650 }, { name: 'Basic', cost: 3500, sellingPrice: 3650 }, { name: 'Smart', cost: 5000, sellingPrice: 5200 }],
+            showmax: [{ name: 'Mobile', cost: 1200, sellingPrice: 1350 }, { name: 'Standard', cost: 2500, sellingPrice: 2650 }, { name: 'Premium', cost: 4500, sellingPrice: 4700 }]
+        };
+        
+        let currentProvider = 'dstv', selectedPackage = null, selectedCost = 0, selectedPrice = 0, userBalance = 0;
 
-function checkBtn() {
-  const card = document.getElementById('cardNumber').value.trim();
-  const btn  = document.getElementById('purchaseBtn');
-  if (selectedPackage && card.length >= 6) {
-    btn.disabled    = false;
-    btn.textContent = `Pay ₦${selectedPrice.toLocaleString()} – ${selectedPackage}`;
-  } else {
-    btn.disabled    = true;
-    btn.textContent = selectedPackage ? 'Enter smart card number' : 'Select a package';
-  }
-}
+        auth.onAuthStateChanged((user) => { if (!user) window.location.href = 'login-page.html'; else loadUserData(); });
 
-// ── TOAST ────────────────────────────────────────────────
-function showToast(type, title, msg) {
-  const map = {
-    success: { icon: '✅', btnClass: '',           btnText: 'OK' },
-    error:   { icon: '❌', btnClass: 'error-btn',  btnText: 'Close' },
-    pending: { icon: '⏳', btnClass: 'pending-btn',btnText: 'OK' }
-  };
-  const cfg = map[type] || map.success;
-  document.getElementById('toastIcon').textContent  = cfg.icon;
-  document.getElementById('toastIcon').className    = `toast-icon ${type}`;
-  document.getElementById('toastTitle').textContent = title;
-  document.getElementById('toastMsg').textContent   = msg;
-  const btn = document.getElementById('toastBtn');
-  btn.className   = `toast-btn ${cfg.btnClass}`;
-  btn.textContent = cfg.btnText;
-  document.getElementById('toastOverlay').classList.add('show');
-}
-function closeToast() { document.getElementById('toastOverlay').classList.remove('show'); }
-function showSpinner() { document.getElementById('spinnerOverlay').classList.add('show'); }
-function hideSpinner() { document.getElementById('spinnerOverlay').classList.remove('show'); }
+        function loadUserData() {
+            userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('balanceDisplay').innerText = `₦${userBalance.toLocaleString()}.00`;
+            loadProviders();
+            loadPackages();
+        }
 
-// ── SUBSCRIBE ────────────────────────────────────────────
-async function subscribeTV() {
-  const card = document.getElementById('cardNumber').value.trim();
+        function loadProviders() {
+            let html = '';
+            tvProviders.forEach(prov => {
+                html += `<div class="provider-tab ${prov.id === 'dstv' ? 'active' : ''}" onclick="switchProvider('${prov.id}')">${prov.name}</div>`;
+            });
+            document.getElementById('providerTabs').innerHTML = html;
+        }
 
-  if (!selectedPackage) {
-    showToast('error', 'No Package', 'Please select a TV package first.');
-    return;
-  }
-  if (!card || card.length < 6) {
-    showToast('error', 'Invalid Card', 'Please enter a valid smart card / IUC number.');
-    return;
-  }
-  if (userBalance < selectedPrice) {
-    showToast('error', 'Insufficient Balance',
-      `Your balance ₦${userBalance.toLocaleString()} is not enough. Please fund your wallet.`);
-    return;
-  }
+        function switchProvider(provider) {
+            currentProvider = provider;
+            document.querySelectorAll('.provider-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            loadPackages();
+            selectedPackage = null;
+            document.getElementById('purchaseBtn').disabled = true;
+        }
 
-  showSpinner();
+        function loadPackages() {
+            let packs = tvPackages[currentProvider];
+            let html = '';
+            packs.forEach(pkg => {
+                html += `<div class="plan-card" onclick="selectPackage('${pkg.name}', ${pkg.cost}, ${pkg.sellingPrice})">
+                            <div class="plan-name">${pkg.name}</div>
+                            <div class="plan-price">₦${pkg.sellingPrice.toLocaleString()}</div>
+                        </div>`;
+            });
+            document.getElementById('plansContainer').innerHTML = html;
+        }
 
-  try {
-    const payload = {
-      service:     currentProvider,
-      card_number: card,
-      package:     selectedPackage,
-      amount:      selectedCost,
-      pin_code:    BIGISUB_CONFIG.PIN_CODE
-    };
+        function selectPackage(name, cost, price) {
+            selectedPackage = name; selectedCost = cost; selectedPrice = price;
+            document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.getElementById('purchaseBtn').disabled = false;
+            document.getElementById('purchaseBtn').innerText = `Pay ₦${price.toLocaleString()}`;
+        }
 
-    const result = await bigisubRequest('tv/subscribe/', 'POST', payload);
-    hideSpinner();
+        function showError(msg) { document.getElementById('errorText').innerText = msg; document.getElementById('overlay').style.display = 'block'; document.getElementById('errorBox').style.display = 'flex'; }
+        function closeError() { document.getElementById('overlay').style.display = 'none'; document.getElementById('errorBox').style.display = 'none'; }
+        function showSuccess(msg) { document.getElementById('successText').innerText = msg; document.getElementById('overlay').style.display = 'block'; document.getElementById('successBox').style.display = 'flex'; setTimeout(() => { closeSuccess(); window.location.href = 'dashboard.html'; }, 2000); }
+        function closeSuccess() { document.getElementById('overlay').style.display = 'none'; document.getElementById('successBox').style.display = 'none'; }
+        function showPending(msg) { document.getElementById('pendingText').innerText = msg; document.getElementById('overlay').style.display = 'block'; document.getElementById('pendingBox').style.display = 'flex'; }
+        function hidePending() { document.getElementById('overlay').style.display = 'none'; document.getElementById('pendingBox').style.display = 'none'; }
 
-    if (result.success || result.status === 'success') {
-      userBalance -= selectedPrice;
-      localStorage.setItem('userBalance', userBalance);
-      document.getElementById('balanceDisplay').textContent = '₦' + userBalance.toLocaleString() + '.00';
-
-      const txs = JSON.parse(localStorage.getItem('transactions') || '[]');
-      txs.unshift({
-        type:   `${currentProvider.toUpperCase()} TV – ${selectedPackage}`,
-        amount: `-₦${selectedPrice.toLocaleString()}`,
-        date:   new Date().toLocaleString()
-      });
-      localStorage.setItem('transactions', JSON.stringify(txs.slice(0, 50)));
-
-      showToast('success', 'Subscription Successful! 📺',
-        `${currentProvider.toUpperCase()} ${selectedPackage} has been activated on card ${card}.`);
-
-      resetSelection();
-      document.getElementById('cardNumber').value = '';
-      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
-
-    } else {
-      showToast('error', 'Subscription Failed',
-        result.message || result.error || 'Something went wrong. Please try again.');
-    }
-
-  } catch (err) {
-    hideSpinner();
-    showToast('error', 'Network Error', 'Could not reach the server. Check your internet and try again.');
-    console.error(err);
-  }
-}
-</script>
+        async function subscribeTV() {
+            let cardNumber = document.getElementById('cardNumber').value;
+            if (!selectedPackage) { showError('Select a package'); return; }
+            if (!cardNumber || cardNumber.length < 6) { showError('Enter valid card number'); return; }
+            if (userBalance < selectedPrice) { showError('Insufficient balance'); return; }
+            showPending('Processing...');
+            let payload = { service: currentProvider, card_number: cardNumber, package: selectedPackage, amount: selectedCost, pin: BIGISUB_CONFIG.PIN_CODE };
+            try {
+                let result = await bigisubRequest('tv/subscribe/', 'POST', payload);
+                hidePending();
+                if (result.success === true) {
+                    userBalance -= selectedPrice;
+                    localStorage.setItem('userBalance', userBalance);
+                    document.getElementById('balanceDisplay').innerText = `₦${userBalance.toLocaleString()}.00`;
+                    let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                    transactions.unshift({ type: `${currentProvider.toUpperCase()} - ${selectedPackage}`, amount: `-₦${selectedPrice.toLocaleString()}`, date: new Date().toLocaleString(), card: cardNumber });
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    showSuccess(`✅ ${selectedPackage} subscribed on ${cardNumber}`);
+                    selectedPackage = null; document.getElementById('purchaseBtn').disabled = true;
+                } else { showError(result.message || 'Subscription failed'); }
+            } catch (error) { hidePending(); showError('Network error'); }
+        }
+        document.getElementById('cardNumber').addEventListener('input', () => { if (selectedPackage && document.getElementById('cardNumber').value.length >= 6) document.getElementById('purchaseBtn').disabled = false; });
+    </script>
 </body>
 </html>
