@@ -1,480 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - TUNZY SUB 4 YOU</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-        }
-
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: #0066cc;
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .back-btn {
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-            text-decoration: none;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .profile-section {
-            padding: 20px;
-        }
-
-        .profile-card {
-            background: linear-gradient(135deg, #0066cc, #004d99);
-            color: white;
-            padding: 30px 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            color: #0066cc;
-            font-size: 40px;
-        }
-
-        .profile-name {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .profile-email {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid #e0e0e0;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #0066cc;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .settings-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .settings-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #0066cc;
-            margin-bottom: 15px;
-        }
-
-        .setting-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #e0e0e0;
-        }
-
-        .setting-info {
-            flex: 1;
-        }
-
-        .setting-name {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .setting-desc {
-            font-size: 12px;
-            color: #666;
-        }
-
-        /* Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #0066cc;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        .menu-item {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 1px solid #e0e0e0;
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            border-color: #0066cc;
-        }
-
-        .menu-icon {
-            font-size: 24px;
-            color: #0066cc;
-        }
-
-        .menu-text {
-            flex: 1;
-        }
-
-        .menu-title {
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .menu-subtitle {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .logout-btn {
-            width: 100%;
-            padding: 15px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 20px 0;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-
-        /* PIN Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 350px;
-        }
-
-        .modal-content h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            text-align: center;
-            letter-spacing: 8px;
-        }
-
-        .modal-content input:focus {
-            border-color: #0066cc;
-            outline: none;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .modal-btn.cancel {
-            background: #f5f5f5;
-            color: #666;
-        }
-
-        .modal-btn.save {
-            background: #0066cc;
-            color: white;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - TUNZY SUB 4 YOU</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <a href="dashboard.html" class="back-btn">←</a>
-            <h1>My Profile</h1>
-        </div>
 
-        <div class="profile-section">
-            <div class="profile-card">
-                <div class="profile-avatar">👤</div>
-                <div class="profile-name" id="profileName">Loading...</div>
-                <div class="profile-email" id="profileEmail">loading@email.com</div>
-            </div>
+<div class="app-container">
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="statBalance">₦0</div>
-                    <div class="stat-label">Balance</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="statTransactions">0</div>
-                    <div class="stat-label">Transactions</div>
-                </div>
-            </div>
+  <div class="header">
+    <a href="dashboard.html" class="back-btn">←</a>
+    <h1>Account</h1>
+  </div>
 
-            <!-- Security Settings - Only PIN Toggle -->
-            <div class="settings-section">
-                <div class="settings-title">🔒 Security Settings</div>
-                
-                <!-- PIN Toggle -->
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <div class="setting-name">Transaction PIN</div>
-                        <div class="setting-desc">Require PIN for transfers</div>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="pinToggle" onchange="togglePIN()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
+  <!-- Profile Card -->
+  <div style="margin: 20px 16px; background:#f8fafc; border-radius:16px; padding:28px 20px;
+              text-align:center; border:1px solid #d0d8e4;">
+    <div class="profile-avatar" id="profileAvatar">👤</div>
+    <div class="profile-name" id="profileName">Loading…</div>
+    <div class="profile-email" id="profileEmail"></div>
+  </div>
 
-            <!-- Account Settings -->
-            <div class="settings-section">
-                <div class="settings-title">⚙️ Account Settings</div>
-                
-                <div class="menu-item" onclick="changePassword()">
-                    <div class="menu-icon">🔑</div>
-                    <div class="menu-text">
-                        <div class="menu-title">Change Password</div>
-                        <div class="menu-subtitle">Update your password</div>
-                    </div>
-                </div>
-            </div>
+  <!-- Menu -->
+  <div class="profile-menu">
+    <a href="#" class="profile-menu-item" onclick="editInfo()">
+      <div class="profile-menu-icon" style="background:#ddeeff;">✏️</div>
+      Edit Personal Info
+      <span class="profile-menu-arrow">›</span>
+    </a>
+    <a href="#" class="profile-menu-item">
+      <div class="profile-menu-icon" style="background:#e8e0ff;">🪪</div>
+      KYC Verification
+      <span class="badge-tier">Tier 1</span>
+      <span class="profile-menu-arrow">›</span>
+    </a>
+    <a href="#" class="profile-menu-item">
+      <div class="profile-menu-icon" style="background:#e0f0ff;">⚙️</div>
+      Account Security
+      <span class="profile-menu-arrow">›</span>
+    </a>
+    <a href="#" class="profile-menu-item">
+      <div class="profile-menu-icon" style="background:#fff5dd;">🔑</div>
+      Transaction PIN
+      <span class="profile-menu-arrow">›</span>
+    </a>
+  </div>
 
-            <!-- Support Menu -->
-            <div class="menu-item" onclick="window.location.href='support.html'">
-                <div class="menu-icon">❓</div>
-                <div class="menu-text">
-                    <div class="menu-title">Help & Support</div>
-                    <div class="menu-subtitle">Contact us, FAQs</div>
-                </div>
-            </div>
+  <div class="signout-row" style="margin-top:24px;">
+    <button class="signout-btn" onclick="signOut()">⇥ Sign Out</button>
+  </div>
 
-            <!-- Logout Button -->
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </div>
-    </div>
+</div>
 
-    <!-- PIN Setup Modal -->
-    <div class="modal" id="pinModal">
-        <div class="modal-content">
-            <h3>Set Transaction PIN</h3>
-            <p style="color: #666; margin-bottom: 15px;">Enter a 4-digit PIN</p>
-            <input type="password" id="pinInput" maxlength="4" placeholder="••••">
-            <input type="password" id="pinConfirm" maxlength="4" placeholder="Confirm PIN">
-            <div class="modal-buttons">
-                <button class="modal-btn cancel" onclick="closePINModal()">Cancel</button>
-                <button class="modal-btn save" onclick="savePIN()">Save PIN</button>
-            </div>
-        </div>
-    </div>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
+  <a href="history.html"   class="nav-item"><span class="nav-icon">🕐</span>History</a>
+  <a href="buy-data.html"  class="nav-item"><span class="nav-icon">📶</span>Data</a>
+  <a href="support.html"   class="nav-item"><span class="nav-icon">🎧</span>Support</a>
+  <a href="profile.html"   class="nav-item active"><span class="nav-icon">👤</span>Profile</a>
+</nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            const balance = localStorage.getItem('userBalance') || '0';
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            document.getElementById('profileName').textContent = user.name || 'User';
-            document.getElementById('profileEmail').textContent = user.email || '';
-            document.getElementById('statBalance').textContent = `₦${parseFloat(balance).toLocaleString()}`;
-            document.getElementById('statTransactions').textContent = transactions.length;
-            
-            // Load PIN setting
-            const pinEnabled = localStorage.getItem('pinEnabled') === 'true';
-            document.getElementById('pinToggle').checked = pinEnabled;
-        });
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const user = JSON.parse(localStorage.getItem('userData') || '{}');
+  document.getElementById('profileName').textContent  = user.name  || localStorage.getItem('userName') || 'User';
+  document.getElementById('profileEmail').textContent = user.email || localStorage.getItem('userEmail') || '';
+});
 
-        // PIN Toggle
-        function togglePIN() {
-            const isChecked = document.getElementById('pinToggle').checked;
-            
-            if (isChecked) {
-                document.getElementById('pinModal').classList.add('active');
-            } else {
-                localStorage.setItem('pinEnabled', 'false');
-                localStorage.removeItem('transactionPIN');
-                alert('PIN disabled');
-            }
-        }
+function editInfo() {
+  alert('Edit Personal Info feature coming soon.');
+}
 
-        function closePINModal() {
-            document.getElementById('pinModal').classList.remove('active');
-            document.getElementById('pinToggle').checked = false;
-            document.getElementById('pinInput').value = '';
-            document.getElementById('pinConfirm').value = '';
-        }
-
-        function savePIN() {
-            const pin = document.getElementById('pinInput').value;
-            const confirm = document.getElementById('pinConfirm').value;
-            
-            if (pin.length !== 4 || confirm.length !== 4) {
-                alert('PIN must be 4 digits');
-                return;
-            }
-            
-            if (pin !== confirm) {
-                alert('PINs do not match');
-                return;
-            }
-            
-            localStorage.setItem('transactionPIN', pin);
-            localStorage.setItem('pinEnabled', 'true');
-            
-            alert('PIN set successfully!');
-            closePINModal();
-        }
-
-        function changePassword() {
-            alert('Change password feature coming soon!');
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            }
-        }
-    </script>
+function signOut() {
+  if (confirm('Are you sure you want to sign out?')) {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  }
+}
+</script>
 </body>
 </html>
