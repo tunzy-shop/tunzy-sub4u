@@ -9,7 +9,7 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
-        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh}
+        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh;padding-bottom:70px}
         .header{background:#0066cc;padding:20px;color:white;display:flex;align-items:center;gap:20px}
         .back-btn{font-size:24px;cursor:pointer;color:white;text-decoration:none}
         .header h1{font-size:20px;font-weight:600}
@@ -45,6 +45,9 @@
         .modal-btn{flex:1;padding:12px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
         .modal-btn.cancel{background:#f5f5f5;color:#666}
         .modal-btn.save{background:#0066cc;color:white}
+        .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:12px 0;position:fixed;bottom:0;max-width:500px;width:100%}
+        .nav-item{text-align:center;text-decoration:none;color:#999;font-size:13px;font-weight:500;padding:5px 0}
+        .nav-item.active{color:#0066cc;border-bottom:2px solid #0066cc;padding-bottom:3px}
     </style>
 </head>
 <body>
@@ -79,6 +82,12 @@
             </div>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
+    </div>
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">HOME</a>
+        <a href="history.html" class="nav-item">HISTORY</a>
+        <a href="support.html" class="nav-item">SUPPORT</a>
+        <a href="profile.html" class="nav-item active">PROFILE</a>
     </div>
     <div class="modal" id="pinModal"><div class="modal-content"><h3>Set Transaction PIN</h3><p style="color:#666;margin-bottom:10px">Enter 4-digit PIN</p><input type="password" id="pinInput" maxlength="4" placeholder="••••"><input type="password" id="pinConfirm" maxlength="4" placeholder="Confirm PIN"><div class="modal-buttons"><button class="modal-btn cancel" onclick="closePINModal()">Cancel</button><button class="modal-btn save" onclick="savePIN()">Save PIN</button></div></div></div>
 
