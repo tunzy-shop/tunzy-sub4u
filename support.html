@@ -33,9 +33,12 @@
         .faq-question{font-weight:600;display:flex;justify-content:space-between}
         .faq-answer{margin-top:10px;color:#666;font-size:14px;display:none;padding-top:10px;border-top:1px solid #e0e0e0}
         .faq-item.active .faq-answer{display:block}
-        .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:12px 0;position:fixed;bottom:0;max-width:500px;width:100%}
-        .nav-item{text-align:center;text-decoration:none;color:#999;font-size:13px;font-weight:500;padding:5px 0}
-        .nav-item.active{color:#0066cc;border-bottom:2px solid #0066cc;padding-bottom:3px}
+        .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:10px 0 12px;position:fixed;bottom:0;max-width:500px;width:100%}
+        .nav-item{text-align:center;text-decoration:none;color:#999;font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px}
+        .nav-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+        .nav-icon img{width:20px;height:20px;object-fit:contain}
+        .nav-item.active .nav-icon img{filter:brightness(0) saturate(100%) invert(27%) sepia(89%) saturate(2000%) hue-rotate(200deg) brightness(95%) contrast(101%)}
+        .nav-item.active{color:#0066cc}
     </style>
 </head>
 <body>
@@ -73,10 +76,22 @@
         </div>
     </div>
     <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">HOME</a>
-        <a href="history.html" class="nav-item">HISTORY</a>
-        <a href="support.html" class="nav-item active">SUPPORT</a>
-        <a href="profile.html" class="nav-item">PROFILE</a>
+        <a href="dashboard.html" class="nav-item">
+            <div class="nav-icon"><img src="assets/icons/home-icon.png" alt="Home"></div>
+            <div>HOME</div>
+        </a>
+        <a href="history.html" class="nav-item">
+            <div class="nav-icon"><img src="assets/icons/history-icon.png" alt="History"></div>
+            <div>HISTORY</div>
+        </a>
+        <a href="support.html" class="nav-item active">
+            <div class="nav-icon"><img src="assets/icons/support-icon.png" alt="Support"></div>
+            <div>SUPPORT</div>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon"><img src="assets/icons/profile-icon.png" alt="Profile"></div>
+            <div>PROFILE</div>
+        </a>
     </div>
     <script>
         auth.onAuthStateChanged((user) => { if (!user) window.location.href = 'login-page.html'; });
