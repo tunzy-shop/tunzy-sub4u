@@ -49,12 +49,25 @@
         .message-box.pending{border-top:5px solid #ffc107}
         .message-icon{font-size:50px}
         .message-title{font-size:20px;font-weight:bold}
-        .message-text{color:#666;font-size:14px;line-height:1.5}
+        .message-text{color:#666;font-size:14px}
         .message-btn{background:#0066cc;color:white;border:none;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;margin-top:10px}
         .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none}
         .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:12px 0;position:fixed;bottom:0;max-width:500px;width:100%}
         .nav-item{text-align:center;text-decoration:none;color:#999;font-size:12px;font-weight:500}
         .nav-item.active{color:#0066cc}
+        
+        /* PIN OVERLAY STYLES */
+        .pin-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000}
+        .pin-modal{background:white;padding:30px;border-radius:20px;width:90%;max-width:350px;text-align:center}
+        .pin-modal h3{margin-bottom:10px;color:#333}
+        .pin-modal p{color:#666;margin-bottom:20px;font-size:14px}
+        .pin-inputs{display:flex;gap:12px;justify-content:center;margin:20px 0}
+        .pin-digit{width:50px;height:50px;border:2px solid #e0e0e0;border-radius:10px;text-align:center;font-size:24px;font-weight:bold}
+        .pin-digit:focus{border-color:#0066cc;outline:none}
+        .pin-buttons{display:flex;gap:10px;margin-top:20px}
+        .pin-buttons button{flex:1;padding:12px;border:none;border-radius:10px;cursor:pointer;font-weight:600}
+        .pin-buttons button:first-child{background:#f5f5f5;color:#666}
+        .pin-buttons button:last-child{background:#0066cc;color:white}
     </style>
 </head>
 <body>
@@ -140,8 +153,7 @@
                 { id: 146, name: '10GB', cost: 4466, validity: '30 Days', type: 'GIFTING' },
                 { id: 147, name: '12.5GB', cost: 5460, validity: '30 Days', type: 'GIFTING' },
                 { id: 148, name: '16.5GB', cost: 6460, validity: '30 Days', type: 'GIFTING' },
-                { id: 149, name: '20GB', cost: 7455, validity: '30 Days', type: 'GIFTING' },
-                { id: 150, name: '25GB', cost: 8950, validity: '30 Days', type: 'GIFTING' }
+                { id: 149, name: '20GB', cost: 7455, validity: '30 Days', type: 'GIFTING' }
             ],
             glo: [
                 { id: 78, name: '40MB', cost: 50, validity: '1 day', type: 'DataTransfer' },
@@ -196,6 +208,76 @@
         let userBalance = 0;
         const YOUR_PROFIT = 50;
 
+        // PIN VERIFICATION FUNCTION
+        async function verifyUserPin() {
+            return new Promise((resolve) => {
+                let hasPin = localStorage.getItem('transactionPIN') !== null;
+                
+                if (!hasPin) {
+                    if (confirm('🔐 You don\'t have a transaction PIN set. Set one now for security?')) {
+                        window.location.href = 'profile.html';
+                        resolve(false);
+                        return;
+                    }
+                    resolve(true);
+                    return;
+                }
+                
+                // Create PIN modal
+                let modalHtml = `
+                    <div class="pin-overlay" id="pinOverlay">
+                        <div class="pin-modal">
+                            <h3>Enter Transaction PIN</h3>
+                            <p>Please enter your 4-digit PIN to complete this transaction</p>
+                            <div class="pin-inputs">
+                                <input type="password" class="pin-digit" maxlength="1" id="pin1" autofocus>
+                                <input type="password" class="pin-digit" maxlength="1" id="pin2">
+                                <input type="password" class="pin-digit" maxlength="1" id="pin3">
+                                <input type="password" class="pin-digit" maxlength="1" id="pin4">
+                            </div>
+                            <div class="pin-buttons">
+                                <button onclick="closePinModal()">Cancel</button>
+                                <button onclick="submitPin()">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+                // Auto-focus and move
+                for (let i = 1; i <= 4; i++) {
+                    document.getElementById(`pin${i}`).addEventListener('input', function() {
+                        if (this.value.length === 1 && i < 4) {
+                            document.getElementById(`pin${i+1}`).focus();
+                        }
+                    });
+                }
+                
+                window.closePinModal = () => {
+                    document.getElementById('pinOverlay').remove();
+                    resolve(false);
+                };
+                
+                window.submitPin = () => {
+                    let pin = (document.getElementById('pin1')?.value || '') + 
+                              (document.getElementById('pin2')?.value || '') + 
+                              (document.getElementById('pin3')?.value || '') + 
+                              (document.getElementById('pin4')?.value || '');
+                    
+                    let savedPin = localStorage.getItem('transactionPIN');
+                    if (pin === savedPin) {
+                        document.getElementById('pinOverlay').remove();
+                        resolve(true);
+                    } else {
+                        alert('❌ Incorrect PIN. Transaction cancelled.');
+                        document.getElementById('pinOverlay').remove();
+                        resolve(false);
+                    }
+                };
+            });
+        }
+
         auth.onAuthStateChanged((user) => {
             if (!user) window.location.href = 'login-page.html';
             else loadUserData();
@@ -211,7 +293,7 @@
             let html = '';
             networks.forEach(net => {
                 html += `<div class="network-tab ${net.id === 'mtn' ? 'active' : ''}" onclick="switchNetwork('${net.id}')">
-                            <div class="network-logo-box"><img src="${net.image}" alt="${net.name}" onerror="this.src='https://via.placeholder.com/60/0066cc/ffffff?text=${net.name.charAt(0)}'"></div>
+                            <div class="network-logo-box"><img src="${net.image}" alt="${net.name}"></div>
                             <span class="network-name">${net.name}</span>
                         </div>`;
             });
@@ -253,7 +335,7 @@
                 let sellingPrice = plan.cost + YOUR_PROFIT;
                 let badgeClass = '';
                 let badgeText = '';
-                if (plan.type === 'SME') { badgeClass = 'badge-sme'; badgeText = 'SME'; }
+                if (plan.type === 'SME' || plan.type === 'SME2') { badgeClass = 'badge-sme'; badgeText = 'SME'; }
                 else if (plan.type === 'GIFTING' || plan.type === 'CGIFTING') { badgeClass = 'badge-gift'; badgeText = 'GIFT'; }
                 else if (plan.type === 'DataTransfer') { badgeClass = 'badge-data'; badgeText = 'DATA'; }
                 html += `<div class="plan-card" onclick="selectPlan(${plan.id}, '${plan.name}', ${sellingPrice})">
@@ -288,6 +370,10 @@
             if (!selectedPlanId) { showError('Please select a plan'); return; }
             if (!phone || phone.length < 11) { showError('Please enter a valid phone number (11 digits)'); return; }
             if (userBalance < selectedPrice) { showError(`Insufficient balance. Your balance is ₦${userBalance.toLocaleString()}`); return; }
+            
+            // ADD PIN VERIFICATION HERE
+            let pinValid = await verifyUserPin();
+            if (!pinValid) return;
 
             showPending('Processing transaction...');
             let networkObj = networks.find(n => n.id === currentNetwork);
