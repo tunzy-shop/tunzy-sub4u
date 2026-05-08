@@ -10,47 +10,69 @@
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
         .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh;padding-bottom:70px}
+        
+        /* Header with Blue Background */
         .header{background:#0066cc;padding:20px;color:white;display:flex;align-items:center;gap:20px}
         .back-btn{font-size:24px;cursor:pointer;color:white;text-decoration:none}
         .header h1{font-size:20px;font-weight:600}
+        
         .profile-section{padding:20px}
-        .profile-card{background:linear-gradient(135deg,#0066cc,#004d99);color:white;padding:30px;border-radius:15px;text-align:center;margin-bottom:20px}
-        .profile-avatar{width:80px;height:80px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;color:#0066cc;font-size:40px}
-        .profile-name{font-size:22px;font-weight:600;margin-bottom:5px}
-        .profile-email{opacity:0.9;font-size:14px}
+        
+        /* BLUE BALANCE CARD */
+        .balance-card{background:#0066cc;color:white;padding:25px;border-radius:15px;margin-bottom:20px;text-align:center}
+        .balance-label{font-size:14px;opacity:0.9;margin-bottom:5px}
+        .balance-amount{font-size:36px;font-weight:700;margin-bottom:15px}
+        .balance-actions{display:flex;gap:15px;justify-content:center}
+        .balance-actions button{background:rgba(255,255,255,0.2);border:1px solid white;color:white;padding:8px 20px;border-radius:25px;cursor:pointer;font-weight:500}
+        
+        /* Profile Card */
+        .profile-card{background:#f8f9fa;padding:25px;border-radius:15px;text-align:center;margin-bottom:20px;border:1px solid #e0e0e0}
+        .profile-avatar{width:80px;height:80px;background:#0066cc;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;color:white;font-size:40px}
+        .profile-name{font-size:22px;font-weight:600;color:#333;margin-bottom:5px}
+        .profile-email{color:#666;font-size:14px;margin-bottom:10px}
+        .edit-profile{color:#0066cc;font-size:13px;cursor:pointer;text-decoration:none}
+        
         .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin:20px 0}
         .stat-card{background:#f8f9fa;padding:20px;border-radius:12px;text-align:center;border:1px solid #e0e0e0}
         .stat-value{font-size:24px;font-weight:bold;color:#0066cc;margin-bottom:5px}
         .stat-label{font-size:13px;color:#666}
-        .settings-section{background:#f8f9fa;border-radius:15px;padding:20px;margin:20px 0}
-        .settings-title{font-size:16px;font-weight:600;color:#0066cc;margin-bottom:15px}
-        .setting-item{background:white;padding:15px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e0e0e0}
-        .switch{position:relative;display:inline-block;width:50px;height:24px}
-        .switch input{opacity:0;width:0;height:0}
-        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;border-radius:34px}
-        .slider:before{position:absolute;content:"";height:20px;width:20px;left:2px;bottom:2px;background-color:white;border-radius:50%}
-        input:checked+.slider{background-color:#0066cc}
-        input:checked+.slider:before{transform:translateX(26px)}
-        .menu-item{background:#f8f9fa;padding:15px;border-radius:10px;margin-bottom:10px;display:flex;align-items:center;gap:15px;border:1px solid #e0e0e0;cursor:pointer}
+        
+        .menu-section{background:#f8f9fa;border-radius:15px;padding:15px;margin:20px 0}
+        .menu-title{font-size:16px;font-weight:600;color:#0066cc;margin-bottom:15px}
+        .menu-item{background:white;padding:15px;border-radius:10px;margin-bottom:10px;display:flex;align-items:center;gap:15px;border:1px solid #e0e0e0;cursor:pointer;transition:all 0.2s}
+        .menu-item:hover{background:#f5f5f5}
         .menu-icon{font-size:24px;color:#0066cc}
         .menu-text{flex:1}
-        .menu-title{font-weight:600;margin-bottom:3px}
-        .menu-subtitle{font-size:12px;color:#666}
+        .menu-title-text{font-weight:600;margin-bottom:3px}
+        .menu-subtitle{font-size:12px;color:#999}
+        .menu-status{color:#0066cc;font-size:13px;font-weight:500}
+        
         .logout-btn{width:100%;padding:15px;background:#dc3545;color:white;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin:20px 0}
+        .logout-btn:hover{background:#c82333}
+        
+        /* Bottom Navigation */
+        .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:12px 0;position:fixed;bottom:0;max-width:500px;width:100%}
+        .nav-item{text-align:center;text-decoration:none;color:#999;font-size:12px;font-weight:500}
+        .nav-item.active{color:#0066cc}
+        
+        /* PIN MODAL */
         .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:1000}
         .modal.active{display:flex}
-        .modal-content{background:white;padding:30px;border-radius:15px;width:90%;max-width:350px}
-        .modal-content input{width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:10px;margin:10px 0;text-align:center;letter-spacing:8px}
-        .modal-buttons{display:flex;gap:10px;margin-top:15px}
-        .modal-btn{flex:1;padding:12px;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+        .modal-content{background:white;padding:30px;border-radius:20px;width:90%;max-width:350px;text-align:center}
+        .modal-content h3{margin-bottom:10px;color:#333}
+        .modal-content p{margin-bottom:20px;color:#666;font-size:14px}
+        .pin-inputs{display:flex;gap:12px;justify-content:center;margin:20px 0}
+        .pin-digit{width:50px;height:50px;border:2px solid #e0e0e0;border-radius:10px;text-align:center;font-size:24px;font-weight:bold}
+        .pin-digit:focus{border-color:#0066cc;outline:none}
+        .modal-buttons{display:flex;gap:10px;margin-top:20px}
+        .modal-btn{flex:1;padding:12px;border:none;border-radius:10px;cursor:pointer;font-weight:600}
         .modal-btn.cancel{background:#f5f5f5;color:#666}
-        .modal-btn.save{background:#0066cc;color:white}
-        .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:10px 0 12px;position:fixed;bottom:0;max-width:500px;width:100%}
-        .nav-item{text-align:center;text-decoration:none;color:#999;font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px}
-        .nav-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
-        .nav-icon img{width:20px;height:20px;object-fit:contain}
-        .nav-item.active .nav-icon img{filter:brightness(0) saturate(100%) invert(27%) sepia(89%) saturate(2000%) hue-rotate(200deg) brightness(95%) contrast(101%)}
-        .nav-item.active{color:#0066cc}
+        .modal-btn.confirm{background:#0066cc;color:white}
+        .modal-btn.confirm.disabled{background:#ccc}
+        .edit-input{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;margin:10px 0;font-size:16px}
+        
+        .bonus-card{background:linear-gradient(135deg,#28a745,#1e7e34);color:white;padding:20px;border-radius:15px;margin:20px 0;text-align:center}
+        .bonus-amount{font-size:32px;font-weight:bold}
     </style>
 </head>
 <body>
@@ -61,69 +83,396 @@
             <h1>My Profile</h1>
         </div>
         <div class="profile-section">
+            <!-- BLUE BALANCE CARD -->
+            <div class="balance-card">
+                <div class="balance-label">Wallet Balance</div>
+                <div class="balance-amount" id="balanceAmount">₦0.00</div>
+                <div class="balance-actions">
+                    <button onclick="window.location.href='fund.html'">+ Fund Wallet</button>
+                    <button onclick="viewWallet()">View Wallet</button>
+                </div>
+            </div>
+            
+            <!-- Profile Card -->
             <div class="profile-card">
                 <div class="profile-avatar">👤</div>
                 <div class="profile-name" id="profileName">Loading...</div>
                 <div class="profile-email" id="profileEmail"></div>
+                <a href="#" class="edit-profile" onclick="editDisplayName()">Edit Display Name</a>
             </div>
+            
+            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-value" id="statBalance">₦0</div><div class="stat-label">Balance</div></div>
                 <div class="stat-card"><div class="stat-value" id="statTransactions">0</div><div class="stat-label">Transactions</div></div>
+                <div class="stat-card"><div class="stat-value" id="statReferrals">0</div><div class="stat-label">Referrals</div></div>
+                <div class="stat-card"><div class="stat-value" id="statBonus">₦0</div><div class="stat-label">Bonus</div></div>
             </div>
-            <div class="settings-section">
-                <div class="settings-title">🔒 Security Settings</div>
-                <div class="setting-item">
-                    <div><div class="setting-name">Transaction PIN</div><div class="setting-desc">Require PIN for transfers</div></div>
-                    <label class="switch"><input type="checkbox" id="pinToggle" onchange="togglePIN()"><span class="slider"></span></label>
+            
+            <!-- Bonus Card -->
+            <div class="bonus-card">
+                <div>🎁 Your Bonus Balance</div>
+                <div class="bonus-amount" id="bonusAmount">₦0.00</div>
+                <div style="font-size:12px;margin-top:8px">Invite friends to earn ₦50 each!</div>
+            </div>
+            
+            <!-- Menu Items -->
+            <div class="menu-section">
+                <div class="menu-title">⚙️ Account Settings</div>
+                
+                <div class="menu-item" onclick="changeUsername()">
+                    <div class="menu-icon">👤</div>
+                    <div class="menu-text"><div class="menu-title-text">Username / Display Name</div><div class="menu-subtitle">Change how your name appears</div></div>
+                    <div class="menu-status" id="displayNameStatus">Edit</div>
+                </div>
+                
+                <div class="menu-item" onclick="setupTransactionPin()">
+                    <div class="menu-icon">🔐</div>
+                    <div class="menu-text"><div class="menu-title-text" id="pinMenuTitle">Transaction PIN</div><div class="menu-subtitle" id="pinMenuSubtitle">Secure your transactions with a PIN</div></div>
+                    <div class="menu-status" id="pinStatus">Set Up</div>
+                </div>
+                
+                <div class="menu-item" onclick="changePassword()">
+                    <div class="menu-icon">🔑</div>
+                    <div class="menu-text"><div class="menu-title-text">Change Password</div><div class="menu-subtitle">Update your login password</div></div>
+                    <div class="menu-status">Change</div>
                 </div>
             </div>
-            <div class="menu-item" onclick="changePassword()">
-                <div class="menu-icon">🔑</div><div class="menu-text"><div class="menu-title">Change Password</div><div class="menu-subtitle">Update your password</div></div>
+            
+            <div class="menu-section">
+                <div class="menu-title">🎁 Refer & Earn</div>
+                <div class="menu-item" onclick="shareReferral()">
+                    <div class="menu-icon">📢</div>
+                    <div class="menu-text"><div class="menu-title-text">Invite Friends</div><div class="menu-subtitle">Get ₦50 for each friend who joins</div></div>
+                    <div class="menu-status">Share</div>
+                </div>
+                <div class="menu-item" onclick="viewReferrals()">
+                    <div class="menu-icon">👥</div>
+                    <div class="menu-text"><div class="menu-title-text">My Referrals</div><div class="menu-subtitle">See who joined using your link</div></div>
+                    <div class="menu-status">View</div>
+                </div>
             </div>
-            <div class="menu-item" onclick="window.location.href='support.html'">
-                <div class="menu-icon">❓</div><div class="menu-text"><div class="menu-title">Help & Support</div><div class="menu-subtitle">Contact us, FAQs</div></div>
-            </div>
+            
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
+    
     <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-item">
-            <div class="nav-icon"><img src="assets/icons/home-icon.png" alt="Home"></div>
-            <div>HOME</div>
-        </a>
-        <a href="history.html" class="nav-item">
-            <div class="nav-icon"><img src="assets/icons/history-icon.png" alt="History"></div>
-            <div>HISTORY</div>
-        </a>
-        <a href="support.html" class="nav-item">
-            <div class="nav-icon"><img src="assets/icons/support-icon.png" alt="Support"></div>
-            <div>SUPPORT</div>
-        </a>
-        <a href="profile.html" class="nav-item active">
-            <div class="nav-icon"><img src="assets/icons/profile-icon.png" alt="Profile"></div>
-            <div>PROFILE</div>
-        </a>
+        <a href="dashboard.html" class="nav-item">HOME</a>
+        <a href="history.html" class="nav-item">HISTORY</a>
+        <a href="support.html" class="nav-item">SUPPORT</a>
+        <a href="profile.html" class="nav-item active">PROFILE</a>
     </div>
-    <div class="modal" id="pinModal"><div class="modal-content"><h3>Set Transaction PIN</h3><p style="color:#666;margin-bottom:10px">Enter 4-digit PIN</p><input type="password" id="pinInput" maxlength="4" placeholder="••••"><input type="password" id="pinConfirm" maxlength="4" placeholder="Confirm PIN"><div class="modal-buttons"><button class="modal-btn cancel" onclick="closePINModal()">Cancel</button><button class="modal-btn save" onclick="savePIN()">Save PIN</button></div></div></div>
+    
+    <!-- PIN Setup Modal -->
+    <div class="modal" id="pinModal">
+        <div class="modal-content">
+            <h3 id="pinModalTitle">Set Transaction PIN</h3>
+            <p id="pinModalText">Create a 4-digit PIN to secure your transactions</p>
+            <div class="pin-inputs">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNext(this, 1)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNext(this, 2)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNext(this, 3)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNext(this, 4)">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closePinModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="savePin()" id="savePinBtn">Set PIN</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Verify PIN Modal -->
+    <div class="modal" id="verifyPinModal">
+        <div class="modal-content">
+            <h3>Enter PIN</h3>
+            <p>Enter your 4-digit transaction PIN</p>
+            <div class="pin-inputs">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextVerify(this, 1)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextVerify(this, 2)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextVerify(this, 3)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextVerify(this, 4)">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeVerifyPinModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="verifyPin()">Confirm</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Change PIN Modal -->
+    <div class="modal" id="changePinModal">
+        <div class="modal-content">
+            <h3>Change Transaction PIN</h3>
+            <p>Enter new 4-digit PIN</p>
+            <div class="pin-inputs">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextChange(this, 1)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextChange(this, 2)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextChange(this, 3)">
+                <input type="password" class="pin-digit" maxlength="1" oninput="moveToNextChange(this, 4)">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeChangePinModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveNewPin()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Name Modal -->
+    <div class="modal" id="editNameModal">
+        <div class="modal-content">
+            <h3>Edit Display Name</h3>
+            <input type="text" id="newName" class="edit-input" placeholder="Enter new display name">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeEditNameModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveDisplayName()">Save</button>
+            </div>
+        </div>
+    </div>
 
     <script>
+        let pendingAction = null;
+        let pendingPinDigits = [];
+        let pendingNewPin = [];
+        
+        // Load user data - REAL from Firebase
         auth.onAuthStateChanged((user) => {
             if (!user) window.location.href = 'login-page.html';
             else {
-                document.getElementById('profileName').innerText = user.displayName || user.email.split('@')[0];
-                document.getElementById('profileEmail').innerText = user.email;
-                let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
-                let transactions = JSON.parse(localStorage.getItem('transactions') || []);
-                document.getElementById('statBalance').innerText = `₦${balance.toLocaleString()}`;
-                document.getElementById('statTransactions').innerText = transactions.length;
-                document.getElementById('pinToggle').checked = localStorage.getItem('pinEnabled') === 'true';
+                loadUserData();
+                loadRealStats();
+                updatePinUI();
             }
         });
-        function togglePIN() { if (document.getElementById('pinToggle').checked) document.getElementById('pinModal').classList.add('active'); else { localStorage.setItem('pinEnabled', 'false'); localStorage.removeItem('transactionPIN'); alert('PIN disabled'); } }
-        function closePINModal() { document.getElementById('pinModal').classList.remove('active'); document.getElementById('pinToggle').checked = false; }
-        function savePIN() { let pin = document.getElementById('pinInput').value, confirm = document.getElementById('pinConfirm').value; if (pin.length !== 4 || confirm.length !== 4) { alert('PIN must be 4 digits'); return; } if (pin !== confirm) { alert('PINs do not match'); return; } localStorage.setItem('transactionPIN', pin); localStorage.setItem('pinEnabled', 'true'); alert('PIN set successfully!'); closePINModal(); }
-        function changePassword() { let newPass = prompt('Enter new password (min 6 characters):'); if (newPass && newPass.length >= 6) auth.currentUser.updatePassword(newPass).then(() => alert('Password updated!')).catch(() => alert('Error updating password')); else if (newPass) alert('Password must be at least 6 characters'); }
-        function logout() { if (confirm('Logout?')) { auth.signOut(); localStorage.removeItem('currentUser'); window.location.href = 'login-page.html'; } }
+        
+        function loadUserData() {
+            const user = auth.currentUser;
+            if (user) {
+                let displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('profileName').innerText = displayName;
+                document.getElementById('profileEmail').innerText = user.email;
+            }
+        }
+        
+        function loadRealStats() {
+            // REAL balance from localStorage
+            let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            document.getElementById('statBalance').innerText = `₦${balance.toLocaleString()}`;
+            document.getElementById('balanceAmount').innerText = `₦${balance.toLocaleString()}`;
+            
+            // REAL transactions count
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            document.getElementById('statTransactions').innerText = transactions.length;
+            
+            // REAL bonus from localStorage
+            let bonus = parseFloat(localStorage.getItem('userBonus')) || 0;
+            document.getElementById('statBonus').innerText = `₦${bonus.toLocaleString()}`;
+            document.getElementById('bonusAmount').innerText = `₦${bonus.toLocaleString()}`;
+            
+            // REAL referrals count
+            let referrals = JSON.parse(localStorage.getItem('userReferrals')) || [];
+            document.getElementById('statReferrals').innerText = referrals.length;
+        }
+        
+        function updatePinUI() {
+            let hasPin = localStorage.getItem('transactionPIN') !== null;
+            if (hasPin) {
+                document.getElementById('pinMenuTitle').innerText = 'Change Transaction PIN';
+                document.getElementById('pinMenuSubtitle').innerText = 'Update your 4-digit transaction PIN';
+                document.getElementById('pinStatus').innerHTML = 'Change';
+            } else {
+                document.getElementById('pinMenuTitle').innerText = 'Set Transaction PIN';
+                document.getElementById('pinMenuSubtitle').innerText = 'Secure your transactions with a PIN';
+                document.getElementById('pinStatus').innerHTML = 'Set Up';
+            }
+        }
+        
+        // PIN Setup Functions
+        function setupTransactionPin() {
+            let hasPin = localStorage.getItem('transactionPIN') !== null;
+            if (hasPin) {
+                // Show CHANGE PIN modal
+                document.getElementById('changePinModal').classList.add('active');
+                pendingNewPin = [];
+                clearPinInputs('change');
+            } else {
+                // Show SET PIN modal
+                document.getElementById('pinModal').classList.add('active');
+                pendingPinDigits = [];
+                clearPinInputs('pin');
+            }
+        }
+        
+        function moveToNext(input, nextIndex) {
+            if (input.value.length === 1) {
+                let next = document.querySelectorAll('.pin-digit')[nextIndex];
+                if (next) next.focus();
+            }
+            // Store the digits
+            let digits = [];
+            document.querySelectorAll('#pinModal .pin-digit').forEach(el => { if (el.value) digits.push(el.value); });
+            pendingPinDigits = digits;
+        }
+        
+        function moveToNextVerify(input, nextIndex) {
+            if (input.value.length === 1) {
+                let next = document.querySelectorAll('#verifyPinModal .pin-digit')[nextIndex];
+                if (next) next.focus();
+            }
+        }
+        
+        function moveToNextChange(input, nextIndex) {
+            if (input.value.length === 1) {
+                let next = document.querySelectorAll('#changePinModal .pin-digit')[nextIndex];
+                if (next) next.focus();
+            }
+            let digits = [];
+            document.querySelectorAll('#changePinModal .pin-digit').forEach(el => { if (el.value) digits.push(el.value); });
+            pendingNewPin = digits;
+        }
+        
+        function clearPinInputs(modalId) {
+            if (modalId === 'pin') {
+                document.querySelectorAll('#pinModal .pin-digit').forEach(el => { el.value = ''; });
+            } else if (modalId === 'verify') {
+                document.querySelectorAll('#verifyPinModal .pin-digit').forEach(el => { el.value = ''; });
+            } else if (modalId === 'change') {
+                document.querySelectorAll('#changePinModal .pin-digit').forEach(el => { el.value = ''; });
+            }
+        }
+        
+        function savePin() {
+            let pin = pendingPinDigits.join('');
+            if (pin.length !== 4) {
+                alert('Please enter a 4-digit PIN');
+                return;
+            }
+            localStorage.setItem('transactionPIN', pin);
+            localStorage.setItem('pinEnabled', 'true');
+            closePinModal();
+            updatePinUI();
+            alert('✅ PIN set successfully! You will now need it for all transactions.');
+        }
+        
+        function saveNewPin() {
+            let pin = pendingNewPin.join('');
+            if (pin.length !== 4) {
+                alert('Please enter a 4-digit PIN');
+                return;
+            }
+            localStorage.setItem('transactionPIN', pin);
+            localStorage.setItem('pinEnabled', 'true');
+            closeChangePinModal();
+            updatePinUI();
+            alert('✅ PIN changed successfully!');
+        }
+        
+        function closePinModal() {
+            document.getElementById('pinModal').classList.remove('active');
+            pendingPinDigits = [];
+            clearPinInputs('pin');
+        }
+        
+        function closeVerifyPinModal() {
+            document.getElementById('verifyPinModal').classList.remove('active');
+            pendingAction = null;
+            clearPinInputs('verify');
+        }
+        
+        function closeChangePinModal() {
+            document.getElementById('changePinModal').classList.remove('active');
+            pendingNewPin = [];
+            clearPinInputs('change');
+        }
+        
+        function verifyPin() {
+            let enteredPin = '';
+            document.querySelectorAll('#verifyPinModal .pin-digit').forEach(el => { enteredPin += el.value; });
+            let savedPin = localStorage.getItem('transactionPIN');
+            if (enteredPin === savedPin) {
+                closeVerifyPinModal();
+                if (pendingAction === 'editName') {
+                    document.getElementById('editNameModal').classList.add('active');
+                }
+            } else {
+                alert('❌ Incorrect PIN. Please try again.');
+                clearPinInputs('verify');
+            }
+        }
+        
+        function changePassword() {
+            if (document.getElementById('pinMenuTitle').innerText === 'Set Transaction PIN') {
+                alert('Please set your transaction PIN first in Security Settings');
+                return;
+            }
+            let newPass = prompt('Enter new password (min 6 characters):');
+            if (newPass && newPass.length >= 6) {
+                auth.currentUser.updatePassword(newPass).then(() => {
+                    alert('✅ Password updated successfully!');
+                }).catch(() => alert('Error updating password'));
+            } else if (newPass) alert('Password must be at least 6 characters');
+        }
+        
+        function editDisplayName() {
+            if (localStorage.getItem('transactionPIN') === null) {
+                alert('Please set your transaction PIN first in Security Settings');
+                return;
+            }
+            pendingAction = 'editName';
+            document.getElementById('verifyPinModal').classList.add('active');
+            clearPinInputs('verify');
+        }
+        
+        function saveDisplayName() {
+            let newName = document.getElementById('newName').value.trim();
+            if (!newName) {
+                alert('Please enter a display name');
+                return;
+            }
+            auth.currentUser.updateProfile({ displayName: newName }).then(() => {
+                document.getElementById('profileName').innerText = newName;
+                localStorage.setItem('userName', newName);
+                alert('✅ Display name updated!');
+                closeEditNameModal();
+            }).catch(() => alert('Error updating name'));
+        }
+        
+        function changeUsername() { editDisplayName(); }
+        function closeEditNameModal() { document.getElementById('editNameModal').classList.remove('active'); }
+        
+        function viewWallet() {
+            let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+            alert(`💰 Your Wallet Balance: ₦${balance.toLocaleString()}\n\nTransactions: ${JSON.parse(localStorage.getItem('transactions') || '[]').length}`);
+        }
+        
+        function shareReferral() {
+            let referralCode = localStorage.getItem('userEmail') || auth.currentUser?.email;
+            let text = `Join TUNZY SUB 4 YOU and get ₦50 bonus! Use my referral code: ${referralCode}\n\nhttps://tunzy-sub4u.vercel.app/signup.html`;
+            if (navigator.share) navigator.share({ title: 'Join TUNZY SUB 4 YOU', text: text });
+            else prompt('Share this link:', text);
+            addBonus(50);
+        }
+        
+        function addBonus(amount) {
+            let bonus = parseFloat(localStorage.getItem('userBonus')) || 0;
+            bonus += amount;
+            localStorage.setItem('userBonus', bonus);
+            document.getElementById('statBonus').innerText = `₦${bonus.toLocaleString()}`;
+            document.getElementById('bonusAmount').innerText = `₦${bonus.toLocaleString()}`;
+        }
+        
+        function viewReferrals() {
+            let referrals = JSON.parse(localStorage.getItem('userReferrals')) || [];
+            alert(`👥 Total Referrals: ${referrals.length}\n\nEarned Bonus: ₦${referrals.length * 50}`);
+        }
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login-page.html';
+            }
+        }
     </script>
 </body>
 </html>
