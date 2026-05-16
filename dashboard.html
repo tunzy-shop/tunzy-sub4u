@@ -3,58 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - TUNZY SUB 4 YOU</title>
+    <title>Dashboard - TUNZY SUB</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
-        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh;padding-bottom:70px}
+        /* Additional dashboard specific styles */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px;
+            margin: 10px 0 20px;
+            overflow-x: auto;
+        }
         
-        /* Header */
-        .header{background:#0066cc;padding:20px;display:flex;align-items:center;gap:15px}
-        .logo-circle{width:45px;height:45px;border-radius:50%;background:white;overflow:hidden;display:flex;align-items:center;justify-content:center}
-        .logo-circle img{width:100%;height:100%;object-fit:cover}
-        .app-title{font-size:20px;font-weight:600;color:white}
+        .quick-action {
+            background: linear-gradient(135deg, var(--bg-gray), var(--bg-white));
+            padding: 8px 20px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+        }
         
-        /* Welcome Card */
-        .welcome-card{padding:20px 20px 10px}
-        .welcome-text{font-size:14px;color:#666}
-        .user-name{font-size:24px;font-weight:600;color:#0066cc}
+        .section-title {
+            padding: 0 20px;
+            margin: 20px 0 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
         
-        /* Balance Card */
-        .balance-card{background:#0066cc;color:white;margin:10px 20px 20px;padding:20px;border-radius:15px;display:flex;justify-content:space-between;align-items:center}
-        .balance-left{display:flex;align-items:center;gap:15px}
-        .balance-label{font-size:14px;opacity:0.9}
-        .balance-amount{font-size:28px;font-weight:700}
-        .eye-btn{background:rgba(255,255,255,0.2);border:none;font-size:20px;cursor:pointer;color:white;padding:8px;border-radius:50%;width:40px;height:40px}
-        .fund-btn{background:white;color:#0066cc;border:none;padding:10px 25px;border-radius:25px;font-weight:600;cursor:pointer}
+        .transactions-list {
+            padding: 0 20px;
+        }
         
-        /* Services Grid */
-        .services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:20px}
-        .service-card{background:#f8f9fa;padding:30px 15px;border-radius:20px;text-align:center;text-decoration:none;color:#333;border:2px solid #e0e0e0;transition:all 0.3s}
-        .service-card:hover{transform:translateY(-3px);border-color:#0066cc}
-        .service-image{width:70px;height:70px;margin:0 auto 10px}
-        .service-image img{width:100%;height:100%;object-fit:contain}
-        .service-title{font-size:20px;font-weight:700;color:#0066cc}
+        .transaction-item {
+            background: var(--bg-gray);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
         
-        /* Bottom Navigation - WITH REAL ICON IMAGES */
-        .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:10px 0 12px;position:fixed;bottom:0;max-width:500px;width:100%}
-        .nav-item{text-align:center;text-decoration:none;color:#999;font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px}
-        .nav-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
-        .nav-icon img{width:20px;height:20px;object-fit:contain}
-        .nav-item.active .nav-icon img{filter:brightness(0) saturate(100%) invert(27%) sepia(89%) saturate(2000%) hue-rotate(200deg) brightness(95%) contrast(101%)}
-        .nav-item.active{color:#0066cc}
+        .transaction-service {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
         
-        body{padding-bottom:0}
+        .transaction-date {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+        
+        .transaction-amount {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        
+        .transaction-amount.credit {
+            color: var(--success);
+        }
     </style>
 </head>
 <body>
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </div>
+    
+    <script>
+        // Dark mode function
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
+    
     <script src="js/firebase-config.js"></script>
     <div class="app-container">
         <div class="header">
-            <div class="logo-circle"><img src="assets/my-logo.jpg" alt="TUNZY"></div>
-            <span class="app-title">TUNZY SUB 4 YOU</span>
+            <div class="logo-circle">
+                <img src="assets/T-logo.jpg" alt="TUNZY" onerror="this.innerHTML='<span class=\"logo-text\">T</span>'">
+            </div>
+            <span class="app-title">TUNZY SUB</span>
         </div>
         <div class="welcome-card">
             <div class="welcome-text">Welcome back,</div>
@@ -70,58 +110,104 @@
             </div>
             <button class="fund-btn" onclick="window.location.href='fund.html'">Fund</button>
         </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <span class="quick-action">📱 Buy Data</span>
+            <span class="quick-action">📞 Airtime</span>
+            <span class="quick-action">💡 Electricity</span>
+            <span class="quick-action">📺 TV</span>
+        </div>
+        
+        <!-- Services Grid -->
         <div class="services-grid">
             <a href="buy-data.html" class="service-card">
-                <div class="service-image"><img src="assets/buydata.png" alt="Buy Data"></div>
-                <div class="service-title">Buy Data</div>
+                <div class="service-image"><img src="assets/buydata.png" alt="DATA" onerror="this.innerHTML='📱'"></div>
+                <div class="service-title">DATA</div>
             </a>
             <a href="airtime.html" class="service-card">
-                <div class="service-image"><img src="assets/airtime.png" alt="Airtime"></div>
-                <div class="service-title">Airtime</div>
-            </a>
-            <a href="tv.html" class="service-card">
-                <div class="service-image"><img src="assets/cabletv.png" alt="Cable TV"></div>
-                <div class="service-title">Cable TV</div>
+                <div class="service-image"><img src="assets/airtime.png" alt="AIRTIME" onerror="this.innerHTML='📞'"></div>
+                <div class="service-title">AIRTIME</div>
             </a>
             <a href="electricity.html" class="service-card">
-                <div class="service-image"><img src="assets/electricity.png" alt="Electricity"></div>
-                <div class="service-title">Electricity</div>
+                <div class="service-image"><img src="assets/electricity.png" alt="ELECTRICITY" onerror="this.innerHTML='💡'"></div>
+                <div class="service-title">ELECTRICITY</div>
+            </a>
+            <a href="tv.html" class="service-card">
+                <div class="service-image"><img src="assets/cabletv.png" alt="TV" onerror="this.innerHTML='📺'"></div>
+                <div class="service-title">TV</div>
+            </a>
+            <a href="social.html" class="service-card">
+                <div class="service-image"><img src="assets/social.png" alt="BOOST SOCIAL" onerror="this.innerHTML='📱'"></div>
+                <div class="service-title">BOOST SOCIAL</div>
+            </a>
+            <a href="media.html" class="service-card">
+                <div class="service-image"><img src="assets/media.png" alt="MEDIA" onerror="this.innerHTML='🎬'"></div>
+                <div class="service-title">MEDIA</div>
             </a>
         </div>
+        
+        <!-- Recent Transactions -->
+        <div class="section-title">Recent Transactions</div>
+        <div class="transactions-list" id="transactionsList">
+            <div class="transaction-item">
+                <div><div class="transaction-service">No transactions yet</div></div>
+            </div>
+        </div>
     </div>
+    
     <div class="bottom-nav">
         <a href="dashboard.html" class="nav-item active">
-            <div class="nav-icon"><img src="assets/icons/home-icon.png" alt="Home" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23999%22%3E%3Cpath d=%22M12 3L2 9l10 6 10-6-10-6zM2 9v10l10 6 10-6V9%22/%3E%3C/svg%3E'"></div>
+            <div class="nav-icon">🏠</div>
             <div>HOME</div>
         </a>
         <a href="history.html" class="nav-item">
-            <div class="nav-icon"><img src="assets/icons/history-icon.png" alt="History" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23999%22%3E%3Cpath d=%22M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z%22/%3E%3C/svg%3E'"></div>
+            <div class="nav-icon">📊</div>
             <div>HISTORY</div>
         </a>
         <a href="support.html" class="nav-item">
-            <div class="nav-icon"><img src="assets/icons/support-icon.png" alt="Support" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23999%22%3E%3Cpath d=%22M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z%22/%3E%3C/svg%3E'"></div>
+            <div class="nav-icon">❓</div>
             <div>SUPPORT</div>
         </a>
         <a href="profile.html" class="nav-item">
-            <div class="nav-icon"><img src="assets/icons/profile-icon.png" alt="Profile" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23999%22%3E%3Cpath d=%22M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z%22/%3E%3C/svg%3E'"></div>
+            <div class="nav-icon">👤</div>
             <div>PROFILE</div>
         </a>
     </div>
+    
     <script>
         let balanceVisible = true;
+        
         auth.onAuthStateChanged((user) => {
             if (!user) window.location.href = 'login-page.html';
             else {
                 document.getElementById('userName').innerText = user.displayName || user.email.split('@')[0];
                 let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
                 document.getElementById('balanceAmount').innerText = `₦${balance.toLocaleString()}.00`;
+                loadTransactions();
             }
         });
+        
         function toggleBalance() {
             balanceVisible = !balanceVisible;
             let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
             document.getElementById('balanceAmount').innerText = balanceVisible ? `₦${balance.toLocaleString()}.00` : '••••••';
             document.getElementById('eyeBtn').innerHTML = balanceVisible ? '👁️' : '👁️‍🗨️';
+        }
+        
+        function loadTransactions() {
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            let container = document.getElementById('transactionsList');
+            if (transactions.length === 0) return;
+            let html = '';
+            transactions.slice(0, 3).forEach(t => {
+                let isCredit = t.amount && t.amount.startsWith('+');
+                html += `<div class="transaction-item">
+                            <div><div class="transaction-service">${t.type}</div><div class="transaction-date">${t.date || 'Just now'}</div></div>
+                            <div class="transaction-amount ${isCredit ? 'credit' : ''}">${t.amount}</div>
+                        </div>`;
+            });
+            container.innerHTML = html;
         }
     </script>
 </body>
