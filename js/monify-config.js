@@ -16,8 +16,8 @@ const MONNIFY_CONFIG = {
     
     // Settings
     IS_TEST_MODE: false,
-    SERVICE_FEE: 10,  // ₦10 fee per deposit
-    BVN_LIMIT: 20000   // Limit for users without BVN
+    SERVICE_FEE: 10,
+    BVN_LIMIT: 20000
 };
 
 // Get authentication token
@@ -47,7 +47,7 @@ async function getMonnifyToken() {
     }
 }
 
-// Create virtual account for a user
+// Create virtual account
 async function createVirtualAccount(userId, userName, userEmail, bvn = null, nin = null) {
     const token = await getMonnifyToken();
     if (!token) return { success: false, message: 'Authentication failed' };
@@ -64,7 +64,6 @@ async function createVirtualAccount(userId, userName, userEmail, bvn = null, nin
         getAllAvailableBanks: true
     };
     
-    // Add BVN or NIN if provided
     if (bvn) payload.bvn = bvn;
     if (nin) payload.nin = nin;
     
@@ -99,7 +98,7 @@ async function createVirtualAccount(userId, userName, userEmail, bvn = null, nin
     }
 }
 
-// Update BVN for existing account
+// Update BVN
 async function updateAccountBVN(accountReference, bvn, nin = null) {
     const token = await getMonnifyToken();
     if (!token) return { success: false };
@@ -124,7 +123,6 @@ async function updateAccountBVN(accountReference, bvn, nin = null) {
     }
 }
 
-// Export functions
 window.MONNIFY_CONFIG = MONNIFY_CONFIG;
 window.getMonnifyToken = getMonnifyToken;
 window.createVirtualAccount = createVirtualAccount;
