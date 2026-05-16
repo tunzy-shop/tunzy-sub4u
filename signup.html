@@ -3,204 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - TUNZY SUB 4 YOU</title>
+    <title>Sign Up - TUNZY SUB</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0066cc, #004d99);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .signup-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-        }
-
-        .signup-box {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .logo-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #0066cc;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 3px solid white;
-        }
-
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        h1 {
-            color: #0066cc;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .form-group input:focus {
-            border-color: #0066cc;
-            outline: none;
-        }
-
-        .signup-btn {
-            width: 100%;
-            padding: 15px;
-            background: #0066cc;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-
-        .signup-btn:hover {
-            background: #004d99;
-        }
-
-        .login-link {
-            text-align: center;
-            color: #666;
-        }
-
-        .login-link a {
-            color: #0066cc;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 10px 0;
-            color: #0066cc;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#0066cc,#4a90e2);min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .signup-container{width:100%;max-width:450px;padding:20px}
+        .signup-card{background:white;border-radius:24px;padding:40px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
+        .logo{text-align:center;margin-bottom:32px}
+        .logo-circle{width:70px;height:70px;background:linear-gradient(135deg,#0066cc,#4a90e2);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+        .logo-circle span{font-size:32px;font-weight:700;color:white}
+        .logo h1{font-size:24px;color:#1a1a2e}
+        .input-group{margin-bottom:16px}
+        .input-group label{display:block;margin-bottom:6px;font-weight:500;color:#333;font-size:13px}
+        .input-group input{width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;transition:all 0.3s}
+        .input-group input:focus{border-color:#0066cc;outline:none;box-shadow:0 0 0 3px rgba(0,102,204,0.1)}
+        .row{display:flex;gap:12px;margin-bottom:16px}
+        .row .input-group{flex:1}
+        .verification-group{background:#f8f9fa;border-radius:12px;padding:16px;margin:16px 0;border:1px solid #e2e8f0}
+        .limit-info{font-size:12px;color:#666;margin-top:8px;padding:8px;background:#e6f0ff;border-radius:8px}
+        .signup-btn{width:100%;padding:14px;background:linear-gradient(135deg,#0066cc,#4a90e2);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-top:16px}
+        .login-link{text-align:center;margin-top:20px;color:#666}
+        .login-link a{color:#0066cc;text-decoration:none}
+        .error-message{background:#fee2e2;color:#dc2626;padding:12px;border-radius:12px;margin-bottom:20px;display:none}
     </style>
 </head>
 <body>
     <div class="signup-container">
-        <div class="signup-box">
-            <div class="logo-circle">
-                <img src="assets/my-logo.jpg" alt="TUNZY">
+        <div class="signup-card">
+            <div class="logo">
+                <div class="logo-circle"><span>T</span></div>
+                <h1>TUNZY SUB</h1>
             </div>
-            <h1>TUNZY SUB 4 YOU</h1>
 
             <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
-            <div class="loading" id="loading">Creating account...</div>
 
             <form id="signupForm">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="name" placeholder="John Doe" required>
+                <div class="row">
+                    <div class="input-group"><label>First Name</label><input type="text" id="firstName" required></div>
+                    <div class="input-group"><label>Last Name</label><input type="text" id="lastName" required></div>
                 </div>
 
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="email" placeholder="you@example.com" required>
-                </div>
+                <div class="input-group"><label>Email Address</label><input type="email" id="email" required></div>
+                <div class="input-group"><label>Phone Number</label><input type="tel" id="phone" placeholder="08012345678" required></div>
+                <div class="input-group"><label>Password</label><input type="password" id="password" required></div>
+                <div class="input-group"><label>Confirm Password</label><input type="password" id="confirmPassword" required></div>
 
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" id="phone" placeholder="08012345678" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" placeholder="********" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" id="confirmPassword" placeholder="********" required>
+                <div class="verification-group">
+                    <div class="row">
+                        <div class="input-group"><label>BVN (Optional)</label><input type="text" id="bvn" maxlength="11" placeholder="11-digit BVN"><button type="button" class="btn-verify" onclick="verifyBVN()" style="margin-top:8px;padding:8px;background:#0066cc;color:white;border:none;border-radius:8px;cursor:pointer">Verify</button></div>
+                        <div class="input-group"><label>NIN (Optional)</label><input type="text" id="nin" maxlength="11" placeholder="11-digit NIN"><button type="button" class="btn-verify" onclick="verifyNIN()" style="margin-top:8px;padding:8px;background:#0066cc;color:white;border:none;border-radius:8px;cursor:pointer">Verify</button></div>
+                    </div>
+                    <div class="limit-info" id="limitInfo">ℹ️ Without BVN/NIN, your daily transaction limit is ₦20,000. Add BVN or NIN for higher limits.</div>
                 </div>
 
                 <button type="submit" class="signup-btn">Create Account</button>
-
-                <div class="login-link">
-                    Already have an account? <a href="login-page.html">Sign In</a>
-                </div>
+                <div class="login-link">Already have an account? <a href="login-page.html">Sign In</a></div>
             </form>
         </div>
     </div>
 
     <script src="js/firebase-config.js"></script>
+    <script src="js/monnify-config.js"></script>
     <script>
+        function verifyBVN() { alert('BVN verification - In production, this would call Monnify/IdentityPass API'); }
+        function verifyNIN() { alert('NIN verification - In production, this would call NIMC/IdentityPass API'); }
+
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const bvn = document.getElementById('bvn').value;
+            const nin = document.getElementById('nin').value;
             
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
-            
-            if (!name || !email || !phone || !password) {
+            if (!firstName || !lastName || !email || !phone || !password) {
                 showError('All fields are required');
                 return;
             }
@@ -215,67 +97,56 @@
                 return;
             }
             
-            document.getElementById('loading').style.display = 'block';
-            
             try {
-                // Create user in Firebase
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
-                // Update profile with name
-                await user.updateProfile({
-                    displayName: name
-                });
+                const fullName = `${firstName} ${lastName}`;
+                await user.updateProfile({ displayName: fullName });
                 
-                // Save user data to localStorage
-                localStorage.setItem('currentUser', JSON.stringify({
-                    email: email,
-                    name: name
-                }));
-                localStorage.setItem('userName', name);
+                // Create Monnify virtual account
+                const account = await createVirtualAccount(user.uid, fullName, email, bvn || null, nin || null);
+                
+                if (account.success) {
+                    localStorage.setItem(`monnify_account_${user.uid}`, JSON.stringify(account));
+                }
+                
+                localStorage.setItem('userName', fullName);
                 localStorage.setItem('userEmail', email);
                 localStorage.setItem('userBalance', '0');
+                localStorage.setItem('hasBVN', bvn ? 'true' : 'false');
                 
-                // Save to your users list (keep existing structure)
+                // Save to users list
                 const users = JSON.parse(localStorage.getItem('users')) || [];
                 users.push({
-                    name: name,
+                    uid: user.uid,
+                    name: fullName,
                     email: email,
                     phone: phone,
-                    password: password,
                     balance: 0,
+                    hasBVN: !!bvn,
+                    hasNIN: !!nin,
+                    limit: bvn || nin ? null : 20000,
                     created: new Date().toISOString()
                 });
                 localStorage.setItem('users', JSON.stringify(users));
                 
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('successMessage').textContent = 'Account created successfully! Redirecting...';
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                alert('Account created successfully!');
+                window.location.href = 'dashboard.html';
                 
             } catch (error) {
-                document.getElementById('loading').style.display = 'none';
                 let errorMessage = 'Signup failed';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'Email already registered';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'Password is too weak';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email address';
-                }
-                
+                if (error.code === 'auth/email-already-in-use') errorMessage = 'Email already registered';
+                else if (error.code === 'auth/weak-password') errorMessage = 'Password is too weak';
                 showError(errorMessage);
             }
         });
-
+        
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.style.display = 'block';
             errorDiv.textContent = message;
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
         }
     </script>
 </body>
