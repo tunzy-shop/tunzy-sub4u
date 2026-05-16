@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TUNZY SUB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Light Mode (Default) */
+        :root {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #666;
+            --card-bg: #ffffff;
+            --sidebar-bg: #1a1a2e;
+            --sidebar-text: #ffffff;
+            --border: #e2e8f0;
+            --primary: #0066cc;
+            --primary-light: #4a90e2;
+            --primary-dark: #004d99;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --purple: #6f42c1;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e2e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --card-bg: #1e1e2e;
+            --border: #2d2d3d;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header h2 .logo-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #0066cc, #4a90e2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            gap: 12px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #0066cc, #4a90e2);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .dark-mode-toggle {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0066cc, #4a90e2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-header span {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .stat-header i {
+            font-size: 28px;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 13px;
+            color: var(--success);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0066cc, #4a90e2);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: #333;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(40,167,69,0.1);
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: rgba(220,53,69,0.1);
+            color: var(--danger);
+        }
+
+        .badge-warning {
+            background: rgba(255,193,7,0.1);
+            color: var(--warning);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <div class="logo-icon">🔵</div>
+                    TUNZY SUB
+                </h2>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item active" onclick="loadPage('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('users')">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('transactions')">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transactions</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('data-plans')">
+                    <i class="fas fa-database"></i>
+                    <span>Data Plans</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('airtime')">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Airtime</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('electricity')">
+                    <i class="fas fa-bolt"></i>
+                    <span>Electricity</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('tv')">
+                    <i class="fas fa-tv"></i>
+                    <span>TV</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('wallet')">
+                    <i class="fas fa-wallet"></i>
+                    <span>Wallet & Profit</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('resellers')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Resellers</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('reports')">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </div>
+                <div class="nav-item" onclick="loadPage('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title" id="pageTitle">Dashboard</div>
+                <div class="top-bar-right">
+                    <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div class="admin-info">
+                        <div class="admin-avatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="contentArea">
+                <!-- Dashboard will load here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check admin login
+        (function() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'admin-login.html';
+            }
+        })();
+
+        // Dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Load page
+        function loadPage(page) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.getElementById('pageTitle').innerText = page.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            
+            switch(page) {
+                case 'dashboard': loadDashboard(); break;
+                case 'users': loadUsers(); break;
+                case 'transactions': loadTransactions(); break;
+                case 'data-plans': loadDataPlans(); break;
+                case 'airtime': loadAirtime(); break;
+                case 'electricity': loadElectricity(); break;
+                case 'tv': loadTV(); break;
+                case 'wallet': loadWallet(); break;
+                case 'resellers': loadResellers(); break;
+                case 'reports': loadReports(); break;
+                case 'settings': loadSettings(); break;
+                default: loadDashboard();
+            }
+        }
+
+        // Dashboard
+        function loadDashboard() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const today = new Date().toDateString();
+            const todayRevenue = transactions.filter(t => t.date && t.date.includes(today) && t.status === 'successful').reduce((sum, t) => sum + (t.sellingPrice || t.amount), 0);
+            
+            const html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header"><span>Total Users</span><i class="fas fa-users"></i></div>
+                        <div class="stat-value">${users.length}</div>
+                        <div class="stat-change">+0 this week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><span>Available Balance</span><i class="fas fa-wallet"></i></div>
+                        <div class="stat-value">₦${localStorage.getItem('upstreamBalance') || '0'}</div>
+                        <div class="stat-change">Low balance alert: ₦10,000</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><span>Today's Revenue</span><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="stat-value">₦${todayRevenue.toLocaleString()}</div>
+                        <div class="stat-change">From ${transactions.filter(t => t.date && t.date.includes(today)).length} transactions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><span>Today's Profit</span><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-value">₦${Math.floor(todayRevenue * 0.1).toLocaleString()}</div>
+                        <div class="stat-change">~10% margin</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><h3>Recent Transactions</h3><button class="btn btn-primary" onclick="loadPage('transactions')">View All</button></div>
+                    <div class="data-table">
+                        <table>
+                            <thead><tr><th>User</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+                            <tbody id="recentTransactions"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><h3>Recent Users</h3><button class="btn btn-primary" onclick="loadPage('users')">View All</button></div>
+                    <div class="data-table">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Balance</th><th>Status</th></tr></thead>
+                            <tbody id="recentUsers"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = html;
+            
+            // Load recent transactions
+            let recentTrans = transactions.slice(0, 5);
+            let transHtml = '';
+            recentTrans.forEach(t => {
+                transHtml += `<tr><td>${t.userName || 'User'}</td><td>${t.type}</td><td>₦${t.amount}</td><td><span class="badge badge-success">${t.status || 'Successful'}</span></td><td>${t.date || ''}</td></tr>`;
+            });
+            document.getElementById('recentTransactions').innerHTML = transHtml || '<tr><td colspan="5">No transactions</td></tr>';
+            
+            let recentUsersHtml = '';
+            users.slice(0, 5).forEach(u => {
+                recentUsersHtml += `<tr><td>${u.name}</td><td>${u.email}</td><td>₦${u.balance || 0}</td><td><span class="badge badge-success">Active</span></td></tr>`;
+            });
+            document.getElementById('recentUsers').innerHTML = recentUsersHtml || '<tr><td colspan="4">No users</td></tr>';
+        }
+
+        // Users Management
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            let html = `
+                <div class="card">
+                    <div class="card-header"><h3>User Management</h3><button class="btn btn-primary" onclick="showAddUserModal()">+ Add User</button></div>
+                    <div class="filters">
+                        <input type="text" class="filter-input" id="searchUser" placeholder="Search by name/email..." onkeyup="filterUsers()">
+                        <select class="filter-input" id="filterStatus" onchange="filterUsers()"><option value="all">All Status</option><option value="active">Active</option><option value="suspended">Suspended</option></select>
+                    </div>
+                    <div class="data-table">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Balance</th><th>Transactions</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="usersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = html;
+            
+            let usersHtml = '';
+            users.forEach(u => {
+                usersHtml += `<tr>
+                    <td>${u.name}</td><td>${u.email}</td><td>${u.phone || 'N/A'}</td><td>₦${u.balance || 0}</td>
+                    <td>${u.transactionCount || 0}</td><td><span class="badge badge-success">Active</span></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="viewUser('${u.email}')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="fundUser('${u.email}')">Fund</button>
+                    <button class="btn btn-danger btn-sm" onclick="suspendUser('${u.email}')">Suspend</button></td>
+                </tr>`;
+            });
+            document.getElementById('usersTableBody').innerHTML = usersHtml || '<tr><td colspan="7">No users</td></tr>';
+        }
+
+        // Data Plans Management
+        function loadDataPlans() {
+            const plans = JSON.parse(localStorage.getItem('dataPlans')) || [
+                { id: 1, network: 'MTN', name: '1GB', cost: 470, sellingPrice: 520, validity: '30 Days', status: 'active' },
+                { id: 2, network: 'MTN', name: '2GB', cost: 1000, sellingPrice: 1100, validity: '30 Days', status: 'active' },
+                { id: 3, network: 'GLO', name: '1GB', cost: 450, sellingPrice: 500, validity: '30 Days', status: 'active' },
+                { id: 4, network: 'AIRTEL', name: '1GB', cost: 460, sellingPrice: 510, validity: '30 Days', status: 'active' }
+            ];
+            
+            let html = `
+                <div class="card">
+                    <div class="card-header"><h3>Data Plans</h3><button class="btn btn-primary" onclick="showAddPlanModal()">+ Add Plan</button></div>
+                    <div class="data-table">
+                        <table>
+                            <thead><tr><th>Network</th><th>Plan Name</th><th>Cost (₦)</th><th>Selling Price (₦)</th><th>Profit</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="plansTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = html;
+            
+            let plansHtml = '';
+            plans.forEach(p => {
+                const profit = p.sellingPrice - p.cost;
+                plansHtml += `<tr>
+                    <td>${p.network}</td><td>${p.name}</td><td>₦${p.cost}</td><td>₦${p.sellingPrice}</td>
+                    <td><span class="badge badge-success">+₦${profit}</span></td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><button class="btn btn-warning btn-sm" onclick="editPlan(${p.id})">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deletePlan(${p.id})">Delete</button></td>
+                </tr>`;
+            });
+            document.getElementById('plansTableBody').innerHTML = plansHtml;
+        }
+
+        // Helper Functions
+        function filterUsers() {
+            const search = document.getElementById('searchUser').value.toLowerCase();
+            const rows = document.querySelectorAll('#usersTableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(search) ? '' : 'none';
+            });
+        }
+
+        function viewUser(email) { alert(`View user: ${email}`); }
+        function fundUser(email) { const amount = prompt('Enter amount to fund:'); if(amount) alert(`Funded ${email} with ₦${amount}`); }
+        function suspendUser(email) { if(confirm(`Suspend ${email}?`)) alert('User suspended'); }
+        function editPlan(id) { alert(`Edit plan ${id}`); }
+        function deletePlan(id) { if(confirm('Delete this plan?')) alert('Plan deleted'); }
+        function showAddUserModal() { alert('Add user form'); }
+        function showAddPlanModal() { alert('Add plan form'); }
+        function loadTransactions() { alert('Transactions page - coming soon'); }
+        function loadAirtime() { alert('Airtime management - coming soon'); }
+        function loadElectricity() { alert('Electricity management - coming soon'); }
+        function loadTV() { alert('TV management - coming soon'); }
+        function loadWallet() { alert('Wallet management - coming soon'); }
+        function loadResellers() { alert('Resellers - coming soon'); }
+        function loadReports() { alert('Reports - coming soon'); }
+        function loadSettings() { alert('Settings - coming soon'); }
+
+        // Initial load
+        loadDashboard();
+    </script>
+</body>
+</html>
