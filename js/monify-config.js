@@ -1,34 +1,24 @@
 // ============================================
-// MONNIFY CONFIGURATION - TUNZY SUB 4 YOU
+// MONNIFY CONFIGURATION - TUNZY SUB
 // ============================================
 
 const MONNIFY_CONFIG = {
-    // 🔴 TEST KEYS (replace with LIVE keys when ready)
-    API_KEY: 'MK_TEST_3GVY4PHNJA',
-    SECRET_KEY: '2ZZ3E7WXD9H1RM0Y6U8MEZ8FASMCS7D8',
+    // LIVE KEYS
+    API_KEY: 'MK_PROD_4FS0VW1PW5',
+    SECRET_KEY: 'FNQLL426TMHXHNW70MHWEATGBG3XNCUT',
+    CONTRACT_CODE: '513315958327',
     
-    // 🔴 YOU NEED TO GET THIS FROM YOUR MONNIFY DASHBOARD
-    CONTRACT_CODE: 'YOUR_CONTRACT_CODE_HERE',  // ← FIND THIS!
+    // Base URL
+    BASE_URL: 'https://api.monnify.com',
     
-    // Base URL (TEST environment)
-    BASE_URL: 'https://sandbox.monnify.com',
-    
-    // Live URL (when you switch to live)
-    LIVE_URL: 'https://api.monnify.com',
-    
-    // Is this test mode?
-    IS_TEST_MODE: true,
-    
-    // Webhook URL (where Monnify sends payment notifications)
+    // Webhook URL
     WEBHOOK_URL: 'https://tunzy-sub4u.vercel.app/api/monnify-webhook',
     
-    // Your service fee (₦ per deposit - your profit!)
-    SERVICE_FEE: 10
+    // Settings
+    IS_TEST_MODE: false,
+    SERVICE_FEE: 10,  // ₦10 fee per deposit
+    BVN_LIMIT: 20000   // Limit for users without BVN
 };
-
-// ============================================
-// AUTHENTICATION FUNCTIONS
-// ============================================
 
 // Get authentication token
 async function getMonnifyToken() {
@@ -57,29 +47,26 @@ async function getMonnifyToken() {
     }
 }
 
-// ============================================
-// VIRTUAL ACCOUNT FUNCTIONS
-// ============================================
-
 // Create virtual account for a user
-async function createVirtualAccount(userId, userName, userEmail) {
+async function createVirtualAccount(userId, userName, userEmail, bvn = null, nin = null) {
     const token = await getMonnifyToken();
-    if (!token) {
-        console.error('No token');
-        return null;
-    }
+    if (!token) return { success: false, message: 'Authentication failed' };
     
     const reference = `TUNZY_${userId}_${Date.now()}`;
     
     const payload = {
         accountReference: reference,
-        accountName: `${userName} - TUNZY`,
+        accountName: `${userName} - TUNZY SUB`,
         currencyCode: "NGN",
         contractCode: MONNIFY_CONFIG.CONTRACT_CODE,
         customerEmail: userEmail,
         customerName: userName,
         getAllAvailableBanks: true
     };
+    
+    // Add BVN or NIN if provided
+    if (bvn) payload.bvn = bvn;
+    if (nin) payload.nin = nin;
     
     try {
         const response = await fetch(`${MONNIFY_CONFIG.BASE_URL}/api/v1/bank-transfer/reserved-accounts`, {
@@ -100,91 +87,45 @@ async function createVirtualAccount(userId, userName, userEmail) {
                 accountNumber: result.accountNumber,
                 bankName: result.bankName,
                 accountName: result.accountName,
-                reservedAccountId: result.reservedAccountId
+                reservedAccountId: result.reservedAccountId,
+                hasBVN: !!bvn,
+                limit: bvn ? null : MONNIFY_CONFIG.BVN_LIMIT
             };
         } else {
-            console.error('Create account failed:', data);
             return { success: false, message: data.responseMessage };
         }
     } catch (error) {
-        console.error('Error:', error);
         return { success: false, message: error.message };
     }
 }
 
-// Get virtual account details for a user
-async function getVirtualAccount(accountReference) {
+// Update BVN for existing account
+async function updateAccountBVN(accountReference, bvn, nin = null) {
     const token = await getMonnifyToken();
-    if (!token) return null;
+    if (!token) return { success: false };
+    
+    const payload = { accountReference, bvn };
+    if (nin) payload.nin = nin;
     
     try {
-        const response = await fetch(`${MONNIFY_CONFIG.BASE_URL}/api/v1/bank-transfer/reserved-accounts/${accountReference}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const response = await fetch(`${MONNIFY_CONFIG.BASE_URL}/api/v1/bank-transfer/reserved-accounts/update-bvn`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
         });
         
         const data = await response.json();
-        return data;
+        return { success: data.requestSuccessful };
     } catch (error) {
-        console.error(error);
-        return null;
+        return { success: false };
     }
 }
 
-// ============================================
-// TRANSACTION FUNCTIONS
-// ============================================
-
-// Check transaction status
-async function checkTransactionStatus(transactionReference) {
-    const token = await getMonnifyToken();
-    if (!token) return null;
-    
-    try {
-        const response = await fetch(`${MONNIFY_CONFIG.BASE_URL}/api/v1/merchant/transactions/query?transactionReference=${transactionReference}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-}
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-
-// Function to call when user funds wallet (webhook)
-function processUserDeposit(userId, amount) {
-    // Get current balance
-    let balance = parseFloat(localStorage.getItem(`userBalance_${userId}`)) || 0;
-    
-    // Add deposit
-    balance += amount;
-    localStorage.setItem(`userBalance_${userId}`, balance);
-    
-    // Record transaction
-    const transaction = {
-        id: Date.now(),
-        userId: userId,
-        amount: amount,
-        date: new Date().toISOString(),
-        type: 'deposit'
-    };
-    
-    let transactions = JSON.parse(localStorage.getItem(`transactions_${userId}`)) || [];
-    transactions.unshift(transaction);
-    localStorage.setItem(`transactions_${userId}`, JSON.stringify(transactions));
-    
-    return balance;
-}
-
-// Export for use in other files
+// Export functions
 window.MONNIFY_CONFIG = MONNIFY_CONFIG;
 window.getMonnifyToken = getMonnifyToken;
 window.createVirtualAccount = createVirtualAccount;
-window.getVirtualAccount = getVirtualAccount;
-window.checkTransactionStatus = checkTransactionStatus;
-window.processUserDeposit = processUserDeposit;
+window.updateAccountBVN = updateAccountBVN;
