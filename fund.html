@@ -9,27 +9,44 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5}
-        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh;padding-bottom:70px}
+        .app-container{max-width:500px;margin:0 auto;background:white;min-height:100vh}
         .header{background:#0066cc;padding:20px;color:white;display:flex;align-items:center;gap:20px}
         .back-btn{font-size:24px;cursor:pointer;color:white;text-decoration:none}
         .header h1{font-size:20px;font-weight:600}
         .fund-container{padding:20px}
         .balance-display{background:#f8f9fa;padding:20px;border-radius:10px;text-align:center;margin-bottom:20px;border:1px solid #e0e0e0}
-        .current-balance{font-size:14px;color:#666}
+        .current-balance{font-size:14px;color:#666;margin-bottom:5px}
         .balance-amount{font-size:32px;font-weight:bold;color:#0066cc}
+        
+        /* Tab Styles */
+        .funding-tabs{display:flex;gap:10px;margin:20px 0}
+        .funding-tab{flex:1;padding:12px;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:10px;text-align:center;cursor:pointer;font-weight:600;transition:all 0.3s}
+        .funding-tab.active{background:#0066cc;color:white;border-color:#0066cc}
         
         /* Virtual Account Card */
         .virtual-card{background:linear-gradient(135deg,#0066cc,#004d99);color:white;padding:25px;border-radius:15px;margin:20px 0;text-align:center}
-        .virtual-number{font-size:28px;font-weight:bold;letter-spacing:3px;margin:15px 0;background:rgba(255,255,255,0.2);padding:10px;border-radius:10px}
+        .virtual-number{font-size:28px;font-weight:bold;letter-spacing:3px;margin:15px 0;background:rgba(255,255,255,0.2);padding:10px;border-radius:10px;cursor:pointer}
+        .virtual-number:active{background:rgba(255,255,255,0.3)}
         .copy-btn{background:white;color:#0066cc;border:none;padding:10px 20px;border-radius:25px;font-weight:600;cursor:pointer;margin-top:10px}
         .bank-name{font-size:14px;opacity:0.9;margin-top:10px}
+        .limit-notice{background:#fff3cd;color:#856404;padding:12px;border-radius:10px;margin:15px 0;font-size:13px}
         
-        .note{text-align:center;color:#666;font-size:12px;margin-top:20px}
+        /* Amount Grid */
+        .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+        .amount-btn{background:#f8f9fa;border:2px solid #e0e0e0;border-radius:10px;padding:15px;text-align:center;cursor:pointer;font-weight:600}
+        .amount-btn.selected{border-color:#0066cc;background:#0066cc;color:white}
+        .custom-amount{margin:20px 0}
+        .custom-amount input{width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:10px;font-size:16px}
+        
+        .fund-btn{width:100%;padding:18px;background:#0066cc;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin:20px 0}
+        .fund-btn:disabled{background:#ccc;cursor:not-allowed}
+        .note{text-align:center;color:#999;font-size:12px;margin-top:20px}
         .loading{text-align:center;padding:40px;color:#0066cc}
         
         .bottom-nav{background:white;border-top:1px solid #e0e0e0;display:flex;justify-content:space-around;padding:12px 0;position:fixed;bottom:0;max-width:500px;width:100%}
         .nav-item{text-align:center;text-decoration:none;color:#999;font-size:12px;font-weight:500}
         .nav-item.active{color:#0066cc}
+        body{padding-bottom:70px}
     </style>
 </head>
 <body>
@@ -47,33 +64,46 @@
                 <div class="balance-amount" id="balanceDisplay">₦0.00</div>
             </div>
             
-            <div id="loadingSection" style="display:block">
-                <div class="loading">⏳ Setting up your account...</div>
+            <!-- Payment Method Tabs -->
+            <div class="funding-tabs">
+                <div class="funding-tab" onclick="switchMethod('paystack')">💳 Paystack</div>
+                <div class="funding-tab active" onclick="switchMethod('monnify')">🏦 Monnify (Virtual Account)</div>
             </div>
             
-            <div id="virtualSection" style="display:none">
-                <div class="virtual-card">
-                    <div>💰 Your Personal Funding Account</div>
-                    <div class="virtual-number" id="virtualAccountNumber">-</div>
-                    <button class="copy-btn" onclick="copyAccountNumber()">📋 Copy Account Number</button>
-                    <div class="bank-name" id="bankName">Bank: -</div>
-                    <div class="bank-name" id="accountName">Account Name: -</div>
+            <!-- Paystack Section -->
+            <div id="paystackSection" style="display:none">
+                <div class="amount-grid" id="amountGrid"></div>
+                <div class="custom-amount">
+                    <input type="number" id="customAmount" placeholder="Or enter custom amount" min="100">
+                </div>
+                <button class="fund-btn" id="paystackBtn" onclick="processPaystackPayment()" disabled>Select amount</button>
+            </div>
+            
+            <!-- Monnify Section -->
+            <div id="monnifySection">
+                <div id="monnifyLoading" style="display:block">
+                    <div class="loading">⏳ Setting up your virtual account...</div>
                 </div>
                 
-                <div class="note">
-                    💡 <strong>How to fund your wallet:</strong><br><br>
-                    1️⃣ Copy your account number above<br>
-                    2️⃣ Open your banking app (OPay, PalmPay, Kuda, etc.)<br>
-                    3️⃣ Transfer any amount to this account<br>
-                    4️⃣ Your wallet will be credited automatically<br><br>
-                    ⚡ ₦10 service fee applies per transaction
-                </div>
-            </div>
-            
-            <div id="errorSection" style="display:none">
-                <div class="note" style="color:#dc3545">
-                    ❌ Failed to create your virtual account.<br>
-                    Please try again later or contact support.
+                <div id="monnifyContent" style="display:none">
+                    <div class="virtual-card">
+                        <div>💰 Your Personal Funding Account</div>
+                        <div class="virtual-number" id="virtualAccountNumber" onclick="copyAccountNumber()">-</div>
+                        <button class="copy-btn" onclick="copyAccountNumber()">📋 Copy Account Number</button>
+                        <div class="bank-name" id="bankName">Bank: -</div>
+                        <div class="bank-name" id="accountName">Account Name: -</div>
+                    </div>
+                    
+                    <div class="limit-notice" id="limitNotice"></div>
+                    
+                    <div class="note">
+                        💡 <strong>How to fund your wallet:</strong><br><br>
+                        1️⃣ Copy your account number above<br>
+                        2️⃣ Open your banking app (OPay, PalmPay, Kuda, GTB, etc.)<br>
+                        3️⃣ Transfer any amount to this account<br>
+                        4️⃣ Your wallet will be credited automatically within 2-5 minutes<br><br>
+                        ⚡ ₦10 service fee applies per transaction
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,34 +117,50 @@
     </div>
 
     <script>
+        let currentMethod = 'monnify';
+        let selectedAmount = 0;
+        let userBalance = 0;
         let userVirtualAccount = null;
+        let paystackAmount = 0;
+        
+        // Paystack Public Key (replace with your actual key)
+        const PAYSTACK_PUBLIC_KEY = 'pk_live_YOUR_PAYSTACK_KEY_HERE';
         
         auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                window.location.href = 'login-page.html';
-                return;
+            if (!user) window.location.href = 'login-page.html';
+            else {
+                userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
+                document.getElementById('balanceDisplay').innerText = `₦${userBalance.toLocaleString()}.00`;
+                await loadVirtualAccount(user);
+                loadAmountGrid();
+                
+                document.getElementById('customAmount').addEventListener('input', function() {
+                    let amt = parseInt(this.value);
+                    if (amt >= 100) {
+                        paystackAmount = amt;
+                        document.getElementById('paystackBtn').disabled = false;
+                        document.getElementById('paystackBtn').innerText = `Pay ₦${amt.toLocaleString()}`;
+                    } else if (this.value === '') {
+                        paystackAmount = 0;
+                        document.getElementById('paystackBtn').disabled = true;
+                        document.getElementById('paystackBtn').innerText = 'Select amount';
+                    }
+                });
             }
-            
-            // Load user balance
-            let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
-            document.getElementById('balanceDisplay').innerText = `₦${balance.toLocaleString()}.00`;
-            
-            // Check if user already has virtual account
+        });
+        
+        async function loadVirtualAccount(user) {
             let savedAccount = localStorage.getItem(`monnify_account_${user.uid}`);
             
             if (savedAccount) {
                 userVirtualAccount = JSON.parse(savedAccount);
                 displayVirtualAccount();
-            } else {
-                await createUserVirtualAccount(user);
+                return;
             }
-        });
-        
-        async function createUserVirtualAccount(user) {
-            document.getElementById('loadingSection').style.display = 'block';
             
             try {
                 const userName = user.displayName || user.email.split('@')[0];
+                const hasBVN = localStorage.getItem('hasBVN') === 'true';
                 const result = await createVirtualAccount(user.uid, userName, user.email);
                 
                 if (result && result.success) {
@@ -122,24 +168,33 @@
                     localStorage.setItem(`monnify_account_${user.uid}`, JSON.stringify(result));
                     displayVirtualAccount();
                 } else {
-                    document.getElementById('loadingSection').style.display = 'none';
-                    document.getElementById('errorSection').style.display = 'block';
-                    console.error('Failed to create account:', result);
+                    document.getElementById('monnifyLoading').style.display = 'none';
+                    document.getElementById('monnifyContent').innerHTML = '<div class="note" style="color:#dc3545">Failed to create virtual account. Please contact support.</div>';
                 }
             } catch (error) {
-                document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('errorSection').style.display = 'block';
                 console.error('Error:', error);
+                document.getElementById('monnifyLoading').style.display = 'none';
+                document.getElementById('monnifyContent').innerHTML = '<div class="note" style="color:#dc3545">Error creating virtual account. Please try again later.</div>';
             }
         }
         
         function displayVirtualAccount() {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('virtualSection').style.display = 'block';
+            document.getElementById('monnifyLoading').style.display = 'none';
+            document.getElementById('monnifyContent').style.display = 'block';
             
             document.getElementById('virtualAccountNumber').innerText = userVirtualAccount.accountNumber;
             document.getElementById('bankName').innerHTML = `Bank: ${userVirtualAccount.bankName}`;
             document.getElementById('accountName').innerHTML = `Account Name: ${userVirtualAccount.accountName}`;
+            
+            // Show limit notice based on BVN status
+            const hasBVN = localStorage.getItem('hasBVN') === 'true';
+            const limitNotice = document.getElementById('limitNotice');
+            if (!hasBVN) {
+                limitNotice.innerHTML = '⚠️ <strong>Daily Transaction Limit: ₦20,000</strong><br>You have not added your BVN. Add BVN in Profile to increase your transaction limit.';
+                limitNotice.style.display = 'block';
+            } else {
+                limitNotice.style.display = 'none';
+            }
         }
         
         function copyAccountNumber() {
@@ -147,6 +202,90 @@
                 navigator.clipboard.writeText(userVirtualAccount.accountNumber);
                 alert('✅ Account number copied!');
             }
+        }
+        
+        function switchMethod(method) {
+            currentMethod = method;
+            document.querySelectorAll('.funding-tab').forEach(tab => tab.classList.remove('active'));
+            if (method === 'paystack') {
+                document.querySelectorAll('.funding-tab')[0].classList.add('active');
+                document.getElementById('paystackSection').style.display = 'block';
+                document.getElementById('monnifySection').style.display = 'none';
+            } else {
+                document.querySelectorAll('.funding-tab')[1].classList.add('active');
+                document.getElementById('paystackSection').style.display = 'none';
+                document.getElementById('monnifySection').style.display = 'block';
+            }
+        }
+        
+        function loadAmountGrid() {
+            const amounts = [100, 200, 500, 1000, 2000, 5000];
+            const container = document.getElementById('amountGrid');
+            let html = '';
+            amounts.forEach(amt => {
+                html += `<div class="amount-btn" onclick="selectAmount(${amt})">₦${amt.toLocaleString()}</div>`;
+            });
+            container.innerHTML = html;
+        }
+        
+        function selectAmount(amount) {
+            paystackAmount = amount;
+            document.getElementById('customAmount').value = amount;
+            document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            document.getElementById('paystackBtn').disabled = false;
+            document.getElementById('paystackBtn').innerText = `Pay ₦${amount.toLocaleString()}`;
+        }
+        
+        async function processPaystackPayment() {
+            const amount = paystackAmount || parseInt(document.getElementById('customAmount').value);
+            
+            if (!amount || amount < 100) {
+                alert('Please select or enter a valid amount (minimum ₦100)');
+                return;
+            }
+            
+            if (!window.PaystackPop) {
+                await loadScript('https://js.paystack.co/v1/inline.js');
+            }
+            
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: auth.currentUser?.email,
+                amount: amount * 100,
+                currency: 'NGN',
+                ref: 'TUNZY_' + Date.now(),
+                callback: function(response) {
+                    userBalance += amount;
+                    localStorage.setItem('userBalance', userBalance);
+                    document.getElementById('balanceDisplay').innerText = `₦${userBalance.toLocaleString()}.00`;
+                    
+                    let transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                    transactions.unshift({
+                        type: 'Wallet Funding (Paystack)',
+                        amount: `+₦${amount.toLocaleString()}`,
+                        date: new Date().toLocaleString(),
+                        reference: response.reference
+                    });
+                    localStorage.setItem('transactions', JSON.stringify(transactions.slice(0, 20)));
+                    
+                    alert(`✅ Wallet funded with ₦${amount.toLocaleString()}`);
+                    window.location.href = 'dashboard.html';
+                },
+                onClose: function() { alert('Payment cancelled'); }
+            });
+            
+            handler.openIframe();
+        }
+        
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
         }
     </script>
 </body>
